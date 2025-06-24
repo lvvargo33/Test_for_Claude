@@ -1,0 +1,388 @@
+"""
+BigQuery Schema Setup - Optimized Version
+========================================
+
+Creates optimized BigQuery tables with proper partitioning,
+clustering, and schema design for the Location Optimizer platform.
+"""
+
+import logging
+from google.cloud import bigquery
+from google.cloud.exceptions import NotFound
+import yaml
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+class BigQuerySetup:
+    """Handles BigQuery dataset and table creation with optimization"""
+    
+    def __init__(self, project_id: str = "location-optimizer-1", config_path: str = "data_sources.yaml"):
+        """
+        Initialize BigQuery setup
+        
+        Args:
+            project_id: GCP project ID
+            config_path: Path to configuration file
+        """
+        self.project_id = project_id
+        self.client = bigquery.Client(project=project_id)
+        
+        # Load configuration
+        with open(config_path, 'r') as file:
+            self.config = yaml.safe_load(file)
+        
+        self.bq_config = self.config.get('bigquery', {})
+    
+    def create_datasets(self):
+        """Create required datasets"""
+        datasets = self.bq_config.get('datasets', {})
+        
+        for dataset_name, dataset_id in datasets.items():
+            try:
+                # Create dataset
+                dataset_ref = self.client.dataset(dataset_id)
+                dataset = bigquery.Dataset(dataset_ref)
+                dataset.location = "US"  # Use US multi-region for better performance
+                dataset.description = f"Location Optimizer {dataset_name.replace('_', ' ').title()}"
+                
+                # Check if dataset exists
+                try:
+                    self.client.get_dataset(dataset_ref)
+                    logger.info(f"Dataset {dataset_id} already exists")
+                except NotFound:
+                    dataset = self.client.create_dataset(dataset)
+                    logger.info(f"Created dataset {dataset_id}")
+                    
+            except Exception as e:
+                logger.error(f"Error creating dataset {dataset_id}: {e}")
+    
+    def create_business_entities_table(self):
+        """Create optimized business entities table"""
+        dataset_id = self.bq_config.get('datasets', {}).get('raw_data', 'raw_business_data')
+        table_id = self.bq_config.get('tables', {}).get('business_entities', 'business_entities')
+        full_table_id = f"{self.project_id}.{dataset_id}.{table_id}"
+        
+        schema = [
+            # Core identifiers
+            bigquery.SchemaField("business_id", "STRING", mode="REQUIRED", description="Unique business identifier"),
+            bigquery.SchemaField("source_id", "STRING", mode="REQUIRED", description="Source system identifier"),
+            
+            # Business information
+            bigquery.SchemaField("business_name", "STRING", mode="REQUIRED", description="Official business name"),
+            bigquery.SchemaField("owner_name", "STRING", mode="NULLABLE", description="Primary owner name"),
+            bigquery.SchemaField("business_type", "STRING", mode="REQUIRED", description="Categorized business type"),
+            bigquery.SchemaField("naics_code", "STRING", mode="NULLABLE", description="NAICS industry code"),
+            bigquery.SchemaField("entity_type", "STRING", mode="NULLABLE", description="Legal entity type"),
+            
+            # Status and dates
+            bigquery.SchemaField("status", "STRING", mode="REQUIRED", description="Current business status"),
+            bigquery.SchemaField("registration_date", "DATE", mode="NULLABLE", description="Business registration date"),
+            bigquery.SchemaField("last_updated", "DATE", mode="NULLABLE", description="Last update from source"),
+            
+            # Location information
+            bigquery.SchemaField("address_full", "STRING", mode="NULLABLE", description="Complete address"),
+            bigquery.SchemaField("city", "STRING", mode="REQUIRED", description="Business city"),
+            bigquery.SchemaField("state", "STRING", mode="REQUIRED", description="Business state"),
+            bigquery.SchemaField("zip_code", "STRING", mode="NULLABLE", description="ZIP code"),
+            bigquery.SchemaField("county", "STRING", mode="NULLABLE", description="County name"),
+            
+            # Contact information
+            bigquery.SchemaField("phone", "STRING", mode="NULLABLE", description="Business phone"),
+            bigquery.SchemaField("email", "STRING", mode="NULLABLE", description="Business email"),
+            bigquery.SchemaField("website", "STRING", mode="NULLABLE", description="Business website"),
+            
+            # Additional details
+            bigquery.SchemaField("business_description", "STRING", mode="NULLABLE", description="Business description"),
+            bigquery.SchemaField("employee_count", "INTEGER", mode="NULLABLE", description="Number of employees"),
+            bigquery.SchemaField("annual_revenue", "FLOAT", mode="NULLABLE", description="Annual revenue estimate"),
+            
+            # Metadata
+            bigquery.SchemaField("data_source", "STRING", mode="REQUIRED", description="Original data source"),
+            bigquery.SchemaField("source_url", "STRING", mode="NULLABLE", description="Source URL"),
+            bigquery.SchemaField("data_extraction_date", "TIMESTAMP", mode="REQUIRED", description="Data extraction timestamp"),
+            bigquery.SchemaField("confidence_score", "FLOAT", mode="NULLABLE", description="Data quality confidence score"),
+            
+            # System fields
+            bigquery.SchemaField("created_at", "TIMESTAMP", mode="NULLABLE", description="Record creation timestamp"),
+            bigquery.SchemaField("updated_at", "TIMESTAMP", mode="NULLABLE", description="Record update timestamp")
+        ]
+        
+        # Configure table with partitioning and clustering
+        table = bigquery.Table(full_table_id, schema=schema)
+        
+        # Partition by data extraction date (daily partitions)
+        table.time_partitioning = bigquery.TimePartitioning(
+            type_=bigquery.TimePartitioningType.DAY,
+            field="data_extraction_date"
+        )
+        
+        # Cluster by state, business_type, and city for optimal query performance
+        table.clustering_fields = ["state", "business_type", "city"]
+        
+        # Set table description
+        table.description = "Business entities collected from various state and local sources"
+        
+        try:
+            table = self.client.create_table(table, exists_ok=True)
+            logger.info(f"Created/verified business entities table: {full_table_id}")
+        except Exception as e:
+            logger.error(f"Error creating business entities table: {e}")
+    
+    def create_sba_loans_table(self):
+        """Create optimized SBA loans table"""
+        dataset_id = self.bq_config.get('datasets', {}).get('raw_data', 'raw_business_data')
+        table_id = self.bq_config.get('tables', {}).get('sba_loans', 'sba_loan_approvals')
+        full_table_id = f"{self.project_id}.{dataset_id}.{table_id}"
+        
+        schema = [
+            # Loan identifiers
+            bigquery.SchemaField("loan_id", "STRING", mode="REQUIRED", description="Unique loan identifier"),
+            bigquery.SchemaField("borrower_name", "STRING", mode="REQUIRED", description="Borrower business name"),
+            
+            # Loan details
+            bigquery.SchemaField("loan_amount", "NUMERIC", mode="REQUIRED", description="Approved loan amount"),
+            bigquery.SchemaField("approval_date", "DATE", mode="REQUIRED", description="Loan approval date"),
+            bigquery.SchemaField("program_type", "STRING", mode="REQUIRED", description="SBA program type"),
+            
+            # Borrower information
+            bigquery.SchemaField("borrower_address", "STRING", mode="NULLABLE", description="Borrower address"),
+            bigquery.SchemaField("borrower_city", "STRING", mode="REQUIRED", description="Borrower city"),
+            bigquery.SchemaField("borrower_state", "STRING", mode="REQUIRED", description="Borrower state"),
+            bigquery.SchemaField("borrower_zip", "STRING", mode="NULLABLE", description="Borrower ZIP code"),
+            
+            # Business details
+            bigquery.SchemaField("naics_code", "STRING", mode="NULLABLE", description="NAICS code"),
+            bigquery.SchemaField("business_type", "STRING", mode="NULLABLE", description="Business type"),
+            bigquery.SchemaField("jobs_supported", "INTEGER", mode="NULLABLE", description="Jobs supported"),
+            
+            # Franchise information
+            bigquery.SchemaField("franchise_code", "STRING", mode="NULLABLE", description="Franchise code"),
+            bigquery.SchemaField("franchise_name", "STRING", mode="NULLABLE", description="Franchise name"),
+            
+            # Lender information
+            bigquery.SchemaField("lender_name", "STRING", mode="NULLABLE", description="Lender name"),
+            
+            # Metadata
+            bigquery.SchemaField("data_source", "STRING", mode="REQUIRED", description="Data source"),
+            bigquery.SchemaField("data_extraction_date", "TIMESTAMP", mode="REQUIRED", description="Extraction timestamp"),
+            
+            # System fields
+            bigquery.SchemaField("created_at", "TIMESTAMP", mode="NULLABLE", description="Record creation timestamp"),
+            bigquery.SchemaField("updated_at", "TIMESTAMP", mode="NULLABLE", description="Record update timestamp")
+        ]
+        
+        table = bigquery.Table(full_table_id, schema=schema)
+        
+        # Partition by approval date
+        table.time_partitioning = bigquery.TimePartitioning(
+            type_=bigquery.TimePartitioningType.DAY,
+            field="approval_date"
+        )
+        
+        # Cluster by state, approval date, and program type
+        table.clustering_fields = ["borrower_state", "program_type", "franchise_name"]
+        
+        table.description = "SBA loan approvals data for franchise opportunity analysis"
+        
+        try:
+            table = self.client.create_table(table, exists_ok=True)
+            logger.info(f"Created/verified SBA loans table: {full_table_id}")
+        except Exception as e:
+            logger.error(f"Error creating SBA loans table: {e}")
+    
+    def create_business_licenses_table(self):
+        """Create business licenses table"""
+        dataset_id = self.bq_config.get('datasets', {}).get('raw_data', 'raw_business_data')
+        table_id = self.bq_config.get('tables', {}).get('business_licenses', 'business_licenses')
+        full_table_id = f"{self.project_id}.{dataset_id}.{table_id}"
+        
+        schema = [
+            # License identifiers
+            bigquery.SchemaField("license_id", "STRING", mode="REQUIRED", description="License identifier"),
+            bigquery.SchemaField("business_name", "STRING", mode="REQUIRED", description="Licensed business name"),
+            
+            # License details
+            bigquery.SchemaField("license_type", "STRING", mode="REQUIRED", description="Type of license"),
+            bigquery.SchemaField("issue_date", "DATE", mode="NULLABLE", description="License issue date"),
+            bigquery.SchemaField("expiration_date", "DATE", mode="NULLABLE", description="License expiration date"),
+            bigquery.SchemaField("status", "STRING", mode="REQUIRED", description="License status"),
+            
+            # Location information
+            bigquery.SchemaField("address", "STRING", mode="NULLABLE", description="Business address"),
+            bigquery.SchemaField("city", "STRING", mode="REQUIRED", description="Business city"),
+            bigquery.SchemaField("state", "STRING", mode="REQUIRED", description="Business state"),
+            bigquery.SchemaField("zip_code", "STRING", mode="NULLABLE", description="ZIP code"),
+            
+            # Metadata
+            bigquery.SchemaField("issuing_authority", "STRING", mode="NULLABLE", description="License issuing authority"),
+            bigquery.SchemaField("data_source", "STRING", mode="REQUIRED", description="Data source"),
+            bigquery.SchemaField("data_extraction_date", "TIMESTAMP", mode="REQUIRED", description="Extraction timestamp"),
+            
+            # System fields
+            bigquery.SchemaField("created_at", "TIMESTAMP", mode="NULLABLE", description="Record creation timestamp"),
+            bigquery.SchemaField("updated_at", "TIMESTAMP", mode="NULLABLE", description="Record update timestamp")
+        ]
+        
+        table = bigquery.Table(full_table_id, schema=schema)
+        
+        # Partition by issue date
+        table.time_partitioning = bigquery.TimePartitioning(
+            type_=bigquery.TimePartitioningType.DAY,
+            field="issue_date"
+        )
+        
+        # Cluster by state, city, and license type
+        table.clustering_fields = ["state", "city", "license_type"]
+        
+        table.description = "Business licenses from municipal and county sources"
+        
+        try:
+            table = self.client.create_table(table, exists_ok=True)
+            logger.info(f"Created/verified business licenses table: {full_table_id}")
+        except Exception as e:
+            logger.error(f"Error creating business licenses table: {e}")
+    
+    def create_opportunity_scores_table(self):
+        """Create opportunity scores table for analytics"""
+        dataset_id = self.bq_config.get('datasets', {}).get('analytics', 'business_analytics')
+        table_id = self.bq_config.get('tables', {}).get('opportunity_scores', 'opportunity_scores')
+        full_table_id = f"{self.project_id}.{dataset_id}.{table_id}"
+        
+        schema = [
+            bigquery.SchemaField("business_id", "STRING", mode="REQUIRED", description="Business identifier"),
+            bigquery.SchemaField("market_opportunity_score", "FLOAT", mode="REQUIRED", description="Market opportunity score (0-100)"),
+            bigquery.SchemaField("competition_density_score", "FLOAT", mode="REQUIRED", description="Competition density score (0-100)"),
+            bigquery.SchemaField("demographic_match_score", "FLOAT", mode="REQUIRED", description="Demographic match score (0-100)"),
+            bigquery.SchemaField("location_quality_score", "FLOAT", mode="REQUIRED", description="Location quality score (0-100)"),
+            bigquery.SchemaField("overall_score", "FLOAT", mode="REQUIRED", description="Overall opportunity score (0-100)"),
+            bigquery.SchemaField("score_date", "TIMESTAMP", mode="REQUIRED", description="Score calculation date"),
+            bigquery.SchemaField("model_version", "STRING", mode="REQUIRED", description="Scoring model version")
+        ]
+        
+        table = bigquery.Table(full_table_id, schema=schema)
+        
+        # Partition by score date
+        table.time_partitioning = bigquery.TimePartitioning(
+            type_=bigquery.TimePartitioningType.DAY,
+            field="score_date"
+        )
+        
+        # Cluster by overall score for fast filtering
+        table.clustering_fields = ["overall_score"]
+        
+        table.description = "Business opportunity scores for lead prioritization"
+        
+        try:
+            table = self.client.create_table(table, exists_ok=True)
+            logger.info(f"Created/verified opportunity scores table: {full_table_id}")
+        except Exception as e:
+            logger.error(f"Error creating opportunity scores table: {e}")
+    
+    def setup_all_tables(self):
+        """Create all required datasets and tables"""
+        logger.info("Setting up BigQuery infrastructure...")
+        
+        # Create datasets
+        self.create_datasets()
+        
+        # Create tables
+        self.create_business_entities_table()
+        self.create_sba_loans_table()
+        self.create_business_licenses_table()
+        self.create_opportunity_scores_table()
+        
+        logger.info("BigQuery setup complete!")
+    
+    def create_analytics_views(self):
+        """Create useful views for analytics"""
+        analytics_dataset = self.bq_config.get('datasets', {}).get('analytics', 'business_analytics')
+        
+        views = {
+            'hot_prospects': f"""
+            WITH recent_businesses AS (
+              SELECT 
+                business_id,
+                business_name,
+                business_type,
+                city,
+                state,
+                registration_date,
+                confidence_score,
+                'NEW_BUSINESS' as lead_source
+              FROM `{self.project_id}.raw_business_data.business_entities`
+              WHERE registration_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+                AND business_type IN ('restaurant', 'retail', 'personal_services', 'fitness')
+            ),
+            recent_sba_loans AS (
+              SELECT
+                loan_id as business_id,
+                borrower_name as business_name,
+                business_type,
+                borrower_city as city,
+                borrower_state as state,
+                approval_date as registration_date,
+                90.0 as confidence_score,
+                'SBA_LOAN' as lead_source
+              FROM `{self.project_id}.raw_business_data.sba_loan_approvals`
+              WHERE approval_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 60 DAY)
+                AND loan_amount >= 100000
+            )
+            SELECT * FROM recent_businesses
+            UNION ALL
+            SELECT * FROM recent_sba_loans
+            ORDER BY registration_date DESC, confidence_score DESC
+            """,
+            
+            'market_summary': f"""
+            SELECT 
+              state,
+              city,
+              business_type,
+              COUNT(*) as total_businesses,
+              COUNT(CASE WHEN registration_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY) THEN 1 END) as new_this_month,
+              AVG(confidence_score) as avg_confidence_score
+            FROM `{self.project_id}.raw_business_data.business_entities`
+            WHERE registration_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 90 DAY)
+            GROUP BY state, city, business_type
+            HAVING COUNT(*) >= 3
+            ORDER BY new_this_month DESC, total_businesses DESC
+            """
+        }
+        
+        for view_name, query in views.items():
+            try:
+                view_id = f"{self.project_id}.{analytics_dataset}.{view_name}"
+                view = bigquery.Table(view_id)
+                view.view_query = query
+                
+                view = self.client.create_table(view, exists_ok=True)
+                logger.info(f"Created/updated view: {view_name}")
+                
+            except Exception as e:
+                logger.error(f"Error creating view {view_name}: {e}")
+
+
+def main():
+    """Main setup function"""
+    print("BigQuery Infrastructure Setup")
+    print("=" * 40)
+    
+    setup = BigQuerySetup()
+    
+    # Setup all tables
+    setup.setup_all_tables()
+    
+    # Create analytics views
+    setup.create_analytics_views()
+    
+    print("\nSetup complete! You can now:")
+    print("1. Run data collection: python wisconsin_setup.py --collect-data")
+    print("2. Run analysis: python wisconsin_setup.py --run-analysis")
+    print("3. Export prospects: python wisconsin_setup.py --export-prospects")
+
+
+if __name__ == "__main__":
+    main()

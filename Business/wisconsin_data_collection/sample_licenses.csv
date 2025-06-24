@@ -1,0 +1,21 @@
+license_id,business_name,license_type,issue_date,expiration_date,status,address,city,state,zip_code,issuing_authority,data_source,data_extraction_date
+MKE202400000,Milwaukee Business 1,Restaurant License,2025-06-23,2026-06-23,Active,300 Milwaukee Ave,Milwaukee,WI,53200,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260180
+MKE202400001,Milwaukee Business 2,Retail Food Establishment,2025-06-21,2026-06-21,Active,301 Milwaukee Ave,Milwaukee,WI,53201,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260191
+MKE202400002,Milwaukee Business 3,Liquor License,2025-06-19,2026-06-19,Active,302 Milwaukee Ave,Milwaukee,WI,53202,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260199
+MKE202400003,Milwaukee Business 4,General Business License,2025-06-17,2026-06-17,Active,303 Milwaukee Ave,Milwaukee,WI,53203,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260206
+MKE202400004,Milwaukee Business 5,Professional Services License,2025-06-15,2026-06-15,Active,304 Milwaukee Ave,Milwaukee,WI,53204,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260215
+MKE202400005,Milwaukee Business 6,Personal Services License,2025-06-13,2026-06-13,Active,305 Milwaukee Ave,Milwaukee,WI,53205,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260226
+MKE202400006,Milwaukee Business 7,Restaurant License,2025-06-11,2026-06-11,Active,306 Milwaukee Ave,Milwaukee,WI,53206,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260232
+MKE202400007,Milwaukee Business 8,Retail Food Establishment,2025-06-09,2026-06-09,Active,307 Milwaukee Ave,Milwaukee,WI,53207,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260239
+MKE202400008,Milwaukee Business 9,Liquor License,2025-06-07,2026-06-07,Active,308 Milwaukee Ave,Milwaukee,WI,53208,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260245
+MKE202400009,Milwaukee Business 10,General Business License,2025-06-05,2026-06-05,Active,309 Milwaukee Ave,Milwaukee,WI,53209,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260252
+MKE202400010,Milwaukee Business 11,Professional Services License,2025-06-03,2026-06-03,Active,310 Milwaukee Ave,Milwaukee,WI,53210,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260258
+MKE202400011,Milwaukee Business 12,Personal Services License,2025-06-01,2026-06-01,Active,311 Milwaukee Ave,Milwaukee,WI,53211,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260265
+MKE202400012,Milwaukee Business 13,Restaurant License,2025-05-30,2026-05-30,Active,312 Milwaukee Ave,Milwaukee,WI,53212,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260273
+MKE202400013,Milwaukee Business 14,Retail Food Establishment,2025-05-28,2026-05-28,Active,313 Milwaukee Ave,Milwaukee,WI,53213,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260282
+MKE202400014,Milwaukee Business 15,Liquor License,2025-05-26,2026-05-26,Active,314 Milwaukee Ave,Milwaukee,WI,53214,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260288
+MKE202400015,Milwaukee Business 16,General Business License,2025-05-24,2026-05-24,Active,315 Milwaukee Ave,Milwaukee,WI,53215,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260297
+MKE202400016,Milwaukee Business 17,Professional Services License,2025-05-22,2026-05-22,Active,316 Milwaukee Ave,Milwaukee,WI,53216,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260304
+MKE202400017,Milwaukee Business 18,Personal Services License,2025-05-20,2026-05-20,Active,317 Milwaukee Ave,Milwaukee,WI,53217,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260310
+MKE202400018,Milwaukee Business 19,Restaurant License,2025-05-18,2026-05-18,Active,318 Milwaukee Ave,Milwaukee,WI,53218,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260318
+MKE202400019,Milwaukee Business 20,Retail Food Establishment,2025-05-16,2026-05-16,Active,319 Milwaukee Ave,Milwaukee,WI,53219,City of Milwaukee,Milwaukee_Sample_Data,2025-06-23 21:01:17.260325

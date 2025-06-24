@@ -1,0 +1,172 @@
+# Data Sources Configuration
+# =========================
+# 
+# Centralized configuration for all data sources across states
+# Includes primary sources, fallbacks, and update frequencies
+
+states:
+  wisconsin:
+    name: "Wisconsin"
+    fips_code: "55"
+    
+    business_registrations:
+      primary:
+        name: "Wisconsin Department of Financial Institutions"
+        url: "https://www.wcc.state.wi.us/search"
+        type: "web_scraping"
+        format: "html"
+        update_frequency: "daily"
+        rate_limit: "10_requests_per_minute"
+        
+      fallback:
+        name: "Wisconsin Secretary of State"
+        url: "https://www.sos.state.wi.us/Pages/Corporations/default.aspx"
+        type: "web_scraping"
+        format: "html"
+        
+    sba_loans:
+      primary:
+        name: "SBA FOIA Data"
+        url: "https://www.sba.gov/about-sba/sba-performance/open-government/foia/frequently-requested-records/sba-7a-504-loan-data"
+        type: "file_download"
+        format: "csv"
+        update_frequency: "quarterly"
+        file_pattern: "7a_504_loans_*_WI_*.csv"
+        
+      fallback:
+        name: "SBA District Office 5"
+        contact: "wisconsin.district@sba.gov"
+        type: "manual_request"
+        
+    business_licenses:
+      milwaukee:
+        name: "Milwaukee Open Data"
+        url: "https://data.milwaukee.gov/dataset/business-licenses"
+        api_endpoint: "https://data.milwaukee.gov/api/3/action/datastore_search"
+        resource_id: "qjdu-27ya"
+        type: "api"
+        format: "json"
+        update_frequency: "weekly"
+        
+      madison:
+        name: "Madison Open Data"
+        url: "https://data-cityofmadison.opendata.arcgis.com/"
+        api_endpoint: "https://data-cityofmadison.opendata.arcgis.com/api/feed/dcat-ap/1.1.json"
+        type: "api"
+        format: "json"
+        update_frequency: "weekly"
+        
+      green_bay:
+        name: "Green Bay Business Licenses"
+        url: "https://www.greenbaywi.gov/387/Business-License"
+        type: "web_scraping"
+        format: "html"
+        
+    economic_data:
+      primary:
+        name: "Wisconsin Economic Development Corporation"
+        url: "https://wedc.org/export/data/"
+        type: "file_download"
+        format: "json"
+        
+  illinois:
+    name: "Illinois"
+    fips_code: "17"
+    
+    business_registrations:
+      primary:
+        name: "Illinois Secretary of State"
+        url: "https://www.cyberdriveillinois.com/departments/business_services/corp.html"
+        api_endpoint: "https://www.ilsos.gov/corporatellc/"
+        type: "web_scraping"
+        format: "html"
+        
+    sba_loans:
+      primary:
+        name: "SBA FOIA Data"
+        url: "https://www.sba.gov/about-sba/sba-performance/open-government/foia/frequently-requested-records/sba-7a-504-loan-data"
+        file_pattern: "7a_504_loans_*_IL_*.csv"
+        
+    business_licenses:
+      chicago:
+        name: "Chicago Data Portal"
+        url: "https://data.cityofchicago.org/Community-Economic-Development/Business-Licenses/r5kz-chrr"
+        api_endpoint: "https://data.cityofchicago.org/resource/r5kz-chrr.json"
+        type: "api"
+        format: "json"
+        app_token_required: true
+
+# Target business types for franchise opportunities
+target_business_types:
+  high_priority:
+    - "restaurant"
+    - "food_service"
+    - "quick_service_restaurant"
+    - "retail_food"
+    - "fitness"
+    - "personal_services"
+    
+  medium_priority:
+    - "retail"
+    - "professional_services"
+    - "automotive_services"
+    - "health_services"
+    - "education_services"
+    
+  franchise_naics_codes:
+    - "722"  # Food services and drinking places
+    - "445"  # Food and beverage stores  
+    - "448"  # Clothing and clothing accessories
+    - "812"  # Personal and laundry services
+    - "541"  # Professional services
+    - "531"  # Real estate
+
+# Data quality rules
+data_quality:
+  required_fields:
+    business_entity: ["business_name", "city", "state", "business_type"]
+    sba_loan: ["borrower_name", "loan_amount", "approval_date"]
+    business_license: ["business_name", "license_type", "city", "state"]
+    
+  validation_rules:
+    phone_number: "^\\(?([0-9]{3})\\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$"
+    email: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+    zip_code: "^[0-9]{5}(-[0-9]{4})?$"
+    state_code: "^[A-Z]{2}$"
+    
+  confidence_scoring:
+    complete_record: 100
+    missing_contact_info: 85
+    missing_secondary_fields: 70
+    minimal_information: 50
+
+# Processing configuration
+processing:
+  batch_size: 1000
+  max_concurrent_requests: 5
+  request_timeout_seconds: 30
+  retry_attempts: 3
+  retry_delay_seconds: 5
+  
+# BigQuery configuration
+bigquery:
+  project_id: "location-optimizer-1"
+  datasets:
+    raw_data: "raw_business_data"
+    processed_data: "processed_business_data"
+    analytics: "business_analytics"
+    
+  tables:
+    business_entities: "business_entities"
+    sba_loans: "sba_loan_approvals"
+    business_licenses: "business_licenses"
+    opportunity_scores: "opportunity_scores"
+    
+  partitioning:
+    field: "data_extraction_date"
+    type: "DAY"
+    
+  clustering:
+    business_entities: ["state", "business_type", "city"]
+    sba_loans: ["borrower_state", "approval_date", "program_type"]
+    business_licenses: ["state", "city", "license_type"]

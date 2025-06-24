@@ -1,0 +1,5 @@
+source,business_name,city,state,contact_approach,value_indicator,lead_quality,days_since_trigger
+NEW_BUSINESS,Restaurant of Milwaukee 1,Milwaukee,WI,Email: Welcome to Wisconsin! Free market analysis,75,QUALIFIED,5
+NEW_BUSINESS,Retail Store of Madison 2,Madison,WI,Email: Welcome to Wisconsin! Free market analysis,75,QUALIFIED,5
+NEW_BUSINESS,Coffee Shop of Eau Claire 8,Eau Claire,WI,Email: Welcome to Wisconsin! Free market analysis,75,QUALIFIED,5
+NEW_BUSINESS,Retail Clothing of Oshkosh 9,Oshkosh,WI,Email: Welcome to Wisconsin! Free market analysis,75,QUALIFIED,5

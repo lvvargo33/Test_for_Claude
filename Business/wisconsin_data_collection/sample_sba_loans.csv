@@ -1,0 +1,26 @@
+loan_id,borrower_name,loan_amount,approval_date,program_type,borrower_address,borrower_city,borrower_state,borrower_zip,naics_code,business_type,jobs_supported,franchise_code,franchise_name,lender_name,data_source,data_extraction_date
+WI2024000000,Subway of Milwaukee,125000.0,2025-05-29,7(a),200 Business Ave,Milwaukee,WI,53700,7220,Restaurant,6,FC000,Subway,Wisconsin Bank 1,SBA_Sample_Data,2025-06-23 21:01:17.259843
+WI2024000001,McDonald's of Madison,140000.0,2025-06-01,7(a),201 Business Ave,Madison,WI,53701,7221,Restaurant,7,FC001,McDonald's,Wisconsin Bank 2,SBA_Sample_Data,2025-06-23 21:01:17.259874
+WI2024000002,Pizza Hut of Green Bay,155000.0,2025-06-04,7(a),202 Business Ave,Green Bay,WI,53702,7222,Restaurant,8,FC002,Pizza Hut,Wisconsin Bank 3,SBA_Sample_Data,2025-06-23 21:01:17.259890
+WI2024000003,Great Clips of Appleton,170000.0,2025-06-07,7(a),203 Business Ave,Appleton,WI,53703,7223,Restaurant,9,FC003,Great Clips,Wisconsin Bank 4,SBA_Sample_Data,2025-06-23 21:01:17.259905
+WI2024000004,H&R Block of Kenosha,185000.0,2025-06-10,7(a),204 Business Ave,Kenosha,WI,53704,7224,Restaurant,10,FC004,H&R Block,Wisconsin Bank 5,SBA_Sample_Data,2025-06-23 21:01:17.259920
+WI2024000005,Snap Fitness of Milwaukee,200000.0,2025-06-13,7(a),205 Business Ave,Milwaukee,WI,53705,7225,Restaurant,11,FC005,Snap Fitness,Wisconsin Bank 1,SBA_Sample_Data,2025-06-23 21:01:17.259935
+WI2024000006,Anytime Fitness of Madison,215000.0,2025-06-16,7(a),206 Business Ave,Madison,WI,53706,7226,Restaurant,12,FC006,Anytime Fitness,Wisconsin Bank 2,SBA_Sample_Data,2025-06-23 21:01:17.259949
+WI2024000007,Papa John's of Green Bay,230000.0,2025-06-19,7(a),207 Business Ave,Green Bay,WI,53707,7227,Restaurant,13,FC007,Papa John's,Wisconsin Bank 3,SBA_Sample_Data,2025-06-23 21:01:17.259973
+WI2024000008,Jimmy John's of Appleton,245000.0,2025-06-22,7(a),208 Business Ave,Appleton,WI,53708,7228,Restaurant,6,FC008,Jimmy John's,Wisconsin Bank 4,SBA_Sample_Data,2025-06-23 21:01:17.259990
+WI2024000009,Culver's of Kenosha,260000.0,2025-06-25,7(a),209 Business Ave,Kenosha,WI,53709,7229,Restaurant,7,FC009,Culver's,Wisconsin Bank 5,SBA_Sample_Data,2025-06-23 21:01:17.260004
+WI2024000010,Kwik Trip of Milwaukee,275000.0,2025-06-28,7(a),210 Business Ave,Milwaukee,WI,53710,7220,Restaurant,8,FC010,Kwik Trip,Wisconsin Bank 1,SBA_Sample_Data,2025-06-23 21:01:17.260015
+WI2024000011,Cousins Subs of Madison,290000.0,2025-07-01,7(a),211 Business Ave,Madison,WI,53711,7221,Restaurant,9,FC011,Cousins Subs,Wisconsin Bank 2,SBA_Sample_Data,2025-06-23 21:01:17.260049
+WI2024000012,Subway of Green Bay,305000.0,2025-07-04,7(a),212 Business Ave,Green Bay,WI,53712,7222,Restaurant,10,FC012,Subway,Wisconsin Bank 3,SBA_Sample_Data,2025-06-23 21:01:17.260058
+WI2024000013,McDonald's of Appleton,320000.0,2025-07-07,7(a),213 Business Ave,Appleton,WI,53713,7223,Restaurant,11,FC013,McDonald's,Wisconsin Bank 4,SBA_Sample_Data,2025-06-23 21:01:17.260065
+WI2024000014,Pizza Hut of Kenosha,335000.0,2025-07-10,7(a),214 Business Ave,Kenosha,WI,53714,7224,Restaurant,12,FC014,Pizza Hut,Wisconsin Bank 5,SBA_Sample_Data,2025-06-23 21:01:17.260078
+WI2024000015,Great Clips of Milwaukee,350000.0,2025-07-13,7(a),215 Business Ave,Milwaukee,WI,53715,7225,Restaurant,13,FC015,Great Clips,Wisconsin Bank 1,SBA_Sample_Data,2025-06-23 21:01:17.260086
+WI2024000016,H&R Block of Madison,365000.0,2025-07-16,7(a),216 Business Ave,Madison,WI,53716,7226,Restaurant,6,FC016,H&R Block,Wisconsin Bank 2,SBA_Sample_Data,2025-06-23 21:01:17.260093
+WI2024000017,Snap Fitness of Green Bay,380000.0,2025-07-19,7(a),217 Business Ave,Green Bay,WI,53717,7227,Restaurant,7,FC017,Snap Fitness,Wisconsin Bank 3,SBA_Sample_Data,2025-06-23 21:01:17.260100
+WI2024000018,Anytime Fitness of Appleton,395000.0,2025-07-22,7(a),218 Business Ave,Appleton,WI,53718,7228,Restaurant,8,FC018,Anytime Fitness,Wisconsin Bank 4,SBA_Sample_Data,2025-06-23 21:01:17.260108
+WI2024000019,Papa John's of Kenosha,410000.0,2025-07-25,7(a),219 Business Ave,Kenosha,WI,53719,7229,Restaurant,9,FC019,Papa John's,Wisconsin Bank 5,SBA_Sample_Data,2025-06-23 21:01:17.260119
+WI2024000020,Jimmy John's of Milwaukee,425000.0,2025-07-28,7(a),220 Business Ave,Milwaukee,WI,53720,7220,Restaurant,10,FC020,Jimmy John's,Wisconsin Bank 1,SBA_Sample_Data,2025-06-23 21:01:17.260128
+WI2024000021,Culver's of Madison,440000.0,2025-07-31,7(a),221 Business Ave,Madison,WI,53721,7221,Restaurant,11,FC021,Culver's,Wisconsin Bank 2,SBA_Sample_Data,2025-06-23 21:01:17.260136
+WI2024000022,Kwik Trip of Green Bay,455000.0,2025-08-03,7(a),222 Business Ave,Green Bay,WI,53722,7222,Restaurant,12,FC022,Kwik Trip,Wisconsin Bank 3,SBA_Sample_Data,2025-06-23 21:01:17.260146
+WI2024000023,Cousins Subs of Appleton,470000.0,2025-08-06,7(a),223 Business Ave,Appleton,WI,53723,7223,Restaurant,13,FC023,Cousins Subs,Wisconsin Bank 4,SBA_Sample_Data,2025-06-23 21:01:17.260153
+WI2024000024,Subway of Kenosha,485000.0,2025-08-09,7(a),224 Business Ave,Kenosha,WI,53724,7224,Restaurant,6,FC024,Subway,Wisconsin Bank 5,SBA_Sample_Data,2025-06-23 21:01:17.260164
