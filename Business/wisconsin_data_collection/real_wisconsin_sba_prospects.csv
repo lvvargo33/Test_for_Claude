@@ -1,0 +1,17 @@
+source,business_name,city,state,zip_code,contact_approach,value_indicator,key_date,days_since_approval,priority_score,lead_quality,business_type,naics_code,franchise_name
+SBA_LOAN,Laser Center WI Holdings LLC,Menomonee Falls,WI,53051,Phone: Congratulations on your $4789000 SBA loan! Free location expansion analysis available,4789000.0,2023-07-06,719,1,HIGH,CORPORATION,332999,
+SBA_LOAN,"CAL, LLC",Eden,WI,53019,Phone: Congratulations on your $3267000 SBA loan! Free location expansion analysis available,3267000.0,2023-07-26,699,1,HIGH,CORPORATION,457110,
+SBA_LOAN,Momentum Early Learning,Oconomowoc,WI,53066,Phone: Congratulations on your $2704000 SBA loan! Free location expansion analysis available,2704000.0,2023-07-11,714,1,HIGH,CORPORATION,624410,
+SBA_LOAN,Culver's of Paddock Lake,Salem,WI,53168,Phone: Congratulations on your $1977000 SBA loan! Free location expansion analysis available,1977000.0,2023-07-05,720,1,MEDIUM,CORPORATION,722513,Culver's ButterBurgers & Froze
+SBA_LOAN,"Krueger Investments, LLC",Milwaukee,WI,53224,Phone: Congratulations on your $1877000 SBA loan! Free location expansion analysis available,1877000.0,2023-08-10,684,1,MEDIUM,CORPORATION,332999,
+SBA_LOAN,"Three Oaks Health, S.C.",JOHNSON CREEK,WI,53038,Phone: Congratulations on your $1750000 SBA loan! Free location expansion analysis available,1750000.0,2023-06-27,728,1,MEDIUM,CORPORATION,621111,
+SBA_LOAN,"Quintessa Brookfield, S.C.",Brookfield,WI,53005,Phone: Congratulations on your $1603000 SBA loan! Free location expansion analysis available,1603000.0,2023-08-10,684,1,MEDIUM,CORPORATION,621111,
+SBA_LOAN,Dunkin',Milwaukee,WI,53212,Phone: Congratulations on your $1230000 SBA loan! Free location expansion analysis available,1230000.0,2023-07-06,719,1,MEDIUM,CORPORATION,445291,Dunkin' Donut/Baskin-Robbins C
+SBA_LOAN,Apple Valley Veterinary Clinic,Appleton,WI,54911,Phone: Congratulations on your $1042000 SBA loan! Free location expansion analysis available,1042000.0,2023-07-07,718,1,MEDIUM,CORPORATION,541940,
+SBA_LOAN,"AVS Properties, LLC",Phillips,WI,54555,Phone: Congratulations on your $906000 SBA loan! Free location expansion analysis available,906000.0,2023-07-28,697,1,QUALIFIED,CORPORATION,541940,
+SBA_LOAN,"Growing Wings, LLC",SOMERSET,WI,54025,Phone: Congratulations on your $837000 SBA loan! Free location expansion analysis available,837000.0,2023-08-15,679,1,QUALIFIED,CORPORATION,623210,
+SBA_LOAN,"J. R. Boehlke, LLC",Mequon,WI,53097,Phone: Congratulations on your $757000 SBA loan! Free location expansion analysis available,757000.0,2023-08-19,675,1,QUALIFIED,CORPORATION,238990,
+SBA_LOAN,Black Pig,Sheboygan,WI,53081,Phone: Congratulations on your $638000 SBA loan! Free location expansion analysis available,638000.0,2023-07-27,698,1,QUALIFIED,CORPORATION,722511,
+SBA_LOAN,Homestead Dental LLC,Neenah,WI,54956,Phone: Congratulations on your $632000 SBA loan! Free location expansion analysis available,632000.0,2023-07-13,712,1,QUALIFIED,CORPORATION,621210,
+SBA_LOAN,JF Investment LLC,KAUKAUNA,WI,54130,Phone: Congratulations on your $561000 SBA loan! Free location expansion analysis available,561000.0,2023-08-21,673,1,QUALIFIED,CORPORATION,561730,
+SBA_LOAN,NGJ INVESTMENTS LLC,Whitewater,WI,53190,Phone: Congratulations on your $506000 SBA loan! Free location expansion analysis available,506000.0,2023-07-06,719,1,QUALIFIED,CORPORATION,721110,

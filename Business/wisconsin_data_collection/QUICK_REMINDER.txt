@@ -1,0 +1,19 @@
+📱 PHONE REMINDER TEXT:
+
+Title: Wisconsin Business Data
+Time: Every Monday 7:00 AM
+Repeat: Weekly
+
+Message:
+🕒 Monday Business Collection Time!
+
+OPTION 1 (Super Easy):
+./run_weekly.sh
+
+OPTION 2 (Step by step):
+1. cd /workspaces/Test_for_Claude/Business/wisconsin_data_collection
+2. export GOOGLE_APPLICATION_CREDENTIALS="location-optimizer-1-449414f93a5a.json"  
+3. python3 weekly_dfi_collection.py
+
+Takes 2-3 minutes ⏱️
+Fresh Wisconsin prospects! 💼

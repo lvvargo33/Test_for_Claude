@@ -12,11 +12,40 @@ states:
     business_registrations:
       primary:
         name: "Wisconsin Department of Financial Institutions"
-        url: "https://www.wcc.state.wi.us/search"
+        url: "https://apps.dfi.wi.gov/apps/corpsearch/search.aspx"
+        search_endpoint: "https://apps.dfi.wi.gov/apps/corpsearch/Results.aspx"
         type: "web_scraping"
         format: "html"
-        update_frequency: "daily"
-        rate_limit: "10_requests_per_minute"
+        update_frequency: "weekly"
+        rate_limit: "5_requests_per_minute"
+        lookback_days: 90
+        target_counties:
+          - "Milwaukee"
+          - "Dane"  # Madison
+          - "Brown"  # Green Bay
+          - "Winnebago"  # Appleton
+          - "Kenosha"
+          - "Racine"
+          - "Rock"  # Janesville
+          - "Eau Claire"
+          - "La Crosse"
+          - "Waukesha"
+        target_business_types:
+          food_beverage:
+            naics_codes: ["722", "445", "312"]
+            keywords: ["restaurant", "pizza", "cafe", "coffee", "bar", "pub", "brewery", "bakery", "deli", "grill", "bistro", "tavern"]
+          retail:
+            naics_codes: ["441", "442", "443", "444", "445", "446", "447", "448", "451", "452", "453", "454"]
+            keywords: ["store", "shop", "retail", "gas station", "convenience", "market", "boutique", "outlet"]
+          personal_services:
+            naics_codes: ["812", "811"]
+            keywords: ["salon", "spa", "barber", "nail", "dry clean", "laundry", "auto repair", "mechanic", "garage"]
+          fitness_recreation:
+            naics_codes: ["713", "511"]
+            keywords: ["gym", "fitness", "yoga", "theater", "cinema", "bowling", "arcade", "recreation"]
+          hospitality_care:
+            naics_codes: ["721", "624"]
+            keywords: ["hotel", "motel", "inn", "child care", "daycare", "senior care", "assisted living"]
         
       fallback:
         name: "Wisconsin Secretary of State"
@@ -26,12 +55,20 @@ states:
         
     sba_loans:
       primary:
-        name: "SBA FOIA Data"
-        url: "https://www.sba.gov/about-sba/sba-performance/open-government/foia/frequently-requested-records/sba-7a-504-loan-data"
+        name: "SBA FOIA Data - 7(a) Recent"
+        url: "https://data.sba.gov/dataset/0ff8e8e9-b967-4f4e-987c-6ac78c575087/resource/186eb176-b53e-4cbe-ab93-e5c4fb50197d/download/foia-7a-fy2000-fy2009-asof-250331.csv"
         type: "file_download"
         format: "csv"
         update_frequency: "quarterly"
-        file_pattern: "7a_504_loans_*_WI_*.csv"
+        filter_state: "WI"
+      
+      secondary:
+        name: "SBA FOIA Data - 504 Current"
+        url: "https://data.sba.gov/dataset/0ff8e8e9-b967-4f4e-987c-6ac78c575087/resource/4ad7f0f1-9da6-4d90-8bdb-89a6f821a1a9/download/foia-504-fy2010-present-asof-250331.csv"
+        type: "file_download"
+        format: "csv"
+        update_frequency: "quarterly"
+        filter_state: "WI"
         
       fallback:
         name: "SBA District Office 5"
@@ -40,13 +77,13 @@ states:
         
     business_licenses:
       milwaukee:
-        name: "Milwaukee Open Data"
-        url: "https://data.milwaukee.gov/dataset/business-licenses"
-        api_endpoint: "https://data.milwaukee.gov/api/3/action/datastore_search"
-        resource_id: "qjdu-27ya"
-        type: "api"
-        format: "json"
+        name: "Milwaukee License Search"
+        url: "https://itmdapps.milwaukee.gov/LiraPublic/search.jsp"
+        search_endpoint: "https://itmdapps.milwaukee.gov/LiraPublic/search.jsp"
+        type: "web_scraping"
+        format: "html"
         update_frequency: "weekly"
+        rate_limit: "5_requests_per_minute"
         
       madison:
         name: "Madison Open Data"

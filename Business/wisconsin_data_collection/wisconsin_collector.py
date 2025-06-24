@@ -18,6 +18,7 @@ from models import (
     BusinessEntity, SBALoanRecord, BusinessLicense,
     BusinessType, BusinessStatus, DataSource
 )
+from dfi_collector import DFIBusinessCollector, DFIBusinessRecord
 
 
 class WisconsinDataCollector(BaseDataCollector):
@@ -53,6 +54,32 @@ class WisconsinDataCollector(BaseDataCollector):
             'Wauwatosa': 'Milwaukee',
             'Fond du Lac': 'Fond du Lac'
         }
+    
+    def collect_dfi_registrations(self, days_back: int = 90) -> List[DFIBusinessRecord]:
+        """
+        Collect recent business registrations from Wisconsin DFI
+        
+        Args:
+            days_back: Number of days to look back for registrations
+            
+        Returns:
+            List of DFI business registration records
+        """
+        try:
+            self.logger.info(f"Collecting DFI business registrations from last {days_back} days")
+            
+            # Initialize DFI collector
+            dfi_collector = DFIBusinessCollector()
+            
+            # Collect recent registrations
+            registrations = dfi_collector.collect_recent_registrations(days_back)
+            
+            self.logger.info(f"Collected {len(registrations)} DFI business registrations")
+            return registrations
+            
+        except Exception as e:
+            self.logger.error(f"Error collecting DFI registrations: {e}")
+            return []
     
     def collect_business_registrations(self, days_back: int = 90) -> List[BusinessEntity]:
         """
@@ -160,15 +187,49 @@ class WisconsinDataCollector(BaseDataCollector):
         # Wisconsin DFI configuration
         dfi_config = self.state_config.get('business_registrations', {}).get('primary', {})
         
-        # For now, generate realistic sample data
-        # In production, replace this with actual web scraping
+        # Try to collect real DFI data first, fall back to sample data
+        try:
+            dfi_registrations = self.collect_dfi_registrations(days_back)
+            if dfi_registrations:
+                # Convert DFI records to BusinessEntity format
+                for dfi_record in dfi_registrations:
+                    try:
+                        business = BusinessEntity(
+                            business_id=dfi_record.business_id,
+                            source_id=dfi_record.business_id,
+                            business_name=dfi_record.business_name,
+                            business_type=dfi_record.business_type or 'other',
+                            city=dfi_record.city or 'Unknown',
+                            state=dfi_record.state,
+                            registration_date=datetime.strptime(dfi_record.registration_date, '%m/%d/%Y').date() if dfi_record.registration_date else datetime.now().date(),
+                            status=dfi_record.status or 'active',
+                            data_source=DataSource.STATE_REGISTRATION,
+                            entity_type=dfi_record.entity_type,
+                            zip_code=dfi_record.zip_code,
+                            county=dfi_record.county
+                        )
+                        businesses.append(business)
+                    except Exception as e:
+                        self.logger.warning(f"Error converting DFI record to BusinessEntity: {e}")
+                        continue
+                
+                self.logger.info(f"Converted {len(businesses)} DFI records to BusinessEntity format")
+                
+                # Also save DFI data directly to its own table for better tracking
+                self._save_dfi_data_to_bigquery(dfi_registrations)
+                
+                return businesses
+        except Exception as e:
+            self.logger.warning(f"DFI collection failed, using sample data: {e}")
+        
+        # Fallback to sample data
         businesses = self._generate_realistic_wi_businesses(days_back)
         
         return businesses
     
     def _collect_sba_foia_data(self, days_back: int) -> List[SBALoanRecord]:
         """
-        Collect SBA loan data from FOIA sources
+        Collect SBA loan data from real FOIA sources
         
         Args:
             days_back: Number of days to look back
@@ -179,27 +240,48 @@ class WisconsinDataCollector(BaseDataCollector):
         loans = []
         
         try:
-            # SBA provides quarterly data - check for Wisconsin-specific files
-            # Note: Actual URLs change frequently, this is a framework
-            sba_urls = [
-                "https://www.sba.gov/sites/default/files/aboutsbaarticle/FOIA_-_7a_loans_-_FY2024_-_Wisconsin.csv",
-                "https://www.sba.gov/sites/default/files/aboutsbaarticle/FOIA_-_504_loans_-_FY2024_-_Wisconsin.csv"
-            ]
+            # Get real SBA FOIA endpoints from configuration
+            sba_config = self.state_config.get('sba_loans', {})
+            
+            # Collect URLs from both primary (7a) and secondary (504) sources
+            sba_urls = []
+            if 'primary' in sba_config:
+                sba_urls.append(sba_config['primary']['url'])
+            if 'secondary' in sba_config:
+                sba_urls.append(sba_config['secondary']['url'])
+            
+            if not sba_urls:
+                self.logger.warning("No SBA FOIA URLs configured")
+                return loans
+            
+            cutoff_date = datetime.now() - timedelta(days=days_back)
             
             for url in sba_urls:
+                self.logger.info(f"Downloading SBA FOIA data from: {url}")
                 try:
-                    response = self._make_request(url)
+                    response = self._make_request(url, timeout=120)  # Large files need more time
+                    
                     # Parse CSV data
                     from io import StringIO
-                    df = pd.read_csv(StringIO(response.text))
+                    import csv
                     
-                    # Filter for recent approvals
-                    cutoff_date = datetime.now() - timedelta(days=days_back)
+                    # Use csv reader for better memory efficiency with large files
+                    csv_reader = csv.DictReader(StringIO(response.text))
+                    wisconsin_count = 0
+                    total_count = 0
                     
-                    for _, row in df.iterrows():
-                        loan_record = self._parse_sba_loan_record(row)
-                        if loan_record and loan_record.approval_date >= cutoff_date.date():
-                            loans.append(loan_record)
+                    for row in csv_reader:
+                        total_count += 1
+                        
+                        # Filter for Wisconsin loans
+                        borrower_state = row.get('BorrState', '').strip().upper()
+                        if borrower_state == 'WI':
+                            wisconsin_count += 1
+                            loan_record = self._parse_sba_loan_record(row)
+                            if loan_record and loan_record.approval_date >= cutoff_date.date():
+                                loans.append(loan_record)
+                    
+                    self.logger.info(f"Processed {total_count} total loans, found {wisconsin_count} Wisconsin loans")
                             
                 except Exception as e:
                     self.logger.warning(f"Could not fetch SBA data from {url}: {e}")
@@ -274,50 +356,125 @@ class WisconsinDataCollector(BaseDataCollector):
             
         return licenses
     
-    def _parse_sba_loan_record(self, row: pd.Series) -> Optional[SBALoanRecord]:
-        """Parse SBA loan record from CSV row"""
+    def _parse_sba_loan_record(self, row) -> Optional[SBALoanRecord]:
+        """Parse SBA loan record from CSV row (dict or pandas Series)"""
         try:
-            # Map common SBA CSV column names
+            # Map actual SBA CSV column names to model fields
             column_mappings = {
-                'BorrowerName': 'borrower_name',
-                'BorrowerAddress': 'borrower_address', 
-                'BorrowerCity': 'borrower_city',
-                'BorrowerState': 'borrower_state',
-                'BorrowerZip': 'borrower_zip',
-                'LoanNumber': 'loan_id',
-                'DateApproved': 'approval_date',
+                'BorrName': 'borrower_name',
+                'BorrStreet': 'borrower_address', 
+                'BorrCity': 'borrower_city',
+                'BorrState': 'borrower_state',
+                'BorrZip': 'borrower_zip',
+                'LocationID': 'loan_id',
+                'ApprovalDate': 'approval_date',
                 'GrossApproval': 'loan_amount',
-                'NAICSCode': 'naics_code',
+                'NaicsCode': 'naics_code',
                 'BusinessType': 'business_type',
                 'JobsSupported': 'jobs_supported',
                 'FranchiseCode': 'franchise_code',
                 'FranchiseName': 'franchise_name',
-                'LenderName': 'lender_name',
+                'ThirdPartyLender_Name': 'lender_name',
                 'Program': 'program_type'
             }
             
-            # Extract data
+            # Extract data - handle both dict and pandas Series
             loan_data = {}
             for csv_col, model_field in column_mappings.items():
                 if csv_col in row:
-                    loan_data[model_field] = row[csv_col]
+                    value = row[csv_col]
+                    if value and str(value).strip() and str(value).strip().lower() != 'nan':
+                        loan_data[model_field] = str(value).strip()
             
             # Ensure required fields
             if not loan_data.get('borrower_name') or not loan_data.get('loan_amount'):
                 return None
             
+            # Parse and validate loan amount
+            try:
+                loan_amount = str(loan_data['loan_amount']).replace('$', '').replace(',', '')
+                loan_data['loan_amount'] = float(loan_amount)
+            except:
+                return None
+            
             # Parse approval date
             if 'approval_date' in loan_data:
                 try:
+                    import pandas as pd
                     loan_data['approval_date'] = pd.to_datetime(loan_data['approval_date']).date()
                 except:
-                    loan_data['approval_date'] = datetime.now().date()
+                    # Try alternative date formats
+                    try:
+                        from datetime import datetime
+                        loan_data['approval_date'] = datetime.strptime(loan_data['approval_date'], '%m/%d/%Y').date()
+                    except:
+                        return None
+            else:
+                return None
+            
+            # Ensure program_type is set
+            if 'program_type' not in loan_data:
+                loan_data['program_type'] = '7a'  # Default to 7a program
             
             return SBALoanRecord(**loan_data)
             
         except Exception as e:
             self.logger.warning(f"Error parsing SBA loan record: {e}")
             return None
+    
+    def _save_dfi_data_to_bigquery(self, dfi_records: List[DFIBusinessRecord]) -> bool:
+        """Save DFI business registration data to BigQuery"""
+        try:
+            if not dfi_records:
+                return True
+            
+            # Convert DFI records to DataFrame
+            data = []
+            for record in dfi_records:
+                # Parse registration date
+                try:
+                    reg_date = datetime.strptime(record.registration_date, '%m/%d/%Y').date()
+                except:
+                    reg_date = datetime.now().date()
+                
+                data.append({
+                    'business_id': record.business_id,
+                    'business_name': record.business_name,
+                    'entity_type': record.entity_type,
+                    'registration_date': reg_date,
+                    'status': record.status,
+                    'business_type': record.business_type,
+                    'agent_name': record.agent_name,
+                    'business_address': record.business_address,
+                    'city': record.city,
+                    'state': record.state,
+                    'zip_code': record.zip_code,
+                    'county': record.county,
+                    'naics_code': record.naics_code,
+                    'source': record.source,
+                    'data_extraction_date': datetime.now(),
+                    'is_target_business': True  # All DFI records we collect are target businesses
+                })
+            
+            df = pd.DataFrame(data)
+            
+            # Load to BigQuery
+            table_id = f"{self.bq_config['project_id']}.raw_business_data.dfi_business_registrations"
+            
+            job_config = bigquery.LoadJobConfig(
+                write_disposition=bigquery.WriteDisposition.WRITE_APPEND,
+                schema_update_options=[bigquery.SchemaUpdateOption.ALLOW_FIELD_ADDITION]
+            )
+            
+            job = self.bq_client.load_table_from_dataframe(df, table_id, job_config=job_config)
+            job.result()  # Wait for job to complete
+            
+            self.logger.info(f"Loaded {len(df)} DFI records to BigQuery")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Error saving DFI data to BigQuery: {e}")
+            return False
     
     def _parse_milwaukee_license(self, record: Dict) -> Optional[BusinessLicense]:
         """Parse Milwaukee business license record"""

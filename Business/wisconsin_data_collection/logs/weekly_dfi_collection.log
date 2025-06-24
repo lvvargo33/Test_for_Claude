@@ -1,0 +1,89 @@
+2025-06-24 20:55:04,994 - INFO - Searching DFI registrations for 'RESTAURANT' from 06/17/2025 to 06/24/2025
+2025-06-24 20:55:17,361 - INFO - Found 1 result rows to parse
+2025-06-24 20:55:17,362 - INFO - Found 1 'RESTAURANT' business registrations
+2025-06-24 20:55:19,362 - INFO - Searching DFI registrations for 'PIZZA' from 06/17/2025 to 06/24/2025
+2025-06-24 20:55:31,688 - INFO - Found 1 result rows to parse
+2025-06-24 20:55:31,689 - INFO - Found 1 'PIZZA' business registrations
+2025-06-24 20:55:33,689 - INFO - Searching DFI registrations for 'CAFE' from 06/17/2025 to 06/24/2025
+2025-06-24 20:55:45,903 - INFO - Found 3 result rows to parse
+2025-06-24 20:55:45,904 - INFO - Found 3 'CAFE' business registrations
+2025-06-24 20:55:47,904 - INFO - Searching DFI registrations for 'BAR' from 06/17/2025 to 06/24/2025
+2025-06-24 20:56:00,213 - INFO - Found 4 result rows to parse
+2025-06-24 20:56:00,214 - INFO - Found 4 'BAR' business registrations
+2025-06-24 20:56:02,214 - INFO - Searching DFI registrations for 'FOOD' from 06/17/2025 to 06/24/2025
+2025-06-24 20:56:14,502 - INFO - Found 4 result rows to parse
+2025-06-24 20:56:14,503 - INFO - Found 1 'FOOD' business registrations
+2025-06-24 20:56:16,504 - INFO - Searching DFI registrations for 'SALON' from 06/17/2025 to 06/24/2025
+2025-06-24 20:56:28,946 - WARNING - No results table found in response
+2025-06-24 20:56:28,948 - INFO - Found 0 'SALON' business registrations
+2025-06-24 20:56:30,948 - INFO - Searching DFI registrations for 'SPA' from 06/17/2025 to 06/24/2025
+2025-06-24 20:56:43,172 - INFO - Found 5 result rows to parse
+2025-06-24 20:56:43,172 - INFO - Found 5 'SPA' business registrations
+2025-06-24 20:56:45,173 - INFO - Searching DFI registrations for 'BEAUTY' from 06/17/2025 to 06/24/2025
+2025-06-24 20:56:57,436 - INFO - Found 6 result rows to parse
+2025-06-24 20:56:57,437 - INFO - Found 3 'BEAUTY' business registrations
+2025-06-24 20:56:59,437 - INFO - Searching DFI registrations for 'HAIR' from 06/17/2025 to 06/24/2025
+2025-06-24 21:12:42,447 - INFO - Searching DFI registrations for 'RESTAURANT' from 06/17/2025 to 06/24/2025
+2025-06-24 21:12:54,802 - INFO - Found 1 result rows to parse
+2025-06-24 21:12:54,803 - INFO - Found 1 'RESTAURANT' business registrations
+2025-06-24 21:12:56,803 - INFO - Searching DFI registrations for 'PIZZA' from 06/17/2025 to 06/24/2025
+2025-06-24 21:13:08,993 - INFO - Found 1 result rows to parse
+2025-06-24 21:13:08,994 - INFO - Found 1 'PIZZA' business registrations
+2025-06-24 21:13:10,994 - INFO - Searching DFI registrations for 'CAFE' from 06/17/2025 to 06/24/2025
+2025-06-24 21:13:23,190 - INFO - Found 3 result rows to parse
+2025-06-24 21:13:23,191 - INFO - Found 3 'CAFE' business registrations
+2025-06-24 21:13:25,191 - INFO - Searching DFI registrations for 'BAR' from 06/17/2025 to 06/24/2025
+2025-06-24 21:13:37,492 - INFO - Found 4 result rows to parse
+2025-06-24 21:13:37,493 - INFO - Found 4 'BAR' business registrations
+2025-06-24 21:13:39,493 - INFO - Searching DFI registrations for 'FOOD' from 06/17/2025 to 06/24/2025
+2025-06-24 21:13:51,797 - INFO - Found 4 result rows to parse
+2025-06-24 21:13:51,798 - INFO - Found 1 'FOOD' business registrations
+2025-06-24 21:13:53,798 - INFO - Searching DFI registrations for 'SALON' from 06/17/2025 to 06/24/2025
+2025-06-24 21:14:06,064 - WARNING - No results table found in response
+2025-06-24 21:14:06,066 - INFO - Found 0 'SALON' business registrations
+2025-06-24 21:14:08,066 - INFO - Searching DFI registrations for 'SPA' from 06/17/2025 to 06/24/2025
+2025-06-24 21:14:20,293 - INFO - Found 5 result rows to parse
+2025-06-24 21:14:20,294 - INFO - Found 5 'SPA' business registrations
+2025-06-24 21:14:22,295 - INFO - Searching DFI registrations for 'BEAUTY' from 06/17/2025 to 06/24/2025
+2025-06-24 21:14:34,556 - INFO - Found 6 result rows to parse
+2025-06-24 21:14:34,556 - INFO - Found 3 'BEAUTY' business registrations
+2025-06-24 21:14:36,557 - INFO - Searching DFI registrations for 'HAIR' from 06/17/2025 to 06/24/2025
+2025-06-24 21:14:48,821 - INFO - Found 4 result rows to parse
+2025-06-24 21:14:48,822 - INFO - Found 0 'HAIR' business registrations
+2025-06-24 21:14:50,822 - INFO - Searching DFI registrations for 'FITNESS' from 06/17/2025 to 06/24/2025
+2025-06-24 21:15:03,165 - INFO - Found 3 result rows to parse
+2025-06-24 21:15:03,166 - INFO - Found 3 'FITNESS' business registrations
+2025-06-24 21:15:05,166 - INFO - Searching DFI registrations for 'GYM' from 06/17/2025 to 06/24/2025
+2025-06-24 21:15:17,297 - WARNING - No results table found in response
+2025-06-24 21:15:17,299 - INFO - Found 0 'GYM' business registrations
+2025-06-24 21:15:19,299 - INFO - Searching DFI registrations for 'YOGA' from 06/17/2025 to 06/24/2025
+2025-06-24 21:15:31,467 - INFO - Found 4 result rows to parse
+2025-06-24 21:15:31,468 - INFO - Found 4 'YOGA' business registrations
+2025-06-24 21:15:33,468 - INFO - Searching DFI registrations for 'AUTO' from 06/17/2025 to 06/24/2025
+2025-06-24 21:15:46,051 - INFO - Found 10 result rows to parse
+2025-06-24 21:15:46,052 - INFO - Found 2 'AUTO' business registrations
+2025-06-24 21:15:48,053 - INFO - Searching DFI registrations for 'REPAIR' from 06/17/2025 to 06/24/2025
+2025-06-24 21:16:00,428 - INFO - Found 3 result rows to parse
+2025-06-24 21:16:00,429 - INFO - Found 1 'REPAIR' business registrations
+2025-06-24 21:16:02,429 - INFO - Searching DFI registrations for 'RETAIL' from 06/17/2025 to 06/24/2025
+2025-06-24 21:16:14,624 - INFO - Found 2 result rows to parse
+2025-06-24 21:16:14,625 - INFO - Found 2 'RETAIL' business registrations
+2025-06-24 21:16:16,626 - INFO - Searching DFI registrations for 'STORE' from 06/17/2025 to 06/24/2025
+2025-06-24 21:16:28,833 - INFO - Found 2 result rows to parse
+2025-06-24 21:16:28,834 - INFO - Found 2 'STORE' business registrations
+2025-06-24 21:16:30,834 - INFO - Searching DFI registrations for 'SHOP' from 06/17/2025 to 06/24/2025
+2025-06-24 21:16:43,127 - INFO - Found 5 result rows to parse
+2025-06-24 21:16:43,128 - INFO - Found 5 'SHOP' business registrations
+2025-06-24 21:16:45,128 - INFO - Searching DFI registrations for 'HOTEL' from 06/17/2025 to 06/24/2025
+2025-06-24 21:16:57,338 - INFO - Found 1 result rows to parse
+2025-06-24 21:16:57,338 - INFO - Found 1 'HOTEL' business registrations
+2025-06-24 21:16:59,339 - INFO - Searching DFI registrations for 'MOTEL' from 06/17/2025 to 06/24/2025
+2025-06-24 21:17:11,494 - WARNING - No results table found in response
+2025-06-24 21:17:11,497 - INFO - Found 0 'MOTEL' business registrations
+2025-06-24 21:17:13,497 - INFO - Searching DFI registrations for 'CLEANING' from 06/17/2025 to 06/24/2025
+2025-06-24 21:17:25,982 - INFO - Found 12 result rows to parse
+2025-06-24 21:17:25,983 - INFO - Found 0 'CLEANING' business registrations
+2025-06-24 21:17:27,984 - INFO - Searching DFI registrations for 'LAUNDRY' from 06/17/2025 to 06/24/2025
+2025-06-24 21:17:40,135 - INFO - Found 1 result rows to parse
+2025-06-24 21:17:40,136 - INFO - Found 1 'LAUNDRY' business registrations
+2025-06-24 21:17:41,357 - INFO - Weekly collection completed successfully - 36 new businesses added

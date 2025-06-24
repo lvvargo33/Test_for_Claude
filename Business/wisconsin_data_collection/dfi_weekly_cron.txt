@@ -1,0 +1,2 @@
+# Wisconsin DFI Business Data Collection - Every Monday 7:00 AM
+0 7 * * 1 cd /workspaces/Test_for_Claude/Business/wisconsin_data_collection && export GOOGLE_APPLICATION_CREDENTIALS="/workspaces/Test_for_Claude/Business/wisconsin_data_collection/location-optimizer-1-449414f93a5a.json" && /usr/bin/python3 /workspaces/Test_for_Claude/Business/wisconsin_data_collection/weekly_dfi_collection.py >> /workspaces/Test_for_Claude/Business/wisconsin_data_collection/logs/weekly_cron.log 2>&1
