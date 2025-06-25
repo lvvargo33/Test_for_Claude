@@ -389,22 +389,53 @@ class CensusDataCollector:
     def _store_census_data(self, records: List[CensusGeography]):
         """Store Census data in BigQuery"""
         try:
+            from google.cloud import bigquery
+            import pandas as pd
+            import os
+            
+            # Initialize BigQuery client
+            client = bigquery.Client(project="location-optimizer-1")
+            
             # Convert records to dictionaries for BigQuery
             data_dicts = []
             for record in records:
                 data_dict = record.dict()
-                # Convert datetime to string for BigQuery
-                data_dict['data_extraction_date'] = data_dict['data_extraction_date'].isoformat()
+                # Convert datetime to proper timestamp string for BigQuery
+                if 'data_extraction_date' in data_dict and data_dict['data_extraction_date']:
+                    if hasattr(data_dict['data_extraction_date'], 'isoformat'):
+                        data_dict['data_extraction_date'] = data_dict['data_extraction_date'].isoformat()
+                    else:
+                        data_dict['data_extraction_date'] = str(data_dict['data_extraction_date'])
                 data_dicts.append(data_dict)
             
-            # Store in BigQuery (implementation depends on BigQuery setup)
-            self.logger.info(f"Prepared {len(data_dicts)} Census records for BigQuery storage")
+            if not data_dicts:
+                self.logger.warning("No Census data to store")
+                return
             
-            # TODO: Implement actual BigQuery insertion
-            # This will be completed when BigQuery setup is integrated
+            # Convert to DataFrame
+            df = pd.DataFrame(data_dicts)
+            
+            # Clean up data types for BigQuery compatibility
+            if 'data_extraction_date' in df.columns:
+                df['data_extraction_date'] = pd.to_datetime(df['data_extraction_date'])
+            
+            # Set table reference
+            table_id = "location-optimizer-1.raw_business_data.census_demographics"
+            
+            # Configure load job
+            job_config = bigquery.LoadJobConfig(
+                write_disposition=bigquery.WriteDisposition.WRITE_APPEND,
+                schema_update_options=[bigquery.SchemaUpdateOption.ALLOW_FIELD_ADDITION]
+            )
+            
+            # Load data to BigQuery
+            job = client.load_table_from_dataframe(df, table_id, job_config=job_config)
+            job.result()  # Wait for job to complete
+            
+            self.logger.info(f"Successfully stored {len(data_dicts)} Census records to BigQuery table {table_id}")
             
         except Exception as e:
-            self.logger.error(f"Failed to store Census data: {str(e)}")
+            self.logger.error(f"Failed to store Census data to BigQuery: {str(e)}")
             raise
     
     def get_demographic_summary(self, location: str, radius_miles: float = 5.0) -> Dict[str, Any]:

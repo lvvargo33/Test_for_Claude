@@ -3,3 +3,18 @@
 2025-06-25 14:41:16,100 - census_collector - INFO - Collected 72 county records
 2025-06-25 14:41:17,101 - census_collector - INFO - Prepared 72 Census records for BigQuery storage
 2025-06-25 14:41:17,101 - census_collector - INFO - Census collection completed successfully. Collected 72 records in 42.1s
+2025-06-25 14:51:41,602 - census_collector - INFO - Starting Wisconsin Census data collection for ['county']
+2025-06-25 14:51:41,602 - census_collector - INFO - Collecting county level data...
+2025-06-25 14:52:22,178 - census_collector - INFO - Collected 72 county records
+2025-06-25 14:52:23,179 - census_collector - INFO - Prepared 72 Census records for BigQuery storage
+2025-06-25 14:52:23,179 - census_collector - INFO - Census collection completed successfully. Collected 72 records in 41.6s
+2025-06-25 14:54:03,585 - census_collector - INFO - Starting Wisconsin Census data collection for ['county']
+2025-06-25 14:54:03,585 - census_collector - INFO - Collecting county level data...
+2025-06-25 14:54:44,009 - census_collector - INFO - Collected 72 county records
+2025-06-25 14:54:45,347 - census_collector - ERROR - Failed to store Census data to BigQuery: Error converting Pandas column with name: "data_extraction_date" and datatype: "object" to an appropriate pyarrow datatype: Array, ListArray, or StructArray
+2025-06-25 14:54:45,347 - census_collector - ERROR - Census data collection failed: Error converting Pandas column with name: "data_extraction_date" and datatype: "object" to an appropriate pyarrow datatype: Array, ListArray, or StructArray
+2025-06-25 14:55:24,814 - census_collector - INFO - Starting Wisconsin Census data collection for ['county']
+2025-06-25 14:55:24,814 - census_collector - INFO - Collecting county level data...
+2025-06-25 14:56:05,357 - census_collector - INFO - Collected 72 county records
+2025-06-25 14:56:10,532 - census_collector - INFO - Successfully stored 72 Census records to BigQuery table location-optimizer-1.raw_business_data.census_demographics
+2025-06-25 14:56:10,532 - census_collector - INFO - Census collection completed successfully. Collected 72 records in 45.7s
