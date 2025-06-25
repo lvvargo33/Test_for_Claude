@@ -61,13 +61,15 @@ class CensusDataCollector:
         return logger
     
     def collect_wisconsin_demographics(self, geographic_levels: List[str] = None, 
-                                     acs_year: int = 2022) -> CensusDataSummary:
+                                     acs_year: int = 2022, 
+                                     include_population_estimates: bool = True) -> CensusDataSummary:
         """
         Collect comprehensive demographic data for Wisconsin
         
         Args:
             geographic_levels: List of levels to collect ['county', 'tract', 'block_group']
             acs_year: ACS data year (default: 2022)
+            include_population_estimates: Whether to include population estimates data
             
         Returns:
             CensusDataSummary with collection results
@@ -108,6 +110,16 @@ class CensusDataCollector:
                 
                 # Brief pause between geographic levels
                 time.sleep(1)
+            
+            # Collect population estimates data if requested
+            if include_population_estimates and 'county' in geographic_levels:
+                self.logger.info("Collecting population estimates data...")
+                population_estimates = self._collect_population_estimates(acs_year)
+                
+                # Merge population estimates with existing records
+                if population_estimates:
+                    collected_records = self._merge_population_estimates(collected_records, population_estimates)
+                    self.logger.info(f"Merged population estimates for {len(population_estimates)} counties")
             
             # Store data in BigQuery
             if collected_records:
@@ -437,6 +449,171 @@ class CensusDataCollector:
         except Exception as e:
             self.logger.error(f"Failed to store Census data to BigQuery: {str(e)}")
             raise
+    
+    def _collect_population_estimates(self, pep_year: int = 2022) -> List[Dict[str, Any]]:
+        """
+        Collect population estimates data from Census Population Estimates Program
+        
+        Args:
+            pep_year: Population estimates data year
+            
+        Returns:
+            List of population estimates dictionaries by county FIPS
+        """
+        population_estimates = []
+        
+        try:
+            # Build variables list for population estimates
+            pep_variables = self._build_pep_variable_list()
+            
+            # Make API request for Wisconsin counties
+            data = self._make_census_pep_request(
+                pep_year=pep_year,
+                variables=pep_variables,
+                geography="county:*",
+                state="55"
+            )
+            
+            if data and len(data) > 1:
+                for row in data[1:]:  # Skip header
+                    estimates = self._parse_pep_response(row, pep_variables, pep_year)
+                    if estimates:
+                        population_estimates.append(estimates)
+            
+            self.logger.info(f"Collected population estimates for {len(population_estimates)} counties")
+            
+        except Exception as e:
+            self.logger.error(f"Failed to collect population estimates: {str(e)}")
+            
+        return population_estimates
+    
+    def _build_pep_variable_list(self) -> List[str]:
+        """Build list of Population Estimates Program variables to collect"""
+        config_vars = self.config.get('states', {}).get('wisconsin', {}).get('demographics', {}).get('population_estimates', {}).get('target_variables', {})
+        
+        variables = []
+        
+        # Add all configured PEP variables
+        for category, vars_list in config_vars.items():
+            for var_info in vars_list:
+                variables.append(var_info['variable'])
+        
+        return variables
+    
+    def _make_census_pep_request(self, pep_year: int, variables: List[str], 
+                                geography: str, state: str) -> Optional[List[List[str]]]:
+        """Make API request to Census Population Estimates Program"""
+        
+        # Use 2019 PEP API (most recent year with full county support)
+        if pep_year >= 2020:
+            pep_year = 2019
+            self.logger.info(f"Using 2019 PEP data (most recent available for county-level queries)")
+        
+        # Build URL for PEP API
+        url = f"https://api.census.gov/data/{pep_year}/pep/population"
+        
+        params = {
+            'get': ','.join(variables),
+            'for': geography,
+            'in': f'state:{state}',
+            'key': self.api_key
+        }
+        
+        for attempt in range(self.max_retries):
+            try:
+                response = requests.get(url, params=params, timeout=30)
+                response.raise_for_status()
+                
+                data = response.json()
+                return data
+                
+            except requests.exceptions.RequestException as e:
+                self.logger.warning(f"PEP API request attempt {attempt + 1} failed: {str(e)}")
+                if attempt < self.max_retries - 1:
+                    time.sleep(2 ** attempt)  # Exponential backoff
+                else:
+                    self.logger.error(f"All PEP API request attempts failed for {geography}")
+                    return None
+                    
+        return None
+    
+    def _parse_pep_response(self, row: List[str], variables: List[str], 
+                           pep_year: int) -> Optional[Dict[str, Any]]:
+        """Parse Population Estimates Program API response row"""
+        
+        try:
+            # Geographic identifiers are at the end
+            state_fips = row[-2]
+            county_code = row[-1]
+            county_fips = f"{state_fips}{county_code}"
+            
+            # Parse PEP data
+            estimates = {
+                'county_fips': county_fips,
+                'pep_year': pep_year
+            }
+            
+            # Map variables to values (using 2019 PEP variables)
+            pep_var_mapping = {
+                'POP': 'population_2019',
+                'DENSITY': 'population_density_2019'
+            }
+            
+            # Parse each variable value
+            for i, variable in enumerate(variables):
+                if i < len(row) - 2:  # Account for geographic columns
+                    value = row[i]
+                    field_name = pep_var_mapping.get(variable)
+                    
+                    if field_name and value not in [None, '', '-']:
+                        try:
+                            # Convert to appropriate type
+                            if field_name in ['birth_rate_2022', 'death_rate_2022']:
+                                estimates[field_name] = float(value)
+                            else:
+                                estimates[field_name] = int(value)
+                        except (ValueError, TypeError):
+                            # Handle missing or invalid data
+                            pass
+            
+            return estimates
+            
+        except Exception as e:
+            self.logger.error(f"Failed to parse PEP response: {str(e)}")
+            return None
+    
+    def _merge_population_estimates(self, census_records: List[CensusGeography], 
+                                  population_estimates: List[Dict[str, Any]]) -> List[CensusGeography]:
+        """
+        Merge population estimates data with existing census records
+        
+        Args:
+            census_records: List of CensusGeography records with ACS data
+            population_estimates: List of population estimates data by county
+            
+        Returns:
+            Updated census records with population estimates merged
+        """
+        # Create lookup dictionary by county FIPS
+        estimates_by_county = {est['county_fips']: est for est in population_estimates}
+        
+        updated_records = []
+        
+        for record in census_records:
+            if record.geographic_level == 'county' and record.county_fips in estimates_by_county:
+                estimates = estimates_by_county[record.county_fips]
+                
+                # Update record with population estimates data
+                for field, value in estimates.items():
+                    if hasattr(record, field) and field != 'pep_year':  # Skip pep_year as it's not in schema
+                        setattr(record, field, value)
+                
+                # Recalculate derived metrics to include population growth rates
+                record.calculate_derived_metrics()
+                
+            updated_records.append(record)
+        
+        return updated_records
     
     def get_demographic_summary(self, location: str, radius_miles: float = 5.0) -> Dict[str, Any]:
         """

@@ -180,13 +180,15 @@ class WisconsinDataCollector(BaseDataCollector):
         return all_licenses
     
     def collect_census_demographics(self, geographic_levels: List[str] = None, 
-                                  acs_year: int = 2022) -> bool:
+                                  acs_year: int = 2022,
+                                  include_population_estimates: bool = True) -> bool:
         """
         Collect Census demographic data for Wisconsin
         
         Args:
             geographic_levels: List of geographic levels to collect ['county', 'tract', 'block_group']
             acs_year: ACS data year (default: 2022)
+            include_population_estimates: Whether to include population estimates data
             
         Returns:
             bool: True if collection was successful
@@ -200,7 +202,8 @@ class WisconsinDataCollector(BaseDataCollector):
             # Collect demographic data
             summary = self.census_collector.collect_wisconsin_demographics(
                 geographic_levels=geographic_levels,
-                acs_year=acs_year
+                acs_year=acs_year,
+                include_population_estimates=include_population_estimates
             )
             
             if summary.success:

@@ -326,18 +326,33 @@ states:
             - "55141"  # Wood
             
       population_estimates:
-        name: "Census Population Estimates Program"
-        api_base: "https://api.census.gov/data/2022/pep/population"
+        name: "Census Population Estimates Program (2019 - Most Recent Available)"
+        api_base: "https://api.census.gov/data/2019/pep/population"
         api_key_required: true
         type: "api"
         format: "json"
         update_frequency: "annual"
         release_schedule: "december"
+        rate_limit: "unlimited_reasonable_use"
+        documentation: "https://www.census.gov/data/developers/data-sets/popest-popproj.html"
+        note: "Using 2019 PEP data as 2020+ APIs no longer support county-level queries"
+        
+        geographic_levels:
+          - name: "county"
+            code: "050"
+            description: "County level population estimates"
+            coverage: "all_wisconsin"
         
         target_variables:
-          - variable: "POP"
-            name: "total_population_current"
-            description: "Current Year Population Estimate"
+          population:
+            - variable: "POP"
+              name: "population_2019"
+              description: "2019 Population Estimate"
+          
+          demographics:
+            - variable: "DENSITY"
+              name: "population_density_2019"
+              description: "Population Density per Square Mile (2019)"
         
   illinois:
     name: "Illinois"

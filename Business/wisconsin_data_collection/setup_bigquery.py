@@ -333,8 +333,35 @@ class BigQuerySetup:
             bigquery.SchemaField("population_density", "FLOAT", mode="NULLABLE", description="Population per square mile"),
             bigquery.SchemaField("household_density", "FLOAT", mode="NULLABLE", description="Housing units per square mile"),
             
+            # Population Estimates Program (PEP) data (2019 - most recent available via API)
+            bigquery.SchemaField("population_2019", "INTEGER", mode="NULLABLE", description="2019 Population Estimate (POP)"),
+            bigquery.SchemaField("population_density_2019", "FLOAT", mode="NULLABLE", description="2019 Population Density per Square Mile (DENSITY)"),
+            bigquery.SchemaField("population_2022", "INTEGER", mode="NULLABLE", description="2022 Population Estimate (POP_2022)"),
+            bigquery.SchemaField("population_2021", "INTEGER", mode="NULLABLE", description="2021 Population Estimate (POP_2021)"),
+            bigquery.SchemaField("population_2020", "INTEGER", mode="NULLABLE", description="2020 Population Estimate (POP_2020)"),
+            
+            # Population change data
+            bigquery.SchemaField("net_population_change_2022", "INTEGER", mode="NULLABLE", description="Net Population Change 2021-2022 (NPOPCHG_2022)"),
+            bigquery.SchemaField("net_population_change_2021", "INTEGER", mode="NULLABLE", description="Net Population Change 2020-2021 (NPOPCHG_2021)"),
+            
+            # Components of population change
+            bigquery.SchemaField("births_2022", "INTEGER", mode="NULLABLE", description="Births 2022 (BIRTHS2022)"),
+            bigquery.SchemaField("deaths_2022", "INTEGER", mode="NULLABLE", description="Deaths 2022 (DEATHS2022)"),
+            bigquery.SchemaField("net_migration_2022", "INTEGER", mode="NULLABLE", description="Net Migration 2022 (NETMIG2022)"),
+            
+            # Population rates
+            bigquery.SchemaField("birth_rate_2022", "FLOAT", mode="NULLABLE", description="Birth Rate per 1000 population 2022 (RBIRTH2022)"),
+            bigquery.SchemaField("death_rate_2022", "FLOAT", mode="NULLABLE", description="Death Rate per 1000 population 2022 (RDEATH2022)"),
+            
+            # Calculated population metrics
+            bigquery.SchemaField("population_growth_rate_2022", "FLOAT", mode="NULLABLE", description="Calculated population growth rate 2021-2022 (%)"),
+            bigquery.SchemaField("population_growth_rate_2021", "FLOAT", mode="NULLABLE", description="Calculated population growth rate 2020-2021 (%)"),
+            bigquery.SchemaField("avg_annual_growth_rate", "FLOAT", mode="NULLABLE", description="Average annual growth rate 2020-2022 (%)"),
+            bigquery.SchemaField("natural_increase_2022", "INTEGER", mode="NULLABLE", description="Natural increase (births - deaths) 2022"),
+            
             # Metadata
             bigquery.SchemaField("acs_year", "INTEGER", mode="REQUIRED", description="ACS data year"),
+            bigquery.SchemaField("pep_year", "INTEGER", mode="NULLABLE", description="Population Estimates Program data year"),
             bigquery.SchemaField("data_source", "STRING", mode="REQUIRED", description="Data source identifier"),
             bigquery.SchemaField("data_extraction_date", "TIMESTAMP", mode="REQUIRED", description="Data extraction timestamp"),
             bigquery.SchemaField("data_quality_score", "FLOAT", mode="NULLABLE", description="Data completeness score (0-100)"),
@@ -355,7 +382,7 @@ class BigQuerySetup:
         # Cluster by state_fips, county_fips, geographic_level for optimal Wisconsin queries
         table.clustering_fields = ["state_fips", "county_fips", "geographic_level"]
         
-        table.description = "Census ACS demographic data at multiple geographic levels for market analysis"
+        table.description = "Census ACS demographic data and Population Estimates at multiple geographic levels for market analysis"
         
         try:
             table = self.client.create_table(table, exists_ok=True)

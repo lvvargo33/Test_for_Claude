@@ -307,8 +307,35 @@ class CensusGeography(BaseModel):
     population_density: Optional[float] = Field(None, description="Population per square mile")
     household_density: Optional[float] = Field(None, description="Housing units per square mile")
     
+    # Population Estimates Program (PEP) data (2019 - most recent available via API)
+    population_2019: Optional[int] = Field(None, description="2019 Population Estimate (POP)")
+    population_density_2019: Optional[float] = Field(None, description="2019 Population Density per Square Mile (DENSITY)")
+    population_2022: Optional[int] = Field(None, description="2022 Population Estimate (POP_2022)")
+    population_2021: Optional[int] = Field(None, description="2021 Population Estimate (POP_2021)")
+    population_2020: Optional[int] = Field(None, description="2020 Population Estimate (POP_2020)")
+    
+    # Population change data
+    net_population_change_2022: Optional[int] = Field(None, description="Net Population Change 2021-2022 (NPOPCHG_2022)")
+    net_population_change_2021: Optional[int] = Field(None, description="Net Population Change 2020-2021 (NPOPCHG_2021)")
+    
+    # Components of population change
+    births_2022: Optional[int] = Field(None, description="Births 2022 (BIRTHS2022)")
+    deaths_2022: Optional[int] = Field(None, description="Deaths 2022 (DEATHS2022)")
+    net_migration_2022: Optional[int] = Field(None, description="Net Migration 2022 (NETMIG2022)")
+    
+    # Population rates
+    birth_rate_2022: Optional[float] = Field(None, description="Birth Rate per 1000 population 2022 (RBIRTH2022)")
+    death_rate_2022: Optional[float] = Field(None, description="Death Rate per 1000 population 2022 (RDEATH2022)")
+    
+    # Calculated population metrics
+    population_growth_rate_2022: Optional[float] = Field(None, description="Calculated population growth rate 2021-2022 (%)")
+    population_growth_rate_2021: Optional[float] = Field(None, description="Calculated population growth rate 2020-2021 (%)")
+    avg_annual_growth_rate: Optional[float] = Field(None, description="Average annual growth rate 2020-2022 (%)")
+    natural_increase_2022: Optional[int] = Field(None, description="Natural increase (births - deaths) 2022")
+    
     # Metadata
     acs_year: int = Field(..., description="ACS data year (e.g., 2022)")
+    pep_year: Optional[int] = Field(None, description="Population Estimates Program data year")
     data_source: str = Field(default="census_acs", description="Data source identifier")
     data_extraction_date: datetime = Field(default_factory=datetime.now, description="Data extraction timestamp")
     data_quality_score: Optional[float] = Field(None, description="Data completeness score (0-100)")
@@ -352,6 +379,22 @@ class CensusGeography(BaseModel):
         # Calculate household density
         if self.total_housing_units and self.area_land_sqmi and self.area_land_sqmi > 0:
             self.household_density = round(self.total_housing_units / self.area_land_sqmi, 2)
+            
+        # Calculate population growth rates
+        if self.population_2022 and self.population_2021 and self.population_2021 > 0:
+            self.population_growth_rate_2022 = round(((self.population_2022 - self.population_2021) / self.population_2021) * 100, 2)
+            
+        if self.population_2021 and self.population_2020 and self.population_2020 > 0:
+            self.population_growth_rate_2021 = round(((self.population_2021 - self.population_2020) / self.population_2020) * 100, 2)
+            
+        # Calculate average annual growth rate 2020-2022
+        if self.population_2022 and self.population_2020 and self.population_2020 > 0:
+            total_growth = ((self.population_2022 - self.population_2020) / self.population_2020) * 100
+            self.avg_annual_growth_rate = round(total_growth / 2, 2)  # Average over 2 years
+            
+        # Calculate natural increase (births - deaths)
+        if self.births_2022 and self.deaths_2022:
+            self.natural_increase_2022 = self.births_2022 - self.deaths_2022
     
     def calculate_data_quality_score(self):
         """Calculate data completeness score"""

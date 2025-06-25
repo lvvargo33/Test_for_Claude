@@ -18,3 +18,71 @@
 2025-06-25 14:56:05,357 - census_collector - INFO - Collected 72 county records
 2025-06-25 14:56:10,532 - census_collector - INFO - Successfully stored 72 Census records to BigQuery table location-optimizer-1.raw_business_data.census_demographics
 2025-06-25 14:56:10,532 - census_collector - INFO - Census collection completed successfully. Collected 72 records in 45.7s
+2025-06-25 16:01:15,144 - census_collector - INFO - Starting Wisconsin Census data collection for ['county']
+2025-06-25 16:01:15,144 - census_collector - INFO - Collecting county level data...
+2025-06-25 16:01:56,793 - census_collector - INFO - Collected 72 county records
+2025-06-25 16:01:57,793 - census_collector - INFO - Collecting population estimates data...
+2025-06-25 16:01:57,824 - census_collector - WARNING - PEP API request attempt 1 failed: 404 Client Error:  for url: https://api.census.gov/data/2022/pep/population?get=POP_2022%2CPOP_2021%2CPOP_2020%2CNPOPCHG_2022%2CNPOPCHG_2021%2CBIRTHS2022%2CDEATHS2022%2CNETMIG2022%2CRBIRTH2022%2CRDEATH2022&for=county%3A%2A&in=state%3A55&key=dd75feaae49ed1a1884869cf57289ceacb0962f5
+2025-06-25 16:01:58,857 - census_collector - WARNING - PEP API request attempt 2 failed: 404 Client Error:  for url: https://api.census.gov/data/2022/pep/population?get=POP_2022%2CPOP_2021%2CPOP_2020%2CNPOPCHG_2022%2CNPOPCHG_2021%2CBIRTHS2022%2CDEATHS2022%2CNETMIG2022%2CRBIRTH2022%2CRDEATH2022&for=county%3A%2A&in=state%3A55&key=dd75feaae49ed1a1884869cf57289ceacb0962f5
+2025-06-25 16:02:00,889 - census_collector - WARNING - PEP API request attempt 3 failed: 404 Client Error:  for url: https://api.census.gov/data/2022/pep/population?get=POP_2022%2CPOP_2021%2CPOP_2020%2CNPOPCHG_2022%2CNPOPCHG_2021%2CBIRTHS2022%2CDEATHS2022%2CNETMIG2022%2CRBIRTH2022%2CRDEATH2022&for=county%3A%2A&in=state%3A55&key=dd75feaae49ed1a1884869cf57289ceacb0962f5
+2025-06-25 16:02:00,889 - census_collector - ERROR - All PEP API request attempts failed for county:*
+2025-06-25 16:02:00,890 - census_collector - INFO - Collected population estimates for 0 counties
+2025-06-25 16:02:06,513 - census_collector - INFO - Successfully stored 72 Census records to BigQuery table location-optimizer-1.raw_business_data.census_demographics
+2025-06-25 16:02:06,514 - census_collector - INFO - Census collection completed successfully. Collected 72 records in 51.4s
+2025-06-25 16:26:33,750 - census_collector - INFO - Starting Wisconsin Census data collection for ['county']
+2025-06-25 16:26:33,750 - census_collector - INFO - Collecting county level data...
+2025-06-25 16:27:14,870 - census_collector - INFO - Collected 72 county records
+2025-06-25 16:27:15,871 - census_collector - INFO - Collecting population estimates data...
+2025-06-25 16:27:15,871 - census_collector - INFO - Using 2019 PEP data (most recent available for county-level queries)
+2025-06-25 16:27:16,380 - census_collector - INFO - Collected population estimates for 72 counties
+2025-06-25 16:27:16,381 - census_collector - INFO - Merged population estimates for 72 counties
+2025-06-25 16:27:16,405 - census_collector - ERROR - Failed to store Census data to BigQuery: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.
+2025-06-25 16:27:16,406 - census_collector - ERROR - Census data collection failed: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.
+2025-06-25 16:27:37,619 - census_collector - INFO - Starting Wisconsin Census data collection for ['county']
+2025-06-25 16:27:37,619 - census_collector - INFO - Collecting county level data...
+2025-06-25 16:28:19,733 - census_collector - INFO - Collected 72 county records
+2025-06-25 16:28:20,733 - census_collector - INFO - Collecting population estimates data...
+2025-06-25 16:28:20,733 - census_collector - INFO - Using 2019 PEP data (most recent available for county-level queries)
+2025-06-25 16:28:21,151 - census_collector - INFO - Collected population estimates for 72 counties
+2025-06-25 16:28:21,151 - census_collector - INFO - Merged population estimates for 72 counties
+2025-06-25 16:28:21,154 - census_collector - ERROR - Failed to store Census data to BigQuery: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.
+2025-06-25 16:28:21,154 - census_collector - ERROR - Census data collection failed: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.
+2025-06-25 16:29:12,275 - census_collector - INFO - Starting Wisconsin Census data collection for ['county']
+2025-06-25 16:29:12,275 - census_collector - INFO - Collecting county level data...
+2025-06-25 16:29:52,659 - census_collector - INFO - Collected 72 county records
+2025-06-25 16:29:53,659 - census_collector - INFO - Collecting population estimates data...
+2025-06-25 16:29:53,659 - census_collector - INFO - Using 2019 PEP data (most recent available for county-level queries)
+2025-06-25 16:29:54,073 - census_collector - INFO - Collected population estimates for 72 counties
+2025-06-25 16:29:54,074 - census_collector - INFO - Merged population estimates for 72 counties
+2025-06-25 16:29:54,480 - census_collector - ERROR - Failed to store Census data to BigQuery: Error converting Pandas column with name: "pep_year" and datatype: "int64" to an appropriate pyarrow datatype: Array, ListArray, or StructArray
+2025-06-25 16:29:54,480 - census_collector - ERROR - Census data collection failed: Error converting Pandas column with name: "pep_year" and datatype: "int64" to an appropriate pyarrow datatype: Array, ListArray, or StructArray
+2025-06-25 16:30:13,903 - census_collector - INFO - Starting Wisconsin Census data collection for ['county']
+2025-06-25 16:30:13,904 - census_collector - INFO - Collecting county level data...
+2025-06-25 16:30:54,900 - census_collector - INFO - Collected 72 county records
+2025-06-25 16:30:55,901 - census_collector - INFO - Collecting population estimates data...
+2025-06-25 16:30:55,902 - census_collector - INFO - Using 2019 PEP data (most recent available for county-level queries)
+2025-06-25 16:30:56,332 - census_collector - INFO - Collected population estimates for 72 counties
+2025-06-25 16:30:56,333 - census_collector - INFO - Merged population estimates for 72 counties
+2025-06-25 16:31:05,202 - census_collector - INFO - Successfully stored 72 Census records to BigQuery table location-optimizer-1.raw_business_data.census_demographics
+2025-06-25 16:31:05,202 - census_collector - INFO - Census collection completed successfully. Collected 72 records in 51.3s
+2025-06-25 17:27:09,535 - census_collector - INFO - Starting Wisconsin Census data collection for ['county']
+2025-06-25 17:27:09,552 - census_collector - INFO - Collecting county level data...
+2025-06-25 17:27:50,837 - census_collector - INFO - Collected 72 county records
+2025-06-25 17:27:51,837 - census_collector - INFO - Collecting population estimates data...
+2025-06-25 17:27:51,837 - census_collector - INFO - Using 2019 PEP data (most recent available for county-level queries)
+2025-06-25 17:27:52,255 - census_collector - INFO - Collected population estimates for 72 counties
+2025-06-25 17:27:52,256 - census_collector - INFO - Merged population estimates for 72 counties
+2025-06-25 17:27:58,432 - census_collector - INFO - Successfully stored 72 Census records to BigQuery table location-optimizer-1.raw_business_data.census_demographics
+2025-06-25 17:27:58,432 - census_collector - INFO - Census collection completed successfully. Collected 72 records in 48.9s
+2025-06-25 19:14:48,294 - census_collector - INFO - Starting Wisconsin Census data collection for ['county']
+2025-06-25 19:14:48,294 - census_collector - INFO - Collecting county level data...
+2025-06-25 19:15:36,161 - census_collector - INFO - Collected 72 county records
+2025-06-25 19:15:37,161 - census_collector - INFO - Collecting population estimates data...
+2025-06-25 19:15:37,162 - census_collector - INFO - Using 2019 PEP data (most recent available for county-level queries)
+2025-06-25 19:15:37,620 - census_collector - INFO - Collected population estimates for 72 counties
+2025-06-25 19:15:37,621 - census_collector - INFO - Merged population estimates for 72 counties
+2025-06-25 19:15:37,644 - census_collector - ERROR - Failed to store Census data to BigQuery: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.
+2025-06-25 19:15:37,644 - census_collector - ERROR - Census data collection failed: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.
+2025-06-25 19:15:39,645 - census_collector - INFO - Starting Wisconsin Census data collection for ['county']
+2025-06-25 19:15:39,645 - census_collector - INFO - Collecting county level data...
+2025-06-25 19:16:46,512 - census_collector - INFO - Collected 72 county records
