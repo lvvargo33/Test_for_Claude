@@ -33,9 +33,11 @@ def show_menu():
     print("   6. Census Data Only               - Current year demographics")
     print("   7. Historical Census              - 2013-2023 demographic data")
     print("   8. Population Estimates           - County population data")
+    print("   9. BLS Current Year               - Employment & unemployment data")
+    print("   10. BLS Historical                - 2015-current employment data")
     print()
     print("🔧 UTILITIES:")
-    print("   9. Check Data Status              - See when data was last updated")
+    print("   11. Check Data Status             - See when data was last updated")
     print("   0. Help/Documentation             - Show detailed guide")
     print()
 
@@ -88,6 +90,7 @@ def show_help():
     print("  • DFI Business Registrations: Weekly updates")
     print("  • Census Demographics: Annual updates (11 years historical)")
     print("  • Population Estimates: County-level growth data")
+    print("  • BLS Employment Data: County-level employment & unemployment (2015-current)")
     print("  • SBA Loans: 2,904 records (2009-2023)")
     print("  • Business Licenses: Municipal data")
     print()
@@ -100,7 +103,7 @@ def main():
         show_menu()
         
         try:
-            choice = input("Enter your choice (1-9, 0 for help): ").strip()
+            choice = input("Enter your choice (1-11, 0 for help): ").strip()
             print()
             
             if choice == "1":
@@ -151,6 +154,19 @@ def main():
                 success = run_command(["--population-estimates"])
                 
             elif choice == "9":
+                print("🔄 Refreshing BLS Current Year Data...")
+                success = run_command(["--bls-current"])
+                
+            elif choice == "10":
+                print("🔄 Refreshing BLS Historical Data...")
+                print("⚠️  This will take 30-45 minutes")
+                confirm = input("Continue? (y/N): ").lower()
+                if confirm == 'y':
+                    success = run_command(["--bls-historical"])
+                else:
+                    continue
+                
+            elif choice == "11":
                 print("🔍 Checking Data Status...")
                 success = run_command(["--check-status"])
                 
@@ -159,7 +175,7 @@ def main():
                 continue
                 
             else:
-                print("❌ Invalid choice. Please enter 1-9 or 0.")
+                print("❌ Invalid choice. Please enter 1-11 or 0.")
                 continue
             
             print()

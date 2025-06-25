@@ -30,6 +30,7 @@ sys.path.append('.')
 from weekly_dfi_collection import weekly_dfi_collection
 from census_collector import CensusDataCollector
 from collect_census_2013_2023 import collect_acs_year, collect_pep_2019, store_to_bigquery
+from bls_collector import BLSDataCollector
 from google.cloud import bigquery
 
 
@@ -200,6 +201,88 @@ class ComprehensiveDataRefresh:
             }
             return False
     
+    def refresh_bls_current_year(self) -> bool:
+        """Refresh current year BLS data (monthly)"""
+        self.print_header("BLS Data - Current Year Refresh")
+        
+        try:
+            current_year = datetime.now().year
+            
+            print(f"📊 Collecting BLS {current_year} data...")
+            
+            # Initialize BLS collector
+            bls_collector = BLSDataCollector()
+            
+            # Collect current year data
+            results = bls_collector.collect_wisconsin_bls_data(
+                start_year=current_year,
+                end_year=current_year
+            )
+            
+            if results['collection_summary']['qcew_records'] > 0 or results['collection_summary']['laus_records'] > 0:
+                print(f"💾 Storing BLS data...")
+                bls_collector.store_bls_data(results)
+                
+                self.refresh_results['bls_current'] = {
+                    'success': True,
+                    'qcew_records': results['collection_summary']['qcew_records'],
+                    'laus_records': results['collection_summary']['laus_records'],
+                    'year': current_year,
+                    'timestamp': datetime.now()
+                }
+                
+                print(f"✅ BLS {current_year} data refresh complete!")
+                return True
+            else:
+                self.refresh_results['bls_current'] = {
+                    'success': False,
+                    'error': 'No records collected',
+                    'timestamp': datetime.now()
+                }
+                return False
+                
+        except Exception as e:
+            self.logger.error(f"BLS current year refresh failed: {str(e)}")
+            self.refresh_results['bls_current'] = {
+                'success': False,
+                'error': str(e),
+                'timestamp': datetime.now()
+            }
+            return False
+    
+    def refresh_bls_historical(self) -> bool:
+        """Refresh historical BLS data (annual)"""
+        self.print_header("BLS Data - Historical Refresh (2015-Current)")
+        
+        try:
+            print("📈 Collecting historical BLS data...")
+            print("⚠️  Note: This may take 30-45 minutes due to API rate limits")
+            
+            # Run historical BLS collection
+            from collect_bls_2015_current import BLSHistoricalCollector
+            historical_collector = BLSHistoricalCollector()
+            
+            # Collect all historical data
+            results = historical_collector.collect_by_year(start_year=2015)
+            
+            self.refresh_results['bls_historical'] = {
+                'success': True,
+                'total_records': results['total_records'],
+                'years_collected': results['years_collected'],
+                'timestamp': datetime.now()
+            }
+            
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Historical BLS refresh failed: {str(e)}")
+            self.refresh_results['bls_historical'] = {
+                'success': False,
+                'error': str(e),
+                'timestamp': datetime.now()
+            }
+            return False
+    
     def check_sba_loans_update(self) -> bool:
         """Check if SBA loans need updating (monthly)"""
         self.print_header("SBA Loans - Update Check")
@@ -354,6 +437,10 @@ def main():
                        help='Refresh historical census data (2013-2023)')
     parser.add_argument('--population-estimates', action='store_true',
                        help='Refresh population estimates only')
+    parser.add_argument('--bls-current', action='store_true',
+                       help='Refresh current year BLS data only')
+    parser.add_argument('--bls-historical', action='store_true',
+                       help='Refresh historical BLS data (2015-current)')
     parser.add_argument('--all', action='store_true',
                        help='Force refresh all data sources')
     
@@ -384,23 +471,32 @@ def main():
     elif args.population_estimates:
         refresh_system.refresh_population_estimates()
         
+    elif args.bls_current:
+        refresh_system.refresh_bls_current_year()
+        
+    elif args.bls_historical:
+        refresh_system.refresh_bls_historical()
+        
     elif args.all:
         refresh_system.print_header("FULL DATA REFRESH - ALL SOURCES")
-        print("⚠️  This will take 20-30 minutes to complete")
+        print("⚠️  This will take 60-90 minutes to complete")
         refresh_system.refresh_dfi_registrations()
         refresh_system.refresh_census_current_year()
         refresh_system.refresh_historical_census()
         refresh_system.refresh_population_estimates()
+        refresh_system.refresh_bls_current_year()
+        refresh_system.refresh_bls_historical()
         refresh_system.check_sba_loans_update()
         refresh_system.check_business_licenses_update()
         
     elif args.annual:
         refresh_system.print_header("ANNUAL DATA REFRESH")
-        print("⚠️  This will take 20-30 minutes to complete")
+        print("⚠️  This will take 60-90 minutes to complete")
         refresh_system.refresh_dfi_registrations()
         refresh_system.refresh_census_current_year()
         refresh_system.refresh_historical_census()
         refresh_system.refresh_population_estimates()
+        refresh_system.refresh_bls_historical()
         refresh_system.check_sba_loans_update()
         refresh_system.check_business_licenses_update()
         
@@ -408,12 +504,14 @@ def main():
         refresh_system.print_header("QUARTERLY DATA REFRESH")
         refresh_system.refresh_dfi_registrations()
         refresh_system.refresh_census_current_year()
+        refresh_system.refresh_bls_current_year()
         refresh_system.check_sba_loans_update()
         refresh_system.check_business_licenses_update()
         
     elif args.monthly:
         refresh_system.print_header("MONTHLY DATA REFRESH")
         refresh_system.refresh_dfi_registrations()
+        refresh_system.refresh_bls_current_year()
         refresh_system.check_sba_loans_update()
         refresh_system.check_business_licenses_update()
         

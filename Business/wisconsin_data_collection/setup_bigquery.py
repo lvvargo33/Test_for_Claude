@@ -390,6 +390,106 @@ class BigQuerySetup:
         except Exception as e:
             logger.error(f"Error creating census demographics table: {e}")
     
+    def create_bls_qcew_table(self):
+        """Create BLS QCEW (Quarterly Census of Employment and Wages) table"""
+        dataset_id = self.bq_config.get('datasets', {}).get('raw_data', 'raw_business_data')
+        table_id = 'bls_qcew_data'
+        full_table_id = f"{self.project_id}.{dataset_id}.{table_id}"
+        
+        schema = [
+            # Geographic identifiers
+            bigquery.SchemaField("county_fips", "STRING", mode="REQUIRED", description="County FIPS code"),
+            bigquery.SchemaField("county_name", "STRING", mode="REQUIRED", description="County name"),
+            
+            # Time identifiers
+            bigquery.SchemaField("year", "INTEGER", mode="REQUIRED", description="Data year"),
+            bigquery.SchemaField("period", "STRING", mode="REQUIRED", description="Period code (Q1, Q2, Q3, Q4)"),
+            bigquery.SchemaField("period_name", "STRING", mode="NULLABLE", description="Period name"),
+            bigquery.SchemaField("quarter", "INTEGER", mode="NULLABLE", description="Quarter number (1-4)"),
+            
+            # Data fields
+            bigquery.SchemaField("value", "FLOAT", mode="NULLABLE", description="Data value"),
+            bigquery.SchemaField("data_type", "STRING", mode="REQUIRED", description="Type of data (employment, establishments, total_wages)"),
+            
+            # Metadata
+            bigquery.SchemaField("series_id", "STRING", mode="REQUIRED", description="BLS series identifier"),
+            bigquery.SchemaField("data_source", "STRING", mode="REQUIRED", description="Data source (BLS_QCEW)"),
+            bigquery.SchemaField("data_extraction_date", "TIMESTAMP", mode="REQUIRED", description="Data extraction timestamp"),
+            
+            # System fields
+            bigquery.SchemaField("created_at", "TIMESTAMP", mode="NULLABLE", description="Record creation timestamp"),
+            bigquery.SchemaField("updated_at", "TIMESTAMP", mode="NULLABLE", description="Record update timestamp")
+        ]
+        
+        table = bigquery.Table(full_table_id, schema=schema)
+        
+        # Partition by data extraction date for efficient querying
+        table.time_partitioning = bigquery.TimePartitioning(
+            type_=bigquery.TimePartitioningType.DAY,
+            field="data_extraction_date"
+        )
+        
+        # Cluster by county_fips, year, data_type for optimal Wisconsin queries
+        table.clustering_fields = ["county_fips", "year", "data_type"]
+        
+        table.description = "BLS Quarterly Census of Employment and Wages data for Wisconsin counties"
+        
+        try:
+            table = self.client.create_table(table, exists_ok=True)
+            logger.info(f"Created/verified BLS QCEW table: {full_table_id}")
+        except Exception as e:
+            logger.error(f"Error creating BLS QCEW table: {e}")
+    
+    def create_bls_laus_table(self):
+        """Create BLS LAUS (Local Area Unemployment Statistics) table"""
+        dataset_id = self.bq_config.get('datasets', {}).get('raw_data', 'raw_business_data')
+        table_id = 'bls_laus_data'
+        full_table_id = f"{self.project_id}.{dataset_id}.{table_id}"
+        
+        schema = [
+            # Geographic identifiers
+            bigquery.SchemaField("county_fips", "STRING", mode="REQUIRED", description="County FIPS code"),
+            bigquery.SchemaField("county_name", "STRING", mode="REQUIRED", description="County name"),
+            
+            # Time identifiers
+            bigquery.SchemaField("year", "INTEGER", mode="REQUIRED", description="Data year"),
+            bigquery.SchemaField("period", "STRING", mode="REQUIRED", description="Period code (M01-M12)"),
+            bigquery.SchemaField("period_name", "STRING", mode="NULLABLE", description="Period name"),
+            bigquery.SchemaField("month", "INTEGER", mode="NULLABLE", description="Month number (1-12)"),
+            
+            # Data fields
+            bigquery.SchemaField("value", "FLOAT", mode="NULLABLE", description="Data value"),
+            bigquery.SchemaField("measure_type", "STRING", mode="REQUIRED", description="Type of measure (unemployment_rate, unemployment_level, employment_level, labor_force)"),
+            
+            # Metadata
+            bigquery.SchemaField("series_id", "STRING", mode="REQUIRED", description="BLS series identifier"),
+            bigquery.SchemaField("data_source", "STRING", mode="REQUIRED", description="Data source (BLS_LAUS)"),
+            bigquery.SchemaField("data_extraction_date", "TIMESTAMP", mode="REQUIRED", description="Data extraction timestamp"),
+            
+            # System fields
+            bigquery.SchemaField("created_at", "TIMESTAMP", mode="NULLABLE", description="Record creation timestamp"),
+            bigquery.SchemaField("updated_at", "TIMESTAMP", mode="NULLABLE", description="Record update timestamp")
+        ]
+        
+        table = bigquery.Table(full_table_id, schema=schema)
+        
+        # Partition by data extraction date for efficient querying
+        table.time_partitioning = bigquery.TimePartitioning(
+            type_=bigquery.TimePartitioningType.DAY,
+            field="data_extraction_date"
+        )
+        
+        # Cluster by county_fips, year, measure_type for optimal Wisconsin queries
+        table.clustering_fields = ["county_fips", "year", "measure_type"]
+        
+        table.description = "BLS Local Area Unemployment Statistics data for Wisconsin counties"
+        
+        try:
+            table = self.client.create_table(table, exists_ok=True)
+            logger.info(f"Created/verified BLS LAUS table: {full_table_id}")
+        except Exception as e:
+            logger.error(f"Error creating BLS LAUS table: {e}")
+    
     def setup_all_tables(self):
         """Create all required datasets and tables"""
         logger.info("Setting up BigQuery infrastructure...")
@@ -403,6 +503,10 @@ class BigQuerySetup:
         self.create_business_licenses_table()
         self.create_opportunity_scores_table()
         self.create_census_demographics_table()
+        
+        # Create BLS tables
+        self.create_bls_qcew_table()
+        self.create_bls_laus_table()
         
         logger.info("BigQuery setup complete!")
     

@@ -86,3 +86,270 @@
 2025-06-25 19:15:39,645 - census_collector - INFO - Starting Wisconsin Census data collection for ['county']
 2025-06-25 19:15:39,645 - census_collector - INFO - Collecting county level data...
 2025-06-25 19:16:46,512 - census_collector - INFO - Collected 72 county records
+2025-06-25 20:02:08,973 - bls_collector - INFO - Starting BLS data collection for Wisconsin (2022-2023)
+2025-06-25 20:02:08,973 - bls_collector - INFO - Collecting QCEW data...
+2025-06-25 20:02:08,973 - bls_collector - INFO - Collecting QCEW data for Adams County (55001)
+2025-06-25 20:02:09,665 - bls_collector - INFO - Collecting QCEW data for Ashland County (55003)
+2025-06-25 20:02:10,333 - bls_collector - INFO - Collecting QCEW data for Barron County (55005)
+2025-06-25 20:02:11,020 - bls_collector - INFO - Collecting QCEW data for Bayfield County (55007)
+2025-06-25 20:02:11,699 - bls_collector - INFO - Collecting QCEW data for Brown County (55009)
+2025-06-25 20:02:12,343 - bls_collector - INFO - Collecting QCEW data for Buffalo County (55011)
+2025-06-25 20:02:12,991 - bls_collector - INFO - Collecting QCEW data for Burnett County (55013)
+2025-06-25 20:02:13,664 - bls_collector - INFO - Collecting QCEW data for Calumet County (55015)
+2025-06-25 20:02:14,299 - bls_collector - INFO - Collecting QCEW data for Chippewa County (55017)
+2025-06-25 20:02:14,934 - bls_collector - INFO - Collecting QCEW data for Clark County (55019)
+2025-06-25 20:02:15,590 - bls_collector - INFO - Collecting QCEW data for Columbia County (55021)
+2025-06-25 20:02:16,256 - bls_collector - INFO - Collecting QCEW data for Crawford County (55023)
+2025-06-25 20:02:16,917 - bls_collector - INFO - Collecting QCEW data for Dane County (55025)
+2025-06-25 20:02:17,566 - bls_collector - INFO - Collecting QCEW data for Dodge County (55027)
+2025-06-25 20:02:18,216 - bls_collector - INFO - Collecting QCEW data for Door County (55029)
+2025-06-25 20:02:18,870 - bls_collector - INFO - Collecting QCEW data for Douglas County (55031)
+2025-06-25 20:02:19,518 - bls_collector - INFO - Collecting QCEW data for Dunn County (55033)
+2025-06-25 20:02:20,246 - bls_collector - INFO - Collecting QCEW data for Eau Claire County (55035)
+2025-06-25 20:02:20,886 - bls_collector - INFO - Collecting QCEW data for Florence County (55037)
+2025-06-25 20:02:21,541 - bls_collector - INFO - Collecting QCEW data for Fond du Lac County (55039)
+2025-06-25 20:02:22,196 - bls_collector - INFO - Collecting QCEW data for Forest County (55041)
+2025-06-25 20:02:22,888 - bls_collector - INFO - Collecting QCEW data for Grant County (55043)
+2025-06-25 20:02:23,566 - bls_collector - INFO - Collecting QCEW data for Green County (55045)
+2025-06-25 20:02:24,226 - bls_collector - INFO - Collecting QCEW data for Green Lake County (55047)
+2025-06-25 20:02:24,874 - bls_collector - INFO - Collecting QCEW data for Iowa County (55049)
+2025-06-25 20:02:25,524 - bls_collector - INFO - Collecting QCEW data for Iron County (55051)
+2025-06-25 20:02:26,180 - bls_collector - INFO - Collecting QCEW data for Jackson County (55053)
+2025-06-25 20:02:26,232 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:26,732 - bls_collector - INFO - Collecting QCEW data for Jefferson County (55055)
+2025-06-25 20:02:26,788 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:27,289 - bls_collector - INFO - Collecting QCEW data for Juneau County (55057)
+2025-06-25 20:02:27,353 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:27,853 - bls_collector - INFO - Collecting QCEW data for Kenosha County (55059)
+2025-06-25 20:02:27,912 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:28,412 - bls_collector - INFO - Collecting QCEW data for Kewaunee County (55061)
+2025-06-25 20:02:28,476 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:28,977 - bls_collector - INFO - Collecting QCEW data for La Crosse County (55063)
+2025-06-25 20:02:29,039 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:29,539 - bls_collector - INFO - Collecting QCEW data for Lafayette County (55065)
+2025-06-25 20:02:29,602 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:30,102 - bls_collector - INFO - Collecting QCEW data for Langlade County (55067)
+2025-06-25 20:02:30,156 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:30,656 - bls_collector - INFO - Collecting QCEW data for Lincoln County (55069)
+2025-06-25 20:02:30,729 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:31,229 - bls_collector - INFO - Collecting QCEW data for Manitowoc County (55071)
+2025-06-25 20:02:31,285 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:31,785 - bls_collector - INFO - Collecting QCEW data for Marathon County (55073)
+2025-06-25 20:02:31,840 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:32,340 - bls_collector - INFO - Collecting QCEW data for Marinette County (55075)
+2025-06-25 20:02:32,398 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:32,898 - bls_collector - INFO - Collecting QCEW data for Marquette County (55077)
+2025-06-25 20:02:32,957 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:33,457 - bls_collector - INFO - Collecting QCEW data for Menominee County (55078)
+2025-06-25 20:02:33,516 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:34,016 - bls_collector - INFO - Collecting QCEW data for Milwaukee County (55079)
+2025-06-25 20:02:34,070 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:34,570 - bls_collector - INFO - Collecting QCEW data for Monroe County (55081)
+2025-06-25 20:02:34,636 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:35,136 - bls_collector - INFO - Collecting QCEW data for Oconto County (55083)
+2025-06-25 20:02:35,204 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:35,705 - bls_collector - INFO - Collecting QCEW data for Oneida County (55085)
+2025-06-25 20:02:35,764 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:36,264 - bls_collector - INFO - Collecting QCEW data for Outagamie County (55087)
+2025-06-25 20:02:36,321 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:36,821 - bls_collector - INFO - Collecting QCEW data for Ozaukee County (55089)
+2025-06-25 20:02:36,879 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:37,379 - bls_collector - INFO - Collecting QCEW data for Pepin County (55091)
+2025-06-25 20:02:37,436 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:37,936 - bls_collector - INFO - Collecting QCEW data for Pierce County (55093)
+2025-06-25 20:02:37,992 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:38,493 - bls_collector - INFO - Collecting QCEW data for Polk County (55095)
+2025-06-25 20:02:38,549 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:39,050 - bls_collector - INFO - Collecting QCEW data for Portage County (55097)
+2025-06-25 20:02:39,105 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:39,606 - bls_collector - INFO - Collecting QCEW data for Price County (55099)
+2025-06-25 20:02:39,668 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:40,169 - bls_collector - INFO - Collecting QCEW data for Racine County (55101)
+2025-06-25 20:02:40,230 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:40,730 - bls_collector - INFO - Collecting QCEW data for Richland County (55103)
+2025-06-25 20:02:40,802 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:41,302 - bls_collector - INFO - Collecting QCEW data for Rock County (55105)
+2025-06-25 20:02:41,363 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:41,863 - bls_collector - INFO - Collecting QCEW data for Rusk County (55107)
+2025-06-25 20:02:41,923 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:42,423 - bls_collector - INFO - Collecting QCEW data for St. Croix County (55109)
+2025-06-25 20:02:42,482 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:42,983 - bls_collector - INFO - Collecting QCEW data for Sauk County (55111)
+2025-06-25 20:02:43,036 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:43,536 - bls_collector - INFO - Collecting QCEW data for Sawyer County (55113)
+2025-06-25 20:02:43,589 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:44,090 - bls_collector - INFO - Collecting QCEW data for Shawano County (55115)
+2025-06-25 20:02:44,145 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:44,646 - bls_collector - INFO - Collecting QCEW data for Sheboygan County (55117)
+2025-06-25 20:02:44,703 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:45,203 - bls_collector - INFO - Collecting QCEW data for Taylor County (55119)
+2025-06-25 20:02:45,261 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:45,761 - bls_collector - INFO - Collecting QCEW data for Trempealeau County (55121)
+2025-06-25 20:02:45,834 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:46,334 - bls_collector - INFO - Collecting QCEW data for Vernon County (55123)
+2025-06-25 20:02:46,408 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:46,908 - bls_collector - INFO - Collecting QCEW data for Vilas County (55125)
+2025-06-25 20:02:46,971 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:47,471 - bls_collector - INFO - Collecting QCEW data for Walworth County (55127)
+2025-06-25 20:02:47,530 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:48,030 - bls_collector - INFO - Collecting QCEW data for Washburn County (55129)
+2025-06-25 20:02:48,088 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:48,589 - bls_collector - INFO - Collecting QCEW data for Washington County (55131)
+2025-06-25 20:02:48,651 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:49,151 - bls_collector - INFO - Collecting QCEW data for Waukesha County (55133)
+2025-06-25 20:02:49,203 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:49,703 - bls_collector - INFO - Collecting QCEW data for Waupaca County (55135)
+2025-06-25 20:02:49,756 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:50,256 - bls_collector - INFO - Collecting QCEW data for Waushara County (55137)
+2025-06-25 20:02:50,307 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:50,808 - bls_collector - INFO - Collecting QCEW data for Winnebago County (55139)
+2025-06-25 20:02:50,866 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:51,366 - bls_collector - INFO - Collecting QCEW data for Wood County (55141)
+2025-06-25 20:02:51,429 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:51,930 - bls_collector - INFO - Collecting LAUS data...
+2025-06-25 20:02:51,930 - bls_collector - INFO - Collecting LAUS data for Adams County (55001)
+2025-06-25 20:02:51,984 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:52,484 - bls_collector - INFO - Collecting LAUS data for Ashland County (55003)
+2025-06-25 20:02:52,548 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:53,049 - bls_collector - INFO - Collecting LAUS data for Barron County (55005)
+2025-06-25 20:02:53,114 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:53,614 - bls_collector - INFO - Collecting LAUS data for Bayfield County (55007)
+2025-06-25 20:02:53,673 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:54,173 - bls_collector - INFO - Collecting LAUS data for Brown County (55009)
+2025-06-25 20:02:54,231 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:54,731 - bls_collector - INFO - Collecting LAUS data for Buffalo County (55011)
+2025-06-25 20:02:54,793 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:55,293 - bls_collector - INFO - Collecting LAUS data for Burnett County (55013)
+2025-06-25 20:02:55,345 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:55,846 - bls_collector - INFO - Collecting LAUS data for Calumet County (55015)
+2025-06-25 20:02:55,910 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:56,410 - bls_collector - INFO - Collecting LAUS data for Chippewa County (55017)
+2025-06-25 20:02:56,466 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:56,966 - bls_collector - INFO - Collecting LAUS data for Clark County (55019)
+2025-06-25 20:02:57,024 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:57,524 - bls_collector - INFO - Collecting LAUS data for Columbia County (55021)
+2025-06-25 20:02:57,586 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:58,087 - bls_collector - INFO - Collecting LAUS data for Crawford County (55023)
+2025-06-25 20:02:58,141 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:58,641 - bls_collector - INFO - Collecting LAUS data for Dane County (55025)
+2025-06-25 20:02:58,706 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:59,206 - bls_collector - INFO - Collecting LAUS data for Dodge County (55027)
+2025-06-25 20:02:59,274 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:02:59,774 - bls_collector - INFO - Collecting LAUS data for Door County (55029)
+2025-06-25 20:02:59,830 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:00,331 - bls_collector - INFO - Collecting LAUS data for Douglas County (55031)
+2025-06-25 20:03:00,390 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:00,890 - bls_collector - INFO - Collecting LAUS data for Dunn County (55033)
+2025-06-25 20:03:00,951 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:01,451 - bls_collector - INFO - Collecting LAUS data for Eau Claire County (55035)
+2025-06-25 20:03:01,506 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:02,006 - bls_collector - INFO - Collecting LAUS data for Florence County (55037)
+2025-06-25 20:03:02,063 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:02,564 - bls_collector - INFO - Collecting LAUS data for Fond du Lac County (55039)
+2025-06-25 20:03:02,618 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:03,118 - bls_collector - INFO - Collecting LAUS data for Forest County (55041)
+2025-06-25 20:03:03,177 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:03,677 - bls_collector - INFO - Collecting LAUS data for Grant County (55043)
+2025-06-25 20:03:03,739 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:04,239 - bls_collector - INFO - Collecting LAUS data for Green County (55045)
+2025-06-25 20:03:04,290 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:04,791 - bls_collector - INFO - Collecting LAUS data for Green Lake County (55047)
+2025-06-25 20:03:04,855 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:05,356 - bls_collector - INFO - Collecting LAUS data for Iowa County (55049)
+2025-06-25 20:03:05,427 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:05,927 - bls_collector - INFO - Collecting LAUS data for Iron County (55051)
+2025-06-25 20:03:05,985 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:06,485 - bls_collector - INFO - Collecting LAUS data for Jackson County (55053)
+2025-06-25 20:03:06,546 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:07,047 - bls_collector - INFO - Collecting LAUS data for Jefferson County (55055)
+2025-06-25 20:03:07,106 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:07,606 - bls_collector - INFO - Collecting LAUS data for Juneau County (55057)
+2025-06-25 20:03:07,663 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:08,163 - bls_collector - INFO - Collecting LAUS data for Kenosha County (55059)
+2025-06-25 20:03:08,219 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:08,719 - bls_collector - INFO - Collecting LAUS data for Kewaunee County (55061)
+2025-06-25 20:03:08,776 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:09,276 - bls_collector - INFO - Collecting LAUS data for La Crosse County (55063)
+2025-06-25 20:03:09,332 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:09,833 - bls_collector - INFO - Collecting LAUS data for Lafayette County (55065)
+2025-06-25 20:03:09,891 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:10,392 - bls_collector - INFO - Collecting LAUS data for Langlade County (55067)
+2025-06-25 20:03:10,454 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:10,954 - bls_collector - INFO - Collecting LAUS data for Lincoln County (55069)
+2025-06-25 20:03:11,016 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:11,517 - bls_collector - INFO - Collecting LAUS data for Manitowoc County (55071)
+2025-06-25 20:03:11,580 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:12,080 - bls_collector - INFO - Collecting LAUS data for Marathon County (55073)
+2025-06-25 20:03:12,140 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:12,641 - bls_collector - INFO - Collecting LAUS data for Marinette County (55075)
+2025-06-25 20:03:12,704 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:13,204 - bls_collector - INFO - Collecting LAUS data for Marquette County (55077)
+2025-06-25 20:03:13,263 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:13,763 - bls_collector - INFO - Collecting LAUS data for Menominee County (55078)
+2025-06-25 20:03:13,820 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:14,320 - bls_collector - INFO - Collecting LAUS data for Milwaukee County (55079)
+2025-06-25 20:03:14,372 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:14,873 - bls_collector - INFO - Collecting LAUS data for Monroe County (55081)
+2025-06-25 20:03:14,926 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:15,427 - bls_collector - INFO - Collecting LAUS data for Oconto County (55083)
+2025-06-25 20:03:15,489 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:15,989 - bls_collector - INFO - Collecting LAUS data for Oneida County (55085)
+2025-06-25 20:03:16,049 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:16,549 - bls_collector - INFO - Collecting LAUS data for Outagamie County (55087)
+2025-06-25 20:03:16,606 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:17,107 - bls_collector - INFO - Collecting LAUS data for Ozaukee County (55089)
+2025-06-25 20:03:17,172 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:17,673 - bls_collector - INFO - Collecting LAUS data for Pepin County (55091)
+2025-06-25 20:03:17,739 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:18,239 - bls_collector - INFO - Collecting LAUS data for Pierce County (55093)
+2025-06-25 20:03:18,294 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:18,795 - bls_collector - INFO - Collecting LAUS data for Polk County (55095)
+2025-06-25 20:03:18,856 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:19,356 - bls_collector - INFO - Collecting LAUS data for Portage County (55097)
+2025-06-25 20:03:19,413 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:19,913 - bls_collector - INFO - Collecting LAUS data for Price County (55099)
+2025-06-25 20:03:19,970 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:20,471 - bls_collector - INFO - Collecting LAUS data for Racine County (55101)
+2025-06-25 20:03:20,525 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:21,026 - bls_collector - INFO - Collecting LAUS data for Richland County (55103)
+2025-06-25 20:03:21,077 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:21,578 - bls_collector - INFO - Collecting LAUS data for Rock County (55105)
+2025-06-25 20:03:21,635 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:22,136 - bls_collector - INFO - Collecting LAUS data for Rusk County (55107)
+2025-06-25 20:03:22,197 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:22,698 - bls_collector - INFO - Collecting LAUS data for St. Croix County (55109)
+2025-06-25 20:03:22,749 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:23,249 - bls_collector - INFO - Collecting LAUS data for Sauk County (55111)
+2025-06-25 20:03:23,344 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:23,844 - bls_collector - INFO - Collecting LAUS data for Sawyer County (55113)
+2025-06-25 20:03:23,908 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:24,408 - bls_collector - INFO - Collecting LAUS data for Shawano County (55115)
+2025-06-25 20:03:24,477 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:24,978 - bls_collector - INFO - Collecting LAUS data for Sheboygan County (55117)
+2025-06-25 20:03:25,034 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:25,534 - bls_collector - INFO - Collecting LAUS data for Taylor County (55119)
+2025-06-25 20:03:25,598 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:26,099 - bls_collector - INFO - Collecting LAUS data for Trempealeau County (55121)
+2025-06-25 20:03:26,155 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:26,655 - bls_collector - INFO - Collecting LAUS data for Vernon County (55123)
+2025-06-25 20:03:26,714 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:27,214 - bls_collector - INFO - Collecting LAUS data for Vilas County (55125)
+2025-06-25 20:03:27,274 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:27,774 - bls_collector - INFO - Collecting LAUS data for Walworth County (55127)
+2025-06-25 20:03:27,831 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:28,332 - bls_collector - INFO - Collecting LAUS data for Washburn County (55129)
+2025-06-25 20:03:28,391 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:28,891 - bls_collector - INFO - Collecting LAUS data for Washington County (55131)
+2025-06-25 20:03:28,944 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:29,444 - bls_collector - INFO - Collecting LAUS data for Waukesha County (55133)
+2025-06-25 20:03:29,544 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:30,044 - bls_collector - INFO - Collecting LAUS data for Waupaca County (55135)
+2025-06-25 20:03:30,107 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:30,608 - bls_collector - INFO - Collecting LAUS data for Waushara County (55137)
+2025-06-25 20:03:30,670 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:31,170 - bls_collector - INFO - Collecting LAUS data for Winnebago County (55139)
+2025-06-25 20:03:31,227 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:31,727 - bls_collector - INFO - Collecting LAUS data for Wood County (55141)
+2025-06-25 20:03:31,793 - bls_collector - WARNING - BLS API warning: ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']
+2025-06-25 20:03:32,293 - bls_collector - INFO - BLS collection complete: 0 QCEW + 0 LAUS records
+2025-06-25 20:03:32,300 - bls_collector - INFO - Successfully stored BLS data to BigQuery
