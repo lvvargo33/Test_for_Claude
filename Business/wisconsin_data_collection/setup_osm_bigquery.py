@@ -7,8 +7,8 @@ Creates and configures BigQuery tables for storing OSM business data.
 
 import logging
 from google.cloud import bigquery
-from google.cloud.bigquery import SchemaField, Table, TimePartitioning, Clustering
-from typing import List
+from google.cloud.bigquery import SchemaField, Table, TimePartitioning
+from typing import List, Dict
 
 
 class OSMBigQuerySetup:
@@ -88,7 +88,7 @@ class OSMBigQuerySetup:
         
         # Partition by data collection date
         table.time_partitioning = TimePartitioning(
-            type_=TimePartitioning.DAY,
+            type_=bigquery.TimePartitioningType.DAY,
             field="data_collection_date"
         )
         
@@ -144,7 +144,7 @@ class OSMBigQuerySetup:
         
         # Partition by collection date
         table.time_partitioning = TimePartitioning(
-            type_=TimePartitioning.DAY,
+            type_=bigquery.TimePartitioningType.DAY,
             field="collection_date"
         )
         
