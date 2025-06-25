@@ -34,6 +34,14 @@ class DFIBusinessRecord:
     business_type: Optional[str] = None
     source: str = 'DFI'
     
+    # Geocoding information
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    geocoding_confidence: Optional[float] = None
+    formatted_address: Optional[str] = None
+    geocoding_date: Optional[str] = None
+    geocoding_source: Optional[str] = None
+    
 class DFIBusinessCollector:
     """Collector for Wisconsin DFI business registration data"""
     

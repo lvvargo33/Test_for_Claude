@@ -41,6 +41,7 @@ class DataSource(str, Enum):
     BUSINESS_LICENSES = "business_licenses"
     ECONOMIC_DEVELOPMENT = "economic_development"
     CENSUS_DEMOGRAPHICS = "census_demographics"
+    OPENSTREETMAP = "openstreetmap"
 
 
 class BusinessEntity(BaseModel):
@@ -68,6 +69,14 @@ class BusinessEntity(BaseModel):
     state: str = Field(..., description="Business state (2-letter code)")
     zip_code: Optional[str] = Field(None, description="ZIP code")
     county: Optional[str] = Field(None, description="County name")
+    
+    # Geocoding information
+    latitude: Optional[float] = Field(None, description="Latitude coordinate")
+    longitude: Optional[float] = Field(None, description="Longitude coordinate")
+    geocoding_confidence: Optional[float] = Field(None, description="Geocoding confidence score (0.0-1.0)")
+    formatted_address: Optional[str] = Field(None, description="Standardized geocoded address")
+    geocoding_date: Optional[datetime] = Field(None, description="Date when geocoding was performed")
+    geocoding_source: Optional[str] = Field(None, description="Geocoding service used")
     
     # Contact information
     phone: Optional[str] = Field(None, description="Business phone number")
@@ -416,6 +425,180 @@ class CensusGeography(BaseModel):
         
         self.data_quality_score = round(required_weight + optional_weight, 1)
         return self.data_quality_score
+
+
+class OSMBusinessEntity(BaseModel):
+    """OpenStreetMap business entity model"""
+    
+    # OSM identifiers
+    osm_id: str = Field(..., description="OpenStreetMap element ID")
+    osm_type: str = Field(..., description="OSM element type (node, way, relation)")
+    osm_version: Optional[int] = Field(None, description="OSM element version")
+    osm_timestamp: Optional[datetime] = Field(None, description="OSM last modification timestamp")
+    
+    # Business information
+    name: Optional[str] = Field(None, description="Business name")
+    amenity: Optional[str] = Field(None, description="OSM amenity tag")
+    shop: Optional[str] = Field(None, description="OSM shop tag")
+    cuisine: Optional[str] = Field(None, description="Cuisine type for restaurants")
+    brand: Optional[str] = Field(None, description="Brand name")
+    operator: Optional[str] = Field(None, description="Operator/chain name")
+    
+    # Location information
+    latitude: float = Field(..., description="Latitude coordinate")
+    longitude: float = Field(..., description="Longitude coordinate")
+    address_housenumber: Optional[str] = Field(None, description="House number")
+    address_street: Optional[str] = Field(None, description="Street name")
+    address_city: Optional[str] = Field(None, description="City name")
+    address_state: Optional[str] = Field(None, description="State")
+    address_postcode: Optional[str] = Field(None, description="Postal code")
+    address_country: Optional[str] = Field(None, description="Country")
+    
+    # Contact information
+    phone: Optional[str] = Field(None, description="Phone number")
+    website: Optional[str] = Field(None, description="Website URL")
+    email: Optional[str] = Field(None, description="Email address")
+    
+    # Business details
+    opening_hours: Optional[str] = Field(None, description="Opening hours")
+    wheelchair: Optional[str] = Field(None, description="Wheelchair accessibility")
+    takeaway: Optional[str] = Field(None, description="Takeaway available")
+    delivery: Optional[str] = Field(None, description="Delivery available")
+    outdoor_seating: Optional[str] = Field(None, description="Outdoor seating available")
+    
+    # Classification
+    business_type: BusinessType = Field(..., description="Categorized business type")
+    franchise_indicator: bool = Field(default=False, description="Likely franchise business")
+    
+    # Metadata
+    data_source: DataSource = Field(default=DataSource.OPENSTREETMAP, description="Data source")
+    data_collection_date: datetime = Field(default_factory=datetime.now, description="Data collection timestamp")
+    data_quality_score: Optional[float] = Field(None, description="Data completeness score (0-100)")
+    
+    @validator('osm_timestamp', pre=True)
+    def parse_osm_timestamp(cls, v):
+        """Parse OSM timestamp string to datetime"""
+        if isinstance(v, str):
+            try:
+                return datetime.fromisoformat(v.replace('Z', '+00:00'))
+            except:
+                return None
+        return v
+    
+    @validator('business_type', pre=True)
+    def classify_business_type(cls, v, values):
+        """Classify business type from OSM tags if not provided"""
+        if v and v != 'other':
+            return v
+        
+        amenity = values.get('amenity', '').lower()
+        shop = values.get('shop', '').lower()
+        
+        # Food & Beverage
+        if amenity in ['restaurant', 'fast_food', 'cafe', 'bar', 'pub', 'food_court']:
+            return BusinessType.RESTAURANT
+        if shop in ['bakery', 'butcher', 'fishmonger', 'greengrocer', 'alcohol']:
+            return BusinessType.RESTAURANT
+        
+        # Retail
+        if shop in ['supermarket', 'convenience', 'department_store', 'mall', 'clothes', 
+                   'shoes', 'jewelry', 'electronics', 'mobile_phone', 'computer']:
+            return BusinessType.RETAIL
+        
+        # Personal Services
+        if amenity in ['beauty_salon', 'hairdresser']:
+            return BusinessType.PERSONAL_SERVICES
+        if shop in ['beauty', 'hairdresser', 'optician']:
+            return BusinessType.PERSONAL_SERVICES
+        
+        # Automotive
+        if amenity in ['fuel', 'car_rental', 'car_repair', 'car_wash']:
+            return BusinessType.AUTOMOTIVE
+        if shop in ['car', 'motorcycle', 'car_parts']:
+            return BusinessType.AUTOMOTIVE
+        
+        # Fitness
+        if amenity in ['gym', 'fitness_centre', 'swimming_pool', 'spa']:
+            return BusinessType.FITNESS
+        
+        # Healthcare
+        if amenity in ['pharmacy', 'hospital', 'clinic', 'dentist', 'veterinary']:
+            return BusinessType.HEALTHCARE
+        
+        # Professional Services
+        if amenity in ['bank', 'post_office', 'library']:
+            return BusinessType.PROFESSIONAL_SERVICES
+        
+        return BusinessType.OTHER
+    
+    def calculate_data_quality_score(self):
+        """Calculate data completeness score"""
+        score = 0.0
+        
+        # Required fields (50 points total)
+        if self.name:
+            score += 20
+        if self.latitude and self.longitude:
+            score += 20
+        if self.amenity or self.shop:
+            score += 10
+        
+        # Address information (30 points total)
+        if self.address_street:
+            score += 10
+        if self.address_city:
+            score += 10
+        if self.address_postcode:
+            score += 5
+        if self.address_housenumber:
+            score += 5
+        
+        # Contact information (15 points total)
+        if self.phone:
+            score += 8
+        if self.website:
+            score += 4
+        if self.email:
+            score += 3
+        
+        # Business details (5 points total)
+        if self.opening_hours:
+            score += 3
+        if self.brand:
+            score += 2
+        
+        self.data_quality_score = round(score, 1)
+        return self.data_quality_score
+
+
+class OSMDataSummary(BaseModel):
+    """Summary of OSM data collection run"""
+    
+    collection_date: datetime = Field(default_factory=datetime.now)
+    area_name: str = Field(..., description="Area name (e.g., 'Dane County', 'Wisconsin')")
+    bbox: str = Field(..., description="Bounding box used for collection")
+    
+    # Collection counts
+    total_elements: int = Field(default=0, description="Total OSM elements returned")
+    businesses_collected: int = Field(default=0, description="Valid businesses collected")
+    franchises_identified: int = Field(default=0, description="Franchise businesses identified")
+    
+    # Business type breakdown
+    business_type_counts: Optional[Dict[str, int]] = Field(None, description="Count by business type")
+    
+    # Data quality metrics
+    avg_data_quality_score: Optional[float] = Field(None, description="Average data quality score")
+    businesses_with_contact: int = Field(default=0, description="Businesses with contact info")
+    businesses_with_address: int = Field(default=0, description="Businesses with full address")
+    
+    # Success metrics
+    success: bool = Field(default=False)
+    processing_time_seconds: Optional[float] = Field(None)
+    api_requests_made: int = Field(default=0)
+    
+    # Coverage metrics
+    cities_covered: int = Field(default=0, description="Number of unique cities")
+    coverage_area_sqkm: Optional[float] = Field(None, description="Approximate coverage area")
 
 
 class CensusDataSummary(BaseModel):
