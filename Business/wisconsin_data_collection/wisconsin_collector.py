@@ -19,6 +19,7 @@ from models import (
     BusinessType, BusinessStatus, DataSource
 )
 from dfi_collector import DFIBusinessCollector, DFIBusinessRecord
+from census_collector import CensusDataCollector
 
 
 class WisconsinDataCollector(BaseDataCollector):
@@ -35,6 +36,9 @@ class WisconsinDataCollector(BaseDataCollector):
     def __init__(self):
         """Initialize Wisconsin data collector"""
         super().__init__('wisconsin')
+        
+        # Initialize Census collector
+        self.census_collector = CensusDataCollector()
         
         # Wisconsin-specific mappings
         self.county_mappings = {
@@ -174,6 +178,130 @@ class WisconsinDataCollector(BaseDataCollector):
         
         self.logger.info(f"Collected {len(all_licenses)} business licenses total")
         return all_licenses
+    
+    def collect_census_demographics(self, geographic_levels: List[str] = None, 
+                                  acs_year: int = 2022) -> bool:
+        """
+        Collect Census demographic data for Wisconsin
+        
+        Args:
+            geographic_levels: List of geographic levels to collect ['county', 'tract', 'block_group']
+            acs_year: ACS data year (default: 2022)
+            
+        Returns:
+            bool: True if collection was successful
+        """
+        try:
+            self.logger.info("Starting Wisconsin Census demographic data collection")
+            
+            if geographic_levels is None:
+                geographic_levels = ['county', 'tract']  # Default levels
+            
+            # Collect demographic data
+            summary = self.census_collector.collect_wisconsin_demographics(
+                geographic_levels=geographic_levels,
+                acs_year=acs_year
+            )
+            
+            if summary.success:
+                self.logger.info(f"Census collection completed successfully. "
+                               f"Collected {summary.total_geographies} geographic areas")
+                return True
+            else:
+                self.logger.error(f"Census collection failed with {summary.api_errors} errors")
+                return False
+                
+        except Exception as e:
+            self.logger.error(f"Error collecting Census demographics: {e}")
+            return False
+    
+    def run_full_wisconsin_collection(self, days_back: int = 30, 
+                                    include_demographics: bool = True,
+                                    geographic_levels: List[str] = None) -> Dict[str, any]:
+        """
+        Run complete Wisconsin data collection including demographics
+        
+        Args:
+            days_back: Number of days to look back for business data
+            include_demographics: Whether to collect Census demographics
+            geographic_levels: Census geographic levels to collect
+            
+        Returns:
+            Dictionary with collection summary
+        """
+        self.logger.info("Starting full Wisconsin data collection")
+        start_time = datetime.now()
+        
+        summary = {
+            'start_time': start_time,
+            'businesses_collected': 0,
+            'sba_loans_collected': 0,
+            'licenses_collected': 0,
+            'demographics_collected': False,
+            'errors': [],
+            'success': False
+        }
+        
+        try:
+            # Collect business registrations
+            businesses = self.collect_business_registrations(days_back)
+            summary['businesses_collected'] = len(businesses)
+            
+            # Collect SBA loans
+            loans = self.collect_sba_loans(days_back * 2)  # Look back further for loans
+            summary['sba_loans_collected'] = len(loans)
+            
+            # Collect business licenses
+            licenses = self.collect_business_licenses(days_back)
+            summary['licenses_collected'] = len(licenses)
+            
+            # Collect Census demographics if requested
+            if include_demographics:
+                demographics_success = self.collect_census_demographics(
+                    geographic_levels=geographic_levels
+                )
+                summary['demographics_collected'] = demographics_success
+                if not demographics_success:
+                    summary['errors'].append("Census demographics collection failed")
+            
+            # Store all data to BigQuery
+            if businesses or loans or licenses:
+                self._store_collected_data(businesses, loans, licenses)
+            
+            summary['success'] = True
+            summary['end_time'] = datetime.now()
+            summary['processing_time'] = (summary['end_time'] - start_time).total_seconds()
+            
+            self.logger.info(f"Full Wisconsin collection completed successfully in "
+                           f"{summary['processing_time']:.1f} seconds")
+            
+        except Exception as e:
+            summary['errors'].append(str(e))
+            summary['success'] = False
+            self.logger.error(f"Full Wisconsin collection failed: {e}")
+        
+        return summary
+    
+    def _store_collected_data(self, businesses: List[BusinessEntity], 
+                            loans: List[SBALoanRecord], 
+                            licenses: List[BusinessLicense]):
+        """Store all collected data to BigQuery"""
+        try:
+            # Store business entities
+            if businesses:
+                self._store_businesses_to_bigquery(businesses)
+            
+            # Store SBA loans
+            if loans:
+                self._store_loans_to_bigquery(loans)
+            
+            # Store business licenses
+            if licenses:
+                self._store_licenses_to_bigquery(licenses)
+                
+        except Exception as e:
+            self.logger.error(f"Error storing collected data: {e}")
+            raise
     
     def _collect_wi_dfi_registrations(self, days_back: int) -> List[BusinessEntity]:
         """

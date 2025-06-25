@@ -40,6 +40,7 @@ class DataSource(str, Enum):
     SBA_LOANS = "sba_loans"
     BUSINESS_LICENSES = "business_licenses"
     ECONOMIC_DEVELOPMENT = "economic_development"
+    CENSUS_DEMOGRAPHICS = "census_demographics"
 
 
 class BusinessEntity(BaseModel):
@@ -256,3 +257,155 @@ class OpportunityScore(BaseModel):
         )
         
         return self.overall_score
+
+
+class CensusGeography(BaseModel):
+    """Census geographic and demographic data model"""
+    
+    # Geographic identifiers
+    geo_id: str = Field(..., description="Full Census geographic identifier")
+    state_fips: str = Field(..., description="State FIPS code (e.g., '55' for Wisconsin)")
+    county_fips: str = Field(..., description="County FIPS code (e.g., '55025' for Dane County)")
+    tract_code: Optional[str] = Field(None, description="Census tract code")
+    block_group: Optional[str] = Field(None, description="Block group code")
+    
+    # Geographic metadata
+    geographic_level: str = Field(..., description="Geographic level (county, tract, block_group)")
+    area_land_sqmi: Optional[float] = Field(None, description="Land area in square miles")
+    area_water_sqmi: Optional[float] = Field(None, description="Water area in square miles")
+    
+    # Population data
+    total_population: Optional[int] = Field(None, description="Total population (B01003_001E)")
+    median_age: Optional[float] = Field(None, description="Median age (B01002_001E)")
+    
+    # Economic data
+    median_household_income: Optional[int] = Field(None, description="Median household income (B19013_001E)")
+    unemployment_count: Optional[int] = Field(None, description="Unemployed population (B23025_005E)")
+    labor_force: Optional[int] = Field(None, description="Total labor force (B23025_002E)")
+    unemployment_rate: Optional[float] = Field(None, description="Calculated unemployment rate (%)")
+    
+    # Education data
+    bachelor_degree_count: Optional[int] = Field(None, description="Population with bachelor's degree (B15003_022E)")
+    total_education_pop: Optional[int] = Field(None, description="Total population 25+ for education (B15003_001E)")
+    bachelor_degree_pct: Optional[float] = Field(None, description="Calculated % with bachelor's degree")
+    
+    # Housing data
+    total_housing_units: Optional[int] = Field(None, description="Total housing units (B25001_001E)")
+    owner_occupied_units: Optional[int] = Field(None, description="Owner occupied units (B25003_002E)")
+    total_occupied_units: Optional[int] = Field(None, description="Total occupied units (B25003_001E)")
+    owner_occupied_pct: Optional[float] = Field(None, description="Calculated % owner occupied")
+    
+    # Transportation data
+    total_commuters: Optional[int] = Field(None, description="Total commuters (B08303_001E)")
+    commute_60_plus_min: Optional[int] = Field(None, description="Commute 60+ minutes (B08303_013E)")
+    public_transport_count: Optional[int] = Field(None, description="Public transportation users (B08301_010E)")
+    total_transport_pop: Optional[int] = Field(None, description="Total transportation population (B08301_001E)")
+    avg_commute_time: Optional[float] = Field(None, description="Calculated average commute time")
+    public_transport_pct: Optional[float] = Field(None, description="Calculated % using public transport")
+    
+    # Derived metrics
+    population_density: Optional[float] = Field(None, description="Population per square mile")
+    household_density: Optional[float] = Field(None, description="Housing units per square mile")
+    
+    # Metadata
+    acs_year: int = Field(..., description="ACS data year (e.g., 2022)")
+    data_source: str = Field(default="census_acs", description="Data source identifier")
+    data_extraction_date: datetime = Field(default_factory=datetime.now, description="Data extraction timestamp")
+    data_quality_score: Optional[float] = Field(None, description="Data completeness score (0-100)")
+    
+    @validator('state_fips')
+    def validate_state_fips(cls, v):
+        """Ensure state FIPS is 2 digits"""
+        if v and len(v) == 2 and v.isdigit():
+            return v
+        return v
+    
+    @validator('county_fips')
+    def validate_county_fips(cls, v):
+        """Ensure county FIPS is 5 digits (state + county)"""
+        if v and len(v) == 5 and v.isdigit():
+            return v
+        return v
+    
+    def calculate_derived_metrics(self):
+        """Calculate derived demographic metrics"""
+        # Calculate unemployment rate
+        if self.unemployment_count and self.labor_force and self.labor_force > 0:
+            self.unemployment_rate = round((self.unemployment_count / self.labor_force) * 100, 2)
+            
+        # Calculate education percentage
+        if self.bachelor_degree_count and self.total_education_pop and self.total_education_pop > 0:
+            self.bachelor_degree_pct = round((self.bachelor_degree_count / self.total_education_pop) * 100, 2)
+            
+        # Calculate housing percentages
+        if self.owner_occupied_units and self.total_occupied_units and self.total_occupied_units > 0:
+            self.owner_occupied_pct = round((self.owner_occupied_units / self.total_occupied_units) * 100, 2)
+            
+        # Calculate transportation percentages
+        if self.public_transport_count and self.total_transport_pop and self.total_transport_pop > 0:
+            self.public_transport_pct = round((self.public_transport_count / self.total_transport_pop) * 100, 2)
+            
+        # Calculate population density
+        if self.total_population and self.area_land_sqmi and self.area_land_sqmi > 0:
+            self.population_density = round(self.total_population / self.area_land_sqmi, 2)
+            
+        # Calculate household density
+        if self.total_housing_units and self.area_land_sqmi and self.area_land_sqmi > 0:
+            self.household_density = round(self.total_housing_units / self.area_land_sqmi, 2)
+    
+    def calculate_data_quality_score(self):
+        """Calculate data completeness score"""
+        required_fields = [
+            'total_population', 'median_household_income', 'total_housing_units'
+        ]
+        optional_fields = [
+            'median_age', 'unemployment_rate', 'bachelor_degree_pct', 
+            'owner_occupied_pct', 'public_transport_pct'
+        ]
+        
+        # Count populated required fields
+        required_score = sum(1 for field in required_fields if getattr(self, field) is not None)
+        required_weight = (required_score / len(required_fields)) * 70  # 70% weight for required
+        
+        # Count populated optional fields
+        optional_score = sum(1 for field in optional_fields if getattr(self, field) is not None)
+        optional_weight = (optional_score / len(optional_fields)) * 30  # 30% weight for optional
+        
+        self.data_quality_score = round(required_weight + optional_weight, 1)
+        return self.data_quality_score
+
+
+class CensusDataSummary(BaseModel):
+    """Summary of Census data collection run"""
+    
+    collection_date: datetime = Field(default_factory=datetime.now)
+    state_fips: str = Field(..., description="State FIPS code")
+    acs_year: int = Field(..., description="ACS data year")
+    
+    # Collection counts by geographic level
+    counties_collected: int = Field(default=0)
+    tracts_collected: int = Field(default=0)
+    block_groups_collected: int = Field(default=0)
+    total_geographies: int = Field(default=0)
+    
+    # Success metrics
+    success: bool = Field(default=False)
+    api_errors: int = Field(default=0)
+    processing_time_seconds: Optional[float] = Field(None)
+    
+    # Data quality metrics
+    complete_records: int = Field(default=0)
+    partial_records: int = Field(default=0)
+    avg_data_quality_score: Optional[float] = Field(None)
+    
+    # API usage tracking
+    api_requests_made: int = Field(default=0)
+    api_key_used: bool = Field(default=False)
+    
+    def calculate_totals(self):
+        """Calculate total geographies collected"""
+        self.total_geographies = (
+            self.counties_collected + 
+            self.tracts_collected + 
+            self.block_groups_collected
+        )

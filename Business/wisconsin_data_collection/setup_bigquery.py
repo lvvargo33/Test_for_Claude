@@ -281,6 +281,88 @@ class BigQuerySetup:
         except Exception as e:
             logger.error(f"Error creating opportunity scores table: {e}")
     
+    def create_census_demographics_table(self):
+        """Create census demographics table"""
+        dataset_id = self.bq_config.get('datasets', {}).get('raw_data', 'raw_business_data')
+        table_id = self.bq_config.get('tables', {}).get('census_demographics', 'census_demographics')
+        full_table_id = f"{self.project_id}.{dataset_id}.{table_id}"
+        
+        schema = [
+            # Geographic identifiers
+            bigquery.SchemaField("geo_id", "STRING", mode="REQUIRED", description="Full Census geographic identifier"),
+            bigquery.SchemaField("state_fips", "STRING", mode="REQUIRED", description="State FIPS code"),
+            bigquery.SchemaField("county_fips", "STRING", mode="REQUIRED", description="County FIPS code"),
+            bigquery.SchemaField("tract_code", "STRING", mode="NULLABLE", description="Census tract code"),
+            bigquery.SchemaField("block_group", "STRING", mode="NULLABLE", description="Block group code"),
+            
+            # Geographic metadata
+            bigquery.SchemaField("geographic_level", "STRING", mode="REQUIRED", description="Geographic level"),
+            bigquery.SchemaField("area_land_sqmi", "FLOAT", mode="NULLABLE", description="Land area in square miles"),
+            bigquery.SchemaField("area_water_sqmi", "FLOAT", mode="NULLABLE", description="Water area in square miles"),
+            
+            # Population data
+            bigquery.SchemaField("total_population", "INTEGER", mode="NULLABLE", description="Total population"),
+            bigquery.SchemaField("median_age", "FLOAT", mode="NULLABLE", description="Median age"),
+            
+            # Economic data
+            bigquery.SchemaField("median_household_income", "INTEGER", mode="NULLABLE", description="Median household income"),
+            bigquery.SchemaField("unemployment_count", "INTEGER", mode="NULLABLE", description="Unemployed population"),
+            bigquery.SchemaField("labor_force", "INTEGER", mode="NULLABLE", description="Total labor force"),
+            bigquery.SchemaField("unemployment_rate", "FLOAT", mode="NULLABLE", description="Unemployment rate (%)"),
+            
+            # Education data
+            bigquery.SchemaField("bachelor_degree_count", "INTEGER", mode="NULLABLE", description="Population with bachelor's degree"),
+            bigquery.SchemaField("total_education_pop", "INTEGER", mode="NULLABLE", description="Total population 25+ for education"),
+            bigquery.SchemaField("bachelor_degree_pct", "FLOAT", mode="NULLABLE", description="% with bachelor's degree"),
+            
+            # Housing data
+            bigquery.SchemaField("total_housing_units", "INTEGER", mode="NULLABLE", description="Total housing units"),
+            bigquery.SchemaField("owner_occupied_units", "INTEGER", mode="NULLABLE", description="Owner occupied units"),
+            bigquery.SchemaField("total_occupied_units", "INTEGER", mode="NULLABLE", description="Total occupied units"),
+            bigquery.SchemaField("owner_occupied_pct", "FLOAT", mode="NULLABLE", description="% owner occupied"),
+            
+            # Transportation data
+            bigquery.SchemaField("total_commuters", "INTEGER", mode="NULLABLE", description="Total commuters"),
+            bigquery.SchemaField("commute_60_plus_min", "INTEGER", mode="NULLABLE", description="Commute 60+ minutes"),
+            bigquery.SchemaField("public_transport_count", "INTEGER", mode="NULLABLE", description="Public transportation users"),
+            bigquery.SchemaField("total_transport_pop", "INTEGER", mode="NULLABLE", description="Total transportation population"),
+            bigquery.SchemaField("avg_commute_time", "FLOAT", mode="NULLABLE", description="Average commute time"),
+            bigquery.SchemaField("public_transport_pct", "FLOAT", mode="NULLABLE", description="% using public transport"),
+            
+            # Derived metrics
+            bigquery.SchemaField("population_density", "FLOAT", mode="NULLABLE", description="Population per square mile"),
+            bigquery.SchemaField("household_density", "FLOAT", mode="NULLABLE", description="Housing units per square mile"),
+            
+            # Metadata
+            bigquery.SchemaField("acs_year", "INTEGER", mode="REQUIRED", description="ACS data year"),
+            bigquery.SchemaField("data_source", "STRING", mode="REQUIRED", description="Data source identifier"),
+            bigquery.SchemaField("data_extraction_date", "TIMESTAMP", mode="REQUIRED", description="Data extraction timestamp"),
+            bigquery.SchemaField("data_quality_score", "FLOAT", mode="NULLABLE", description="Data completeness score (0-100)"),
+            
+            # System fields
+            bigquery.SchemaField("created_at", "TIMESTAMP", mode="NULLABLE", description="Record creation timestamp"),
+            bigquery.SchemaField("updated_at", "TIMESTAMP", mode="NULLABLE", description="Record update timestamp")
+        ]
+        
+        table = bigquery.Table(full_table_id, schema=schema)
+        
+        # Partition by data extraction date for efficient querying
+        table.time_partitioning = bigquery.TimePartitioning(
+            type_=bigquery.TimePartitioningType.DAY,
+            field="data_extraction_date"
+        )
+        
+        # Cluster by state_fips, county_fips, geographic_level for optimal Wisconsin queries
+        table.clustering_fields = ["state_fips", "county_fips", "geographic_level"]
+        
+        table.description = "Census ACS demographic data at multiple geographic levels for market analysis"
+        
+        try:
+            table = self.client.create_table(table, exists_ok=True)
+            logger.info(f"Created/verified census demographics table: {full_table_id}")
+        except Exception as e:
+            logger.error(f"Error creating census demographics table: {e}")
+    
     def setup_all_tables(self):
         """Create all required datasets and tables"""
         logger.info("Setting up BigQuery infrastructure...")
@@ -293,6 +375,7 @@ class BigQuerySetup:
         self.create_sba_loans_table()
         self.create_business_licenses_table()
         self.create_opportunity_scores_table()
+        self.create_census_demographics_table()
         
         logger.info("BigQuery setup complete!")
     

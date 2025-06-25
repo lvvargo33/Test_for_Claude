@@ -47,35 +47,44 @@ def setup_infrastructure():
         return False
 
 
-def collect_wisconsin_data(days_back: int = 90):
-    """Collect Wisconsin business data"""
+def collect_wisconsin_data(days_back: int = 90, include_demographics: bool = True):
+    """Collect Wisconsin business data including demographics"""
     logger.info(f"Starting Wisconsin data collection for last {days_back} days")
     
     try:
         # Initialize collector
         collector = WisconsinDataCollector()
         
-        # Run full collection
-        summary = collector.run_full_collection(days_back=days_back)
+        # Run full collection including demographics
+        summary = collector.run_full_wisconsin_collection(
+            days_back=days_back,
+            include_demographics=include_demographics,
+            geographic_levels=['county', 'tract']  # Start with county and tract levels
+        )
         
         # Display results
         print("\n" + "=" * 60)
         print("WISCONSIN DATA COLLECTION RESULTS")
         print("=" * 60)
-        print(f"📊 Collection Date: {summary.collection_date.strftime('%Y-%m-%d %H:%M:%S')}")
-        print(f"🏢 Business Registrations: {summary.businesses_collected:,}")
-        print(f"💰 SBA Loan Approvals: {summary.sba_loans_collected:,}")
-        print(f"📋 Business Licenses: {summary.licenses_collected:,}")
-        print(f"📈 Total Records: {summary.total_records:,}")
-        print(f"⏱️  Processing Time: {summary.processing_time_seconds:.1f} seconds")
-        print(f"✅ Success: {'YES' if summary.success else 'NO'}")
+        print(f"📊 Collection Date: {summary['start_time'].strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"🏢 Business Registrations: {summary['businesses_collected']:,}")
+        print(f"💰 SBA Loan Approvals: {summary['sba_loans_collected']:,}")
+        print(f"📋 Business Licenses: {summary['licenses_collected']:,}")
+        print(f"👥 Demographics Collected: {'YES' if summary['demographics_collected'] else 'NO'}")
+        total_records = summary['businesses_collected'] + summary['sba_loans_collected'] + summary['licenses_collected']
+        print(f"📈 Total Records: {total_records:,}")
+        if 'processing_time' in summary:
+            print(f"⏱️  Processing Time: {summary['processing_time']:.1f} seconds")
+        print(f"✅ Success: {'YES' if summary['success'] else 'NO'}")
         
-        if summary.errors_encountered > 0:
-            print(f"⚠️  Errors Encountered: {summary.errors_encountered}")
+        if summary['errors']:
+            print(f"⚠️  Errors: {len(summary['errors'])}")
+            for error in summary['errors'][:3]:  # Show first 3 errors
+                print(f"   • {error}")
         
         print("=" * 60)
         
-        if summary.success:
+        if summary['success']:
             print("\n🎉 Data collection successful!")
             print("\n📋 Next steps:")
             print("   1. Run analysis: python main.py --analyze")
@@ -318,11 +327,12 @@ def run_daily_collection():
     # Collect last 7 days of data (with overlap for reliability)
     summary = collect_wisconsin_data(days_back=7)
     
-    if summary and summary.success:
+    if summary and summary['success']:
         # If successful, update prospect list
         export_prospects(f"daily_prospects_{datetime.now().strftime('%Y%m%d')}.csv")
         
-        print(f"✅ Daily collection complete: {summary.total_records} records")
+        total_daily_records = summary['businesses_collected'] + summary['sba_loans_collected'] + summary['licenses_collected']
+        print(f"✅ Daily collection complete: {total_daily_records} records")
         return True
     else:
         print("❌ Daily collection failed")
@@ -381,7 +391,7 @@ Examples:
         
         if args.collect:
             summary = collect_wisconsin_data(args.days_back)
-            success &= (summary is not None and summary.success)
+            success &= (summary is not None and summary['success'])
         
         if args.analyze:
             success &= run_analysis()
