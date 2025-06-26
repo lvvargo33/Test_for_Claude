@@ -364,6 +364,194 @@ states:
             line_code: "11"
             description: "Restaurants and hotels spending"
 
+    # PHASE 2 DATA SOURCES (Real Estate & Market Intelligence)
+    commercial_real_estate:
+      county_property_records:
+        milwaukee:
+          name: "Milwaukee County Real Property"
+          base_url: "https://milwaukee.county-taxes.com"
+          search_url: "https://milwaukee.county-taxes.com/search"
+          type: "property_tax_search"
+          coverage: "commercial_properties"
+          
+        dane:
+          name: "Dane County Register of Deeds"
+          base_url: "https://rod.countyofdane.com"
+          search_url: "https://rod.countyofdane.com/property-search"
+          type: "deed_records"
+          coverage: "all_property_types"
+          
+        waukesha:
+          name: "Waukesha County Property Search"
+          base_url: "https://waukesha.county-taxes.com"
+          type: "property_tax_search"
+          
+        brown:
+          name: "Brown County Property Records"
+          base_url: "https://brown.county-taxes.com"
+          type: "property_tax_search"
+          
+        racine:
+          name: "Racine County Property Information"
+          base_url: "https://racine.county-taxes.com"
+          type: "property_tax_search"
+          
+      loopnet_integration:
+        name: "LoopNet Commercial Real Estate"
+        base_url: "https://www.loopnet.com"
+        search_api: "https://www.loopnet.com/search/"
+        rate_limit_seconds: 2
+        user_agent: "LocationOptimizer/2.0 Market Research Tool"
+        target_cities:
+          - "Milwaukee"
+          - "Madison"
+          - "Green Bay"
+          - "Kenosha"
+          - "Racine"
+          - "Appleton"
+          - "Waukesha"
+        property_types:
+          - "office"
+          - "retail"
+          - "restaurant"
+          - "industrial"
+          - "mixed_use"
+          - "land"
+          
+    industry_benchmarks:
+      sba_sources:
+        advocacy_reports:
+          base_url: "https://advocacy.sba.gov/resources/research-and-data/"
+          reports:
+            - "Small Business GDP Report"
+            - "Small Business Profiles by State"
+            - "Small Business Economic Impact Study"
+            
+        size_standards:
+          url: "https://www.sba.gov/federal-contracting/contracting-guide/size-standards"
+          description: "Industry size standards and revenue thresholds"
+          
+      franchise_sources:
+        franchise_business_review:
+          base_url: "https://www.franchisebusinessreview.com"
+          reports_url: "https://www.franchisebusinessreview.com/research/"
+          focus: "Franchise satisfaction and performance metrics"
+          
+        franchise_help:
+          base_url: "https://www.franchisehelp.com"
+          data_url: "https://www.franchisehelp.com/franchises/"
+          focus: "Franchise costs and investment data"
+          
+        ifa_reports:
+          name: "International Franchise Association"
+          base_url: "https://www.franchise.org"
+          focus: "Industry reports and economic impact studies"
+          
+      industry_report_sources:
+        ibisworld:
+          name: "IBISWorld Industry Reports"
+          focus: "Comprehensive industry analysis and benchmarks"
+          
+        bls_productivity:
+          name: "Bureau of Labor Statistics"
+          url: "https://www.bls.gov/productivity/"
+          focus: "Productivity and cost metrics by industry"
+          
+        census_economic:
+          name: "U.S. Census Economic Census"
+          url: "https://www.census.gov/programs-surveys/economic-census.html"
+          focus: "Economic characteristics by industry"
+          
+      target_industries:
+        restaurants:
+          naics_codes: ["722511", "722513", "722515"]
+          keywords: ["restaurant", "food service", "quick service", "fast food", "casual dining"]
+          priority: "high"
+          
+        retail:
+          naics_codes: ["441", "442", "443", "444", "445", "446", "447", "448", "451", "452"]
+          keywords: ["retail", "store", "shop", "apparel", "electronics", "grocery"]
+          priority: "high"
+          
+        fitness:
+          naics_codes: ["713940"]
+          keywords: ["fitness", "gym", "health club", "yoga", "martial arts"]
+          priority: "medium"
+          
+        personal_services:
+          naics_codes: ["812111", "812112", "812113"]
+          keywords: ["salon", "barber", "beauty", "spa", "personal care"]
+          priority: "medium"
+          
+        professional_services:
+          naics_codes: ["541", "561"]
+          keywords: ["consulting", "accounting", "legal", "marketing", "administrative"]
+          priority: "medium"
+          
+        automotive:
+          naics_codes: ["441", "811111", "811112"]
+          keywords: ["auto", "car", "automotive", "repair", "dealership"]
+          priority: "low"
+          
+    enhanced_employment:
+      bls_employment_projections:
+        api_base: "https://api.bls.gov/publicAPI/v2"
+        projections_base: "https://www.bls.gov/emp/data"
+        projection_periods:
+          - "2022-2032"
+          - "2020-2030"
+        coverage: "national_state_msa"
+        
+      oes_wage_data:
+        api_base: "https://api.bls.gov/publicAPI/v2"
+        oes_base: "https://www.bls.gov/oes/tables.htm"
+        data_types:
+          - "annual_wages"
+          - "employment_levels"
+          - "location_quotients"
+        geographic_coverage:
+          - "state"
+          - "msa"
+          - "nonmetropolitan"
+          
+      wisconsin_areas:
+        statewide:
+          code: "ST5500000"
+          name: "Wisconsin"
+          type: "State"
+          
+        milwaukee_msa:
+          code: "M0033340"
+          name: "Milwaukee-Waukesha-West Allis, WI"
+          type: "MSA"
+          
+        madison_msa:
+          code: "M0031540"
+          name: "Madison, WI"
+          type: "MSA"
+          
+        green_bay_msa:
+          code: "M0024580"
+          name: "Green Bay, WI"
+          type: "MSA"
+          
+        appleton_msa:
+          code: "M0010900"
+          name: "Appleton, WI"
+          type: "MSA"
+          
+      target_occupation_groups:
+        management: ["11-0000"]
+        business_finance: ["13-0000"]
+        computer_math: ["15-0000"]
+        healthcare: ["29-0000"]
+        food_service: ["35-0000"]
+        sales: ["41-0000"]
+        office_admin: ["43-0000"]
+        construction: ["47-0000"]
+        production: ["51-0000"]
+        transportation: ["53-0000"]
+
         wisconsin_counties:
           # Target Wisconsin counties for demographic analysis
           target_fips_codes:
@@ -566,6 +754,15 @@ bigquery:
     traffic_counts: "traffic_counts"
     zoning_data: "zoning_data"
     consumer_spending: "consumer_spending"
+    # Phase 2 tables
+    commercial_real_estate: "commercial_real_estate"
+    real_estate_market_trends: "real_estate_market_trends"
+    industry_benchmarks: "industry_benchmarks"
+    franchise_opportunities: "franchise_opportunities"
+    employment_projections: "employment_projections"
+    oes_wages: "oes_wages"
+    labor_market_analysis: "labor_market_analysis"
+    collection_monitoring: "collection_monitoring"
     
   partitioning:
     field: "data_extraction_date"
@@ -575,3 +772,8 @@ bigquery:
     business_entities: ["state", "business_type", "city"]
     sba_loans: ["borrower_state", "approval_date", "program_type"]
     business_licenses: ["state", "city", "license_type"]
+    # Phase 2 clustering
+    commercial_real_estate: ["county", "property_type", "data_source"]
+    industry_benchmarks: ["naics_code", "benchmark_type", "data_source"]
+    employment_projections: ["state", "industry_code", "projection_period"]
+    oes_wages: ["state", "area_code", "occupation_group"]
