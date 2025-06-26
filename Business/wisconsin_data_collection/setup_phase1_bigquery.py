@@ -201,8 +201,16 @@ def main():
         print(f"Project: {project_id}")
         print(f"Dataset: {dataset_id}")
         
-        # Initialize BigQuery client
-        client = bigquery.Client(project=project_id)
+        # Initialize BigQuery client with credentials
+        import os
+        credentials_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS', 'location-optimizer-1-449414f93a5a.json')
+        
+        if os.path.exists(credentials_path):
+            client = bigquery.Client.from_service_account_json(credentials_path, project=project_id)
+            print(f"✓ Using credentials from: {credentials_path}")
+        else:
+            client = bigquery.Client(project=project_id)
+            print("✓ Using default credentials")
         
         # Verify dataset exists
         try:
