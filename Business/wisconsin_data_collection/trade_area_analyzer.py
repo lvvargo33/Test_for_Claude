@@ -31,9 +31,8 @@ DATASET_ID = "location_optimizer"
 CREDENTIALS_PATH = "location-optimizer-1-449414f93a5a.json"
 
 # OpenRouteService configuration (using free tier)
-ORS_BASE_URL = "https://api.openrouteservice.org/v2/isochrone"
-# Note: You'll need to sign up for a free API key at https://openrouteservice.org/dev/#/signup
-ORS_API_KEY = os.environ.get("ORS_API_KEY", "")  # Store in environment variable
+ORS_BASE_URL = "https://api.openrouteservice.org/v2/isochrones/driving-car"
+ORS_API_KEY = os.environ.get("ORS_API_KEY", "5b3ce3597851110001cf6248d33b6d517e6840ddaebe04692fec12ec")
 
 # Census API configuration
 CENSUS_API_KEY = os.environ.get("CENSUS_API_KEY", "")  # Get from https://api.census.gov/data/key_signup.html
