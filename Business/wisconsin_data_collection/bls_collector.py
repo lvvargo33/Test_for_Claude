@@ -28,11 +28,11 @@ class BLSDataCollector:
     
     def __init__(self, config_path: str = "data_sources.yaml"):
         self.config = self._load_config(config_path)
-        self.api_key = None  # BLS API is free without registration for basic use
+        self.api_key = "c177d400482b4df282ff74850f23a7d9"  # BLS API key for higher limits
         self.base_url = "https://api.bls.gov/publicAPI/v2"
         self.logger = self._setup_logging()
         
-        # Rate limiting (BLS allows 25 queries per 10 seconds for unregistered users)
+        # Rate limiting (BLS allows 500 queries per day with API key)
         self.request_delay = 0.5  # 500ms between requests
         self.max_retries = 3
         
