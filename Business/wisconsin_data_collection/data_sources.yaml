@@ -249,6 +249,121 @@ states:
               name: "total_transport_pop"
               description: "Total Transportation Population"
               
+    # PHASE 1 DATA SOURCES (High-Impact, Free Sources)
+    traffic_data:
+      wisdot_traffic_counts:
+        name: "Wisconsin DOT Traffic Counts"
+        url: "https://data-wisdot.opendata.arcgis.com/datasets/WisDOT::traffic-counts.geojson"
+        api_endpoint: "https://services1.arcgis.com/WzFsmainVTuD5KML/arcgis/rest/services/Traffic_Counts/FeatureServer/0"
+        type: "arcgis_rest"
+        format: "geojson"
+        update_frequency: "annual"
+        description: "Annual Average Daily Traffic (AADT) counts for Wisconsin highways"
+        coverage: "all_wisconsin_highways"
+        rate_limit: "reasonable_use"
+        
+      highway_system:
+        name: "Wisconsin State Trunk Network"
+        url: "https://data-wisdot.opendata.arcgis.com/datasets/WisDOT::state-trunk-network.geojson"
+        type: "geojson"
+        description: "Wisconsin highway system geometry and classification"
+        
+    zoning_data:
+      county_gis_sources:
+        dane_county:
+          name: "Dane County GIS"
+          gis_portal: "https://map.countyofdane.com/arcgis/rest/services"
+          zoning_service: "https://map.countyofdane.com/arcgis/rest/services/PlanDev/Zoning/MapServer/0"
+          parcel_service: "https://map.countyofdane.com/arcgis/rest/services/PlanDev/Parcels/MapServer/0"
+          type: "arcgis_rest"
+          
+        milwaukee_county:
+          name: "Milwaukee County GIS"
+          gis_portal: "https://gis.milwaukee.gov/arcgis/rest/services"
+          zoning_service: "https://gis.milwaukee.gov/arcgis/rest/services/PlanningZoning/MapServer"
+          type: "arcgis_rest"
+          
+        brown_county:
+          name: "Brown County GIS"
+          gis_portal: "https://gis.co.brown.wi.us/arcgis/rest/services"
+          zoning_service: "https://gis.co.brown.wi.us/arcgis/rest/services/Planning/MapServer"
+          type: "arcgis_rest"
+          
+        outagamie_county:
+          name: "Outagamie County GIS"
+          gis_portal: "https://gis.outagamie.org/rest/services"
+          zoning_service: "https://gis.outagamie.org/rest/services/Planning/MapServer"
+          type: "arcgis_rest"
+          
+        winnebago_county:
+          name: "Winnebago County GIS"
+          gis_portal: "https://gis.co.winnebago.wi.us/arcgis/rest/services"
+          zoning_service: "https://gis.co.winnebago.wi.us/arcgis/rest/services/Zoning/MapServer"
+          type: "arcgis_rest"
+          
+        wood_county:
+          name: "Wood County Land Records"
+          web_viewer: "https://beacon.schneidercorp.com"
+          type: "web_scraping"
+          note: "Comprehensive parcel and zoning data via web interface"
+          
+    consumer_spending:
+      bea_regional_data:
+        name: "Bureau of Economic Analysis - Regional Data"
+        api_base: "https://apps.bea.gov/api/data"
+        api_key_required: true
+        api_key_signup: "https://apps.bea.gov/api/signup/"
+        type: "api"
+        format: "json"
+        update_frequency: "annual"
+        release_schedule: "april"  # Annual data released in April
+        
+        datasets:
+          personal_consumption:
+            dataset_name: "Regional"
+            table_name: "CAINC30"
+            description: "Personal consumption expenditures by state"
+            geographic_level: "state"
+            
+          quarterly_gdp:
+            dataset_name: "Regional" 
+            table_name: "SQGDP2"
+            description: "Quarterly GDP by state (includes PCE components)"
+            geographic_level: "state"
+            frequency: "quarterly"
+            
+        spending_categories:
+          - name: "total_pce"
+            line_code: "1"
+            description: "Total Personal Consumption Expenditures"
+          - name: "goods_total"
+            line_code: "2" 
+            description: "Total spending on goods"
+          - name: "goods_durable"
+            line_code: "3"
+            description: "Durable goods spending"
+          - name: "services_total"
+            line_code: "5"
+            description: "Total spending on services"
+          - name: "housing_utilities"
+            line_code: "6"
+            description: "Housing and utilities spending"
+          - name: "healthcare"
+            line_code: "7"
+            description: "Healthcare spending"
+          - name: "transportation"
+            line_code: "8"
+            description: "Transportation spending"
+          - name: "recreation"
+            line_code: "9"
+            description: "Recreation spending"
+          - name: "food_beverages"
+            line_code: "10"
+            description: "Food and beverages spending"
+          - name: "restaurants_hotels"
+            line_code: "11"
+            description: "Restaurants and hotels spending"
+
         wisconsin_counties:
           # Target Wisconsin counties for demographic analysis
           target_fips_codes:
@@ -447,6 +562,10 @@ bigquery:
     business_licenses: "business_licenses"
     opportunity_scores: "opportunity_scores"
     census_demographics: "census_demographics"
+    # Phase 1 tables
+    traffic_counts: "traffic_counts"
+    zoning_data: "zoning_data"
+    consumer_spending: "consumer_spending"
     
   partitioning:
     field: "data_extraction_date"

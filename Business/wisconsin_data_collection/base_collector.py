@@ -59,7 +59,14 @@ class BaseDataCollector(abc.ABC):
         """
         self.state_code = state_code.upper()
         self.config = self._load_config(config_path)
-        self.state_config = self.config['states'].get(state_code.lower(), {})
+        
+        # Handle state code mapping (WI -> wisconsin)
+        state_mapping = {
+            'WI': 'wisconsin',
+            'IL': 'illinois'
+        }
+        config_key = state_mapping.get(state_code.upper(), state_code.lower())
+        self.state_config = self.config['states'].get(config_key, {})
         
         if not self.state_config:
             raise ValueError(f"No configuration found for state: {state_code}")
@@ -74,9 +81,14 @@ class BaseDataCollector(abc.ABC):
             'User-Agent': 'LocationOptimizer/2.0 Business Research Tool'
         })
         
-        # Initialize BigQuery client
+        # Initialize BigQuery client (optional for testing)
         self.bq_config = self.config.get('bigquery', {})
-        self.bq_client = bigquery.Client(project=self.bq_config.get('project_id'))
+        self.bq_client = None
+        try:
+            if BIGQUERY_AVAILABLE:
+                self.bq_client = bigquery.Client(project=self.bq_config.get('project_id'))
+        except Exception as e:
+            self.logger.warning(f"BigQuery client not available: {e}")
         
         # Data collection summary
         self.collection_summary = DataCollectionSummary(state=self.state_code)
