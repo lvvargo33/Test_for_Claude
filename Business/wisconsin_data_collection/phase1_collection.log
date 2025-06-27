@@ -84,3 +84,86 @@
 2025-06-26 21:01:15,545 - __main__ - INFO - Total records collected: 0
 2025-06-26 21:01:15,545 - __main__ - INFO - Total processing time: 28.79 seconds
 2025-06-26 21:01:15,546 - __main__ - INFO - Collection summary saved to phase1_collection_summary_20250626_210115.json
+2025-06-27 13:59:07,501 - WisconsinTrafficDataCollector_WI - INFO - Wisconsin Traffic Data Collector initialized
+2025-06-27 13:59:07,589 - WisconsinZoningDataCollector_WI - INFO - Wisconsin Zoning Data Collector initialized
+2025-06-27 13:59:07,634 - BEAConsumerSpendingCollector_WI - INFO - BEA Consumer Spending Collector initialized
+2025-06-27 13:59:07,635 - BEAConsumerSpendingCollector_WI - WARNING - BEA API key not found in environment. Using demo data mode.
+2025-06-27 13:59:07,635 - __main__ - INFO - Phase 1 collectors initialized successfully
+2025-06-27 13:59:07,635 - __main__ - INFO - Starting Phase 1 data collection with configuration:
+2025-06-27 13:59:07,635 - __main__ - INFO - {
+  "traffic_max_records": 5000,
+  "zoning_counties": [
+    "Dane",
+    "Milwaukee"
+  ],
+  "zoning_max_per_county": 1000,
+  "spending_years": [
+    2021,
+    2022,
+    2023
+  ]
+}
+2025-06-27 13:59:07,635 - __main__ - INFO - Starting Phase 1 data collection orchestration
+2025-06-27 13:59:07,635 - __main__ - INFO - === Starting Traffic Data Collection ===
+2025-06-27 13:59:07,635 - __main__ - INFO - Starting traffic data collection
+2025-06-27 13:59:07,635 - WisconsinTrafficDataCollector_WI - INFO - Starting Wisconsin traffic data collection
+2025-06-27 13:59:07,635 - WisconsinTrafficDataCollector_WI - INFO - Collecting Wisconsin DOT traffic count data
+2025-06-27 13:59:08,637 - WisconsinTrafficDataCollector_WI - INFO - Processing 5000 traffic count features
+2025-06-27 13:59:08,725 - WisconsinTrafficDataCollector_WI - INFO - Successfully collected 4985 traffic records
+2025-06-27 13:59:08,745 - WisconsinTrafficDataCollector_WI - INFO - Collecting traffic data for Milwaukee
+2025-06-27 13:59:08,746 - WisconsinTrafficDataCollector_WI - INFO - City-specific traffic collection for Milwaukee would be implemented here
+2025-06-27 13:59:08,746 - WisconsinTrafficDataCollector_WI - INFO - Collecting traffic data for Madison
+2025-06-27 13:59:08,746 - WisconsinTrafficDataCollector_WI - INFO - City-specific traffic collection for Madison would be implemented here
+2025-06-27 13:59:08,746 - WisconsinTrafficDataCollector_WI - INFO - Collecting traffic data for Green Bay
+2025-06-27 13:59:08,746 - WisconsinTrafficDataCollector_WI - INFO - City-specific traffic collection for Green Bay would be implemented here
+2025-06-27 13:59:08,746 - WisconsinTrafficDataCollector_WI - INFO - Collecting traffic data for Kenosha
+2025-06-27 13:59:08,746 - WisconsinTrafficDataCollector_WI - INFO - City-specific traffic collection for Kenosha would be implemented here
+2025-06-27 13:59:08,746 - WisconsinTrafficDataCollector_WI - INFO - Collecting traffic data for Racine
+2025-06-27 13:59:08,747 - WisconsinTrafficDataCollector_WI - INFO - City-specific traffic collection for Racine would be implemented here
+2025-06-27 13:59:10,570 - WisconsinTrafficDataCollector_WI - ERROR - Error saving traffic data to BigQuery: 400 The field specified for DAY partitioning can only be of type TIMESTAMP, DATETIME or DATE. The type found is: INT64.; reason: invalidQuery, location: query, message: The field specified for DAY partitioning can only be of type TIMESTAMP, DATETIME or DATE. The type found is: INT64.
+2025-06-27 13:59:10,570 - WisconsinTrafficDataCollector_WI - INFO - Traffic collection complete: {'collection_date': datetime.datetime(2025, 6, 27, 13, 59, 7, 635953), 'state': 'WI', 'data_source': 'WisDOT', 'highway_records': 4985, 'city_records': 0, 'total_records': 4985, 'success': False, 'processing_time_seconds': 2.9346697330474854, 'errors': []}
+2025-06-27 13:59:10,571 - __main__ - WARNING - Traffic collection had issues: []
+2025-06-27 13:59:15,571 - __main__ - INFO - === Starting Zoning Data Collection ===
+2025-06-27 13:59:15,571 - __main__ - INFO - Starting zoning data collection
+2025-06-27 13:59:15,572 - WisconsinZoningDataCollector_WI - INFO - Starting Wisconsin zoning data collection
+2025-06-27 13:59:15,572 - WisconsinZoningDataCollector_WI - INFO - Collecting zoning data for Dane County
+2025-06-27 13:59:17,636 - WisconsinZoningDataCollector_WI - ERROR - Request failed for https://map.countyofdane.com/arcgis/rest/services/PlanDev/Zoning/MapServer/0/query: HTTPSConnectionPool(host='map.countyofdane.com', port=443): Max retries exceeded with url: /arcgis/rest/services/PlanDev/Zoning/MapServer/0/query?where=1%3D1&outFields=%2A&returnGeometry=true&f=json&resultRecordCount=1000 (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x779109f1f4d0>: Failed to resolve 'map.countyofdane.com' ([Errno -2] Name or service not known)"))
+2025-06-27 13:59:21,733 - WisconsinZoningDataCollector_WI - ERROR - Request failed for https://map.countyofdane.com/arcgis/rest/services/PlanDev/Zoning/MapServer/0/query: HTTPSConnectionPool(host='map.countyofdane.com', port=443): Max retries exceeded with url: /arcgis/rest/services/PlanDev/Zoning/MapServer/0/query?where=1%3D1&outFields=%2A&returnGeometry=true&f=json&resultRecordCount=1000 (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x779109f34950>: Failed to resolve 'map.countyofdane.com' ([Errno -2] Name or service not known)"))
+2025-06-27 13:59:25,771 - WisconsinZoningDataCollector_WI - ERROR - Request failed for https://map.countyofdane.com/arcgis/rest/services/PlanDev/Zoning/MapServer/0/query: HTTPSConnectionPool(host='map.countyofdane.com', port=443): Max retries exceeded with url: /arcgis/rest/services/PlanDev/Zoning/MapServer/0/query?where=1%3D1&outFields=%2A&returnGeometry=true&f=json&resultRecordCount=1000 (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x779109f34b00>: Failed to resolve 'map.countyofdane.com' ([Errno -2] Name or service not known)"))
+2025-06-27 13:59:25,772 - WisconsinZoningDataCollector_WI - ERROR - Error collecting ArcGIS data for Dane: RetryError[<Future at 0x779109f06690 state=finished raised DataCollectionError>]
+2025-06-27 13:59:25,772 - WisconsinZoningDataCollector_WI - INFO - Collected 0 zoning records for Dane County
+2025-06-27 13:59:25,772 - WisconsinZoningDataCollector_WI - INFO - Collecting zoning data for Milwaukee County
+2025-06-27 13:59:25,948 - WisconsinZoningDataCollector_WI - ERROR - Request failed for https://gis.milwaukee.gov/arcgis/rest/services/PlanningZoning/MapServer/query: HTTPSConnectionPool(host='gis.milwaukee.gov', port=443): Max retries exceeded with url: /arcgis/rest/services/PlanningZoning/MapServer/query?where=1%3D1&outFields=%2A&returnGeometry=true&f=json&resultRecordCount=1000 (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x779109ef98e0>: Failed to resolve 'gis.milwaukee.gov' ([Errno -2] Name or service not known)"))
+2025-06-27 13:59:30,071 - WisconsinZoningDataCollector_WI - ERROR - Request failed for https://gis.milwaukee.gov/arcgis/rest/services/PlanningZoning/MapServer/query: HTTPSConnectionPool(host='gis.milwaukee.gov', port=443): Max retries exceeded with url: /arcgis/rest/services/PlanningZoning/MapServer/query?where=1%3D1&outFields=%2A&returnGeometry=true&f=json&resultRecordCount=1000 (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x779109efad80>: Failed to resolve 'gis.milwaukee.gov' ([Errno -2] Name or service not known)"))
+2025-06-27 13:59:34,143 - WisconsinZoningDataCollector_WI - ERROR - Request failed for https://gis.milwaukee.gov/arcgis/rest/services/PlanningZoning/MapServer/query: HTTPSConnectionPool(host='gis.milwaukee.gov', port=443): Max retries exceeded with url: /arcgis/rest/services/PlanningZoning/MapServer/query?where=1%3D1&outFields=%2A&returnGeometry=true&f=json&resultRecordCount=1000 (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x779109f1fb00>: Failed to resolve 'gis.milwaukee.gov' ([Errno -2] Name or service not known)"))
+2025-06-27 13:59:34,143 - WisconsinZoningDataCollector_WI - ERROR - Error collecting ArcGIS data for Milwaukee: RetryError[<Future at 0x779109efb260 state=finished raised DataCollectionError>]
+2025-06-27 13:59:34,143 - WisconsinZoningDataCollector_WI - INFO - Collected 0 zoning records for Milwaukee County
+2025-06-27 13:59:34,143 - WisconsinZoningDataCollector_WI - WARNING - No zoning records collected
+2025-06-27 13:59:34,144 - WisconsinZoningDataCollector_WI - INFO - Zoning collection complete: {'collection_date': datetime.datetime(2025, 6, 27, 13, 59, 15, 572889), 'state': 'WI', 'data_source': 'County GIS', 'counties_processed': 2, 'total_records': 0, 'success': False, 'processing_time_seconds': 18.571290493011475, 'county_results': {'Dane': {'records_collected': 0, 'success': True}, 'Milwaukee': {'records_collected': 0, 'success': True}}, 'errors': []}
+2025-06-27 13:59:34,144 - __main__ - WARNING - Zoning collection had issues: []
+2025-06-27 13:59:39,144 - __main__ - INFO - === Starting Consumer Spending Data Collection ===
+2025-06-27 13:59:39,144 - __main__ - INFO - Starting consumer spending data collection
+2025-06-27 13:59:39,144 - BEAConsumerSpendingCollector_WI - INFO - Starting BEA consumer spending data collection
+2025-06-27 13:59:39,144 - BEAConsumerSpendingCollector_WI - INFO - Collecting BEA consumer spending data for Wisconsin, years: [2021, 2022, 2023]
+2025-06-27 13:59:39,240 - BEAConsumerSpendingCollector_WI - ERROR - Error collecting annual PCE data for 2021: 'Data'
+2025-06-27 13:59:39,748 - BEAConsumerSpendingCollector_WI - ERROR - Error collecting annual PCE data for 2022: 'Data'
+2025-06-27 13:59:40,257 - BEAConsumerSpendingCollector_WI - ERROR - Error collecting annual PCE data for 2023: 'Data'
+2025-06-27 13:59:40,761 - BEAConsumerSpendingCollector_WI - INFO - Successfully collected 0 consumer spending records
+2025-06-27 13:59:40,761 - BEAConsumerSpendingCollector_WI - INFO - County-level consumer spending data collection (limited availability)
+2025-06-27 13:59:40,761 - BEAConsumerSpendingCollector_WI - INFO - County-level collection for Dane (placeholder)
+2025-06-27 13:59:40,761 - BEAConsumerSpendingCollector_WI - INFO - County-level collection for Milwaukee (placeholder)
+2025-06-27 13:59:40,761 - BEAConsumerSpendingCollector_WI - INFO - County-level collection for Brown (placeholder)
+2025-06-27 13:59:40,761 - BEAConsumerSpendingCollector_WI - INFO - County-level collection for Racine (placeholder)
+2025-06-27 13:59:40,761 - BEAConsumerSpendingCollector_WI - INFO - County-level collection for Kenosha (placeholder)
+2025-06-27 13:59:40,761 - BEAConsumerSpendingCollector_WI - INFO - County-level collection for Rock (placeholder)
+2025-06-27 13:59:40,761 - BEAConsumerSpendingCollector_WI - INFO - County-level collection for Winnebago (placeholder)
+2025-06-27 13:59:40,762 - BEAConsumerSpendingCollector_WI - INFO - County-level collection for Outagamie (placeholder)
+2025-06-27 13:59:40,762 - BEAConsumerSpendingCollector_WI - INFO - County-level collection for Washington (placeholder)
+2025-06-27 13:59:40,762 - BEAConsumerSpendingCollector_WI - INFO - County-level collection for Waukesha (placeholder)
+2025-06-27 13:59:40,762 - BEAConsumerSpendingCollector_WI - WARNING - No consumer spending records collected
+2025-06-27 13:59:40,762 - BEAConsumerSpendingCollector_WI - INFO - Consumer spending collection complete: {'collection_date': datetime.datetime(2025, 6, 27, 13, 59, 39, 144754), 'state': 'WI', 'data_source': 'BEA', 'years_collected': [], 'state_records': 0, 'county_records': 0, 'total_records': 0, 'success': False, 'processing_time_seconds': 1.6175928115844727, 'errors': []}
+2025-06-27 13:59:40,762 - __main__ - WARNING - Consumer spending collection had issues: []
+2025-06-27 13:59:40,762 - __main__ - INFO - Phase 1 collection complete: 0/3 successful
+2025-06-27 13:59:40,762 - __main__ - INFO - Total records collected: 0
+2025-06-27 13:59:40,762 - __main__ - INFO - Total processing time: 33.13 seconds
+2025-06-27 13:59:40,763 - __main__ - INFO - Collection summary saved to phase1_collection_summary_20250627_135940.json

@@ -391,25 +391,44 @@ class WisconsinTrafficDataCollector(BaseDataCollector):
                 self.logger.warning("No traffic data to save")
                 return True
             
+            # Add required fields to match BigQuery schema
+            df['traffic_count_id'] = df.apply(lambda row: f"{row['location_id']}_{row['measurement_year']}", axis=1)
+            df['state'] = 'WI'
+            
             # Ensure proper data types
             df['data_collection_date'] = pd.to_datetime(df['data_collection_date'])
+            df['collection_date'] = df['data_collection_date']  # Alias for schema compatibility
             df['measurement_year'] = df['measurement_year'].astype(int)
+            df['aadt_year'] = df['measurement_year']  # Alias for schema
             df['aadt'] = df['aadt'].astype(int)
             
+            # Rename columns to match schema
+            column_mapping = {
+                'route_name': 'highway_name',
+                'urban_rural': 'location_description',
+                'data_collection_date': 'data_extraction_date'
+            }
+            df = df.rename(columns=column_mapping)
+            
+            # Add required timestamp field for partitioning
+            df['data_extraction_date'] = datetime.utcnow()
+            df['collection_method'] = 'API'
+            
             # Load to BigQuery
-            dataset_id = self.bq_config.get('datasets', {}).get('raw_data', 'raw_business_data')
+            dataset_id = 'raw_traffic'  # Use the correct dataset
             table_id = 'traffic_counts'
             full_table_id = f"{self.bq_config['project_id']}.{dataset_id}.{table_id}"
             
             from google.cloud import bigquery
             
             job_config = bigquery.LoadJobConfig(
-                write_disposition="WRITE_APPEND",
+                write_disposition="WRITE_TRUNCATE",  # Replace the table to update schema
                 time_partitioning=bigquery.TimePartitioning(
                     type_=bigquery.TimePartitioningType.DAY,
-                    field="data_collection_date"
+                    field="data_extraction_date"
                 ),
-                clustering_fields=["county", "highway_type", "traffic_volume_category"]
+                clustering_fields=["county", "highway_type"],
+                autodetect=True  # Let BigQuery infer the schema
             )
             
             job = self.bq_client.load_table_from_dataframe(df, full_table_id, job_config=job_config)
