@@ -85,6 +85,9 @@ class GooglePlacesCollector(BaseDataCollector):
         # Phase 1 search areas
         self.phase1_search_areas = self._define_phase1_search_areas()
         
+        # Phase 2 search areas
+        self.phase2_search_areas = self._define_phase2_search_areas()
+        
         # Business categorization mapping
         self.business_categories = self._load_business_categories()
         
@@ -162,6 +165,102 @@ class GooglePlacesCollector(BaseDataCollector):
         search_areas.extend(brown_areas)
         
         self.logger.info(f"Defined {len(search_areas)} search areas for Phase 1")
+        return search_areas
+    
+    def _define_phase2_search_areas(self) -> List[SearchArea]:
+        """Define comprehensive search areas for Phase 2 counties"""
+        search_areas = []
+        
+        # Winnebago County (Oshkosh, Neenah, Menasha) - Fox Cities region
+        winnebago_areas = [
+            # Oshkosh - Major commercial areas
+            SearchArea("Downtown Oshkosh", 44.0247, -88.5426, 2000, "Winnebago", "Oshkosh-Neenah MSA", 1),
+            SearchArea("Valley Fair Mall", 44.0058, -88.5173, 2500, "Winnebago", "Oshkosh-Neenah MSA", 1),
+            SearchArea("South Park Mall", 44.0058, -88.5173, 2000, "Winnebago", "Oshkosh-Neenah MSA", 1),
+            SearchArea("UW Oshkosh Area", 44.0247, -88.5503, 2000, "Winnebago", "Oshkosh-Neenah MSA", 2),
+            SearchArea("West Oshkosh", 44.0247, -88.5703, 3000, "Winnebago", "Oshkosh-Neenah MSA", 2),
+            # Neenah
+            SearchArea("Downtown Neenah", 44.1858, -88.4626, 2000, "Winnebago", "Oshkosh-Neenah MSA", 1),
+            SearchArea("Neenah Commercial", 44.1758, -88.4726, 2500, "Winnebago", "Oshkosh-Neenah MSA", 2),
+            # Menasha
+            SearchArea("Downtown Menasha", 44.2022, -88.4326, 2000, "Winnebago", "Oshkosh-Neenah MSA", 1),
+            SearchArea("Menasha Commercial", 44.1922, -88.4426, 2500, "Winnebago", "Oshkosh-Neenah MSA", 2),
+        ]
+        
+        # Eau Claire County - Western Wisconsin hub
+        eau_claire_areas = [
+            # Downtown Eau Claire
+            SearchArea("Downtown Eau Claire", 44.8113, -91.4985, 2000, "Eau Claire", "Eau Claire MSA", 1),
+            # Major shopping areas
+            SearchArea("Oakwood Mall", 44.7713, -91.4685, 2500, "Eau Claire", "Eau Claire MSA", 1),
+            SearchArea("Volume One Plaza", 44.8013, -91.4885, 2000, "Eau Claire", "Eau Claire MSA", 1),
+            # University area
+            SearchArea("UW-Eau Claire", 44.8063, -91.5035, 2000, "Eau Claire", "Eau Claire MSA", 1),
+            SearchArea("Water Street District", 44.8113, -91.4935, 1500, "Eau Claire", "Eau Claire MSA", 1),
+            # Major corridors
+            SearchArea("Clairemont Avenue", 44.7913, -91.4585, 3000, "Eau Claire", "Eau Claire MSA", 2),
+            SearchArea("Golf Road Corridor", 44.7613, -91.4485, 3000, "Eau Claire", "Eau Claire MSA", 2),
+            SearchArea("North Eau Claire", 44.8313, -91.4985, 3000, "Eau Claire", "Eau Claire MSA", 2),
+            SearchArea("South Eau Claire", 44.7813, -91.4985, 3000, "Eau Claire", "Eau Claire MSA", 2),
+        ]
+        
+        # Marathon County (Wausau) - Central Wisconsin hub
+        marathon_areas = [
+            # Downtown Wausau
+            SearchArea("Downtown Wausau", 44.9591, -89.6301, 2000, "Marathon", "Wausau MSA", 1),
+            # Major shopping areas
+            SearchArea("Wausau Center Mall", 44.9491, -89.6201, 2500, "Marathon", "Wausau MSA", 1),
+            SearchArea("Cedar Creek Mall", 44.9291, -89.6001, 2500, "Marathon", "Wausau MSA", 1),
+            # Major corridors
+            SearchArea("Grand Avenue", 44.9591, -89.6101, 2500, "Marathon", "Wausau MSA", 2),
+            SearchArea("Stewart Avenue", 44.9391, -89.6301, 2500, "Marathon", "Wausau MSA", 2),
+            SearchArea("Rib Mountain Drive", 44.9191, -89.6501, 3000, "Marathon", "Wausau MSA", 2),
+            # Suburban areas
+            SearchArea("North Wausau", 44.9791, -89.6301, 3000, "Marathon", "Wausau MSA", 2),
+            SearchArea("South Wausau", 44.9391, -89.6301, 3000, "Marathon", "Wausau MSA", 2),
+            SearchArea("West Wausau", 44.9591, -89.6601, 3000, "Marathon", "Wausau MSA", 3),
+        ]
+        
+        # Kenosha County - Southeast Wisconsin, Chicago metro influence
+        kenosha_areas = [
+            # Downtown Kenosha
+            SearchArea("Downtown Kenosha", 42.5847, -87.8212, 2000, "Kenosha", "Chicago-Naperville-Elgin MSA", 1),
+            # Major shopping areas
+            SearchArea("Southport Shopping Center", 42.5647, -87.8112, 2500, "Kenosha", "Chicago-Naperville-Elgin MSA", 1),
+            SearchArea("Pleasant Prairie Premium Outlets", 42.5547, -87.8312, 2500, "Kenosha", "Chicago-Naperville-Elgin MSA", 1),
+            # Major corridors
+            SearchArea("52nd Street Corridor", 42.5747, -87.8312, 3000, "Kenosha", "Chicago-Naperville-Elgin MSA", 2),
+            SearchArea("Highway 50 Corridor", 42.5847, -87.8512, 3000, "Kenosha", "Chicago-Naperville-Elgin MSA", 2),
+            SearchArea("75th Street", 42.5447, -87.8212, 2500, "Kenosha", "Chicago-Naperville-Elgin MSA", 2),
+            # Suburban areas
+            SearchArea("Pleasant Prairie", 42.5547, -87.8612, 3000, "Kenosha", "Chicago-Naperville-Elgin MSA", 2),
+            SearchArea("Somers", 42.6047, -87.8212, 3000, "Kenosha", "Chicago-Naperville-Elgin MSA", 3),
+        ]
+        
+        # Racine County - Southeast Wisconsin, Milwaukee metro influence
+        racine_areas = [
+            # Downtown Racine
+            SearchArea("Downtown Racine", 42.7261, -87.7828, 2000, "Racine", "Milwaukee-Waukesha-West Allis MSA", 1),
+            # Major shopping areas
+            SearchArea("Regency Mall", 42.7061, -87.7928, 2500, "Racine", "Milwaukee-Waukesha-West Allis MSA", 1),
+            SearchArea("Festival Foods Plaza", 42.7161, -87.8128, 2000, "Racine", "Milwaukee-Waukesha-West Allis MSA", 1),
+            # Major corridors
+            SearchArea("Washington Avenue", 42.7261, -87.7928, 2500, "Racine", "Milwaukee-Waukesha-West Allis MSA", 2),
+            SearchArea("Durand Avenue", 42.7061, -87.7628, 3000, "Racine", "Milwaukee-Waukesha-West Allis MSA", 2),
+            SearchArea("Highway 20 Corridor", 42.7361, -87.8028, 3000, "Racine", "Milwaukee-Waukesha-West Allis MSA", 2),
+            # Suburban areas
+            SearchArea("Mount Pleasant", 42.7161, -87.8328, 3000, "Racine", "Milwaukee-Waukesha-West Allis MSA", 2),
+            SearchArea("Caledonia", 42.7461, -87.8728, 3000, "Racine", "Milwaukee-Waukesha-West Allis MSA", 3),
+            SearchArea("Sturtevant", 42.6961, -87.8928, 3000, "Racine", "Milwaukee-Waukesha-West Allis MSA", 3),
+        ]
+        
+        search_areas.extend(winnebago_areas)
+        search_areas.extend(eau_claire_areas)
+        search_areas.extend(marathon_areas)
+        search_areas.extend(kenosha_areas)
+        search_areas.extend(racine_areas)
+        
+        self.logger.info(f"Defined {len(search_areas)} search areas for Phase 2")
         return search_areas
     
     def _load_business_categories(self) -> Dict[str, str]:
@@ -703,6 +802,142 @@ class GooglePlacesCollector(BaseDataCollector):
                 
         except Exception as e:
             error_msg = f"Error in Phase 1 collection: {e}"
+            self.logger.error(error_msg)
+            summary['errors'].append(error_msg)
+            summary['success'] = False
+        
+        summary['processing_time_seconds'] = time.time() - start_time
+        
+        return summary
+    
+    def collect_phase2_data(self) -> pd.DataFrame:
+        """
+        Collect comprehensive business data for Phase 2 counties
+        
+        Returns:
+            DataFrame with collected business data
+        """
+        all_places = []
+        start_time = time.time()
+        
+        self.logger.info("Starting Phase 2 data collection")
+        self.logger.info(f"Target areas: {len(self.phase2_search_areas)}")
+        
+        try:
+            # Collect from each search area
+            for i, search_area in enumerate(self.phase2_search_areas, 1):
+                self.logger.info(f"Processing area {i}/{len(self.phase2_search_areas)}: {search_area.name}")
+                
+                # General search for all businesses
+                area_places = self.search_places_in_area(search_area)
+                all_places.extend(area_places)
+                
+                # Progress reporting
+                if i % 5 == 0:
+                    self.logger.info(f"Progress: {i}/{len(self.phase2_search_areas)} areas completed")
+                    self.logger.info(f"API calls made: {self.api_calls_made}")
+                    self.logger.info(f"Businesses collected: {len(all_places)}")
+            
+            # Remove duplicates based on place_id
+            unique_places = {}
+            for place in all_places:
+                place_id = place.get('place_id')
+                if place_id and place_id not in unique_places:
+                    unique_places[place_id] = place
+            
+            self.businesses_collected = len(unique_places)
+            
+            # Convert to DataFrame
+            df = pd.DataFrame(list(unique_places.values()))
+            
+            # Add competitive analysis
+            if not df.empty:
+                df = self._add_competitive_analysis(df)
+            
+            processing_time = time.time() - start_time
+            
+            self.logger.info("Phase 2 collection complete")
+            self.logger.info(f"Total API calls: {self.api_calls_made}")
+            self.logger.info(f"Unique businesses: {self.businesses_collected}")
+            self.logger.info(f"Processing time: {processing_time:.1f} seconds")
+            self.logger.info(f"Errors encountered: {len(self.errors_encountered)}")
+            
+            return df
+            
+        except Exception as e:
+            self.logger.error(f"Error in Phase 2 collection: {e}")
+            return pd.DataFrame()
+    
+    def run_phase2_collection(self) -> Dict[str, Any]:
+        """
+        Run complete Phase 2 collection process
+        
+        Returns:
+            Collection summary
+        """
+        start_time = time.time()
+        
+        summary = {
+            'collection_date': datetime.now(),
+            'phase': 'Phase 2',
+            'counties': ['Winnebago', 'Eau Claire', 'Marathon', 'Kenosha', 'Racine'],
+            'search_areas': len(self.phase2_search_areas),
+            'api_calls_made': 0,
+            'businesses_collected': 0,
+            'success': False,
+            'processing_time_seconds': 0,
+            'errors': [],
+            'data_quality': {}
+        }
+        
+        try:
+            self.logger.info("Starting Phase 2 Google Places collection")
+            
+            # Reset counters for Phase 2
+            self.api_calls_made = 0
+            self.businesses_collected = 0
+            self.errors_encountered = []
+            
+            # Collect data
+            df = self.collect_phase2_data()
+            
+            if not df.empty:
+                # Save to BigQuery
+                save_success = self.save_to_bigquery(df)
+                
+                # Save local copy
+                output_file = f"google_places_phase2_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+                df.to_csv(output_file, index=False)
+                
+                # Calculate data quality metrics
+                quality_metrics = {
+                    'total_records': len(df),
+                    'records_with_ratings': len(df[df['rating'].notna()]) if 'rating' in df.columns else 0,
+                    'records_with_phone': len(df[df['formatted_phone_number'].notna()]) if 'formatted_phone_number' in df.columns else 0,
+                    'records_with_website': len(df[df['website'].notna()]) if 'website' in df.columns else 0,
+                    'avg_confidence_score': df['data_confidence_score'].mean() if 'data_confidence_score' in df.columns else 0,
+                    'business_categories': df['business_category'].value_counts().to_dict() if 'business_category' in df.columns else {},
+                    'county_distribution': df['county_name'].value_counts().to_dict() if 'county_name' in df.columns else {}
+                }
+                
+                summary.update({
+                    'api_calls_made': self.api_calls_made,
+                    'businesses_collected': self.businesses_collected,
+                    'success': save_success,
+                    'data_quality': quality_metrics,
+                    'errors': self.errors_encountered,
+                    'output_file': output_file
+                })
+                
+                self.logger.info(f"Phase 2 collection completed successfully")
+                self.logger.info(f"Saved to: {output_file}")
+                
+            else:
+                summary['success'] = False
+                summary['errors'].append("No data collected")
+                
+        except Exception as e:
+            error_msg = f"Error in Phase 2 collection: {e}"
             self.logger.error(error_msg)
             summary['errors'].append(error_msg)
             summary['success'] = False
