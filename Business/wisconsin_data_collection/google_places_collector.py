@@ -88,6 +88,9 @@ class GooglePlacesCollector(BaseDataCollector):
         # Phase 2 search areas
         self.phase2_search_areas = self._define_phase2_search_areas()
         
+        # Phase 3 search areas
+        self.phase3_search_areas = self._define_phase3_search_areas()
+        
         # Business categorization mapping
         self.business_categories = self._load_business_categories()
         
@@ -261,6 +264,120 @@ class GooglePlacesCollector(BaseDataCollector):
         search_areas.extend(racine_areas)
         
         self.logger.info(f"Defined {len(search_areas)} search areas for Phase 2")
+        return search_areas
+    
+    def _define_phase3_search_areas(self) -> List[SearchArea]:
+        """Define comprehensive search areas for Phase 3 counties and cities"""
+        search_areas = []
+        
+        # Sauk County - Wisconsin Dells (Major tourism hub)
+        sauk_areas = [
+            # Wisconsin Dells - Tourism center
+            SearchArea("Downtown Wisconsin Dells", 43.6274, -89.7710, 2000, "Sauk", "Wisconsin Dells MSA", 1),
+            SearchArea("Wisconsin Dells Parkway", 43.6174, -89.7810, 2500, "Sauk", "Wisconsin Dells MSA", 1),
+            SearchArea("Lake Delton", 43.5974, -89.7610, 2000, "Sauk", "Wisconsin Dells MSA", 1),
+            SearchArea("Dells Tourism District", 43.6374, -89.7610, 3000, "Sauk", "Wisconsin Dells MSA", 1),
+            # Outlying areas
+            SearchArea("Baraboo", 43.4709, -89.7440, 3000, "Sauk", "Wisconsin Dells MSA", 2),
+            SearchArea("Reedsburg", 43.5327, -90.0040, 2500, "Sauk", "Wisconsin Dells MSA", 3),
+        ]
+        
+        # Door County - Tourism and recreation destination
+        door_areas = [
+            # Sturgeon Bay - County seat
+            SearchArea("Downtown Sturgeon Bay", 44.8342, -87.3773, 2000, "Door", "Door County", 1),
+            SearchArea("Sturgeon Bay Commercial", 44.8242, -87.3673, 2500, "Door", "Door County", 1),
+            # Fish Creek - Tourist destination
+            SearchArea("Fish Creek", 45.1342, -87.2473, 1500, "Door", "Door County", 1),
+            # Ephraim - Tourist destination
+            SearchArea("Ephraim", 45.1442, -87.1773, 1500, "Door", "Door County", 1),
+            # Sister Bay
+            SearchArea("Sister Bay", 45.1942, -87.1273, 1500, "Door", "Door County", 1),
+            # Egg Harbor
+            SearchArea("Egg Harbor", 45.0542, -87.2973, 1500, "Door", "Door County", 2),
+            # Bailey's Harbor
+            SearchArea("Bailey's Harbor", 45.0642, -87.1273, 1500, "Door", "Door County", 2),
+            # Washington Island
+            SearchArea("Washington Island", 45.3842, -86.9273, 2000, "Door", "Door County", 3),
+        ]
+        
+        # La Crosse County - Western Wisconsin hub
+        la_crosse_areas = [
+            # Downtown La Crosse
+            SearchArea("Downtown La Crosse", 43.8014, -91.2396, 2000, "La Crosse", "La Crosse-Onalaska MSA", 1),
+            # Major shopping areas
+            SearchArea("Valley View Mall", 43.8314, -91.2596, 2500, "La Crosse", "La Crosse-Onalaska MSA", 1),
+            SearchArea("French Island", 43.8114, -91.2196, 2000, "La Crosse", "La Crosse-Onalaska MSA", 1),
+            # University area
+            SearchArea("UW-La Crosse", 43.8214, -91.2396, 2000, "La Crosse", "La Crosse-Onalaska MSA", 1),
+            # Major corridors
+            SearchArea("State Road Corridor", 43.8414, -91.2296, 3000, "La Crosse", "La Crosse-Onalaska MSA", 2),
+            SearchArea("Mormon Coulee Road", 43.7814, -91.2496, 2500, "La Crosse", "La Crosse-Onalaska MSA", 2),
+            # Onalaska
+            SearchArea("Onalaska", 43.8844, -91.2396, 3000, "La Crosse", "La Crosse-Onalaska MSA", 2),
+            SearchArea("Holmen", 43.9614, -91.2596, 2500, "La Crosse", "La Crosse-Onalaska MSA", 3),
+        ]
+        
+        # Portage County - Stevens Point (Central Wisconsin)
+        portage_areas = [
+            # Downtown Stevens Point
+            SearchArea("Downtown Stevens Point", 44.5236, -89.5746, 2000, "Portage", "Stevens Point MSA", 1),
+            # University area
+            SearchArea("UW-Stevens Point", 44.5236, -89.5346, 2000, "Portage", "Stevens Point MSA", 1),
+            # Major shopping areas
+            SearchArea("Centerpoint Mall", 44.5036, -89.5646, 2500, "Portage", "Stevens Point MSA", 1),
+            SearchArea("Plover Commercial", 44.4636, -89.5446, 2500, "Portage", "Stevens Point MSA", 1),
+            # Major corridors
+            SearchArea("Business 51 Corridor", 44.5436, -89.5746, 3000, "Portage", "Stevens Point MSA", 2),
+            SearchArea("Highway 10 Corridor", 44.5236, -89.6046, 3000, "Portage", "Stevens Point MSA", 2),
+            # Suburban areas
+            SearchArea("Whiting", 44.4836, -89.5946, 2000, "Portage", "Stevens Point MSA", 2),
+            SearchArea("Park Ridge", 44.5536, -89.5546, 2500, "Portage", "Stevens Point MSA", 3),
+        ]
+        
+        # Douglas County - Superior (Northern Wisconsin, Duluth metro)
+        douglas_areas = [
+            # Downtown Superior
+            SearchArea("Downtown Superior", 46.7208, -92.1041, 2000, "Douglas", "Duluth MN-WI MSA", 1),
+            # Major shopping areas
+            SearchArea("Mariner Mall", 46.6908, -92.0941, 2500, "Douglas", "Duluth MN-WI MSA", 1),
+            SearchArea("Tower Avenue", 46.7108, -92.1041, 2000, "Douglas", "Duluth MN-WI MSA", 1),
+            # Port area
+            SearchArea("Superior Harbor", 46.7308, -92.0741, 2500, "Douglas", "Duluth MN-WI MSA", 1),
+            # Major corridors
+            SearchArea("Belknap Street", 46.6908, -92.1241, 3000, "Douglas", "Duluth MN-WI MSA", 2),
+            SearchArea("Hammond Avenue", 46.7008, -92.1341, 2500, "Douglas", "Duluth MN-WI MSA", 2),
+            # UW-Superior area
+            SearchArea("UW-Superior", 46.7108, -92.1141, 2000, "Douglas", "Duluth MN-WI MSA", 2),
+            SearchArea("South Superior", 46.6808, -92.1041, 3000, "Douglas", "Duluth MN-WI MSA", 3),
+        ]
+        
+        # Rock County - Beloit (Southern Wisconsin, Illinois border)
+        rock_areas = [
+            # Downtown Beloit
+            SearchArea("Downtown Beloit", 42.5083, -89.0317, 2000, "Rock", "Janesville-Beloit MSA", 1),
+            # Major shopping areas
+            SearchArea("Beloit Plaza", 42.5183, -89.0417, 2000, "Rock", "Janesville-Beloit MSA", 1),
+            SearchArea("Eclipse Center", 42.4983, -89.0217, 2500, "Rock", "Janesville-Beloit MSA", 1),
+            # University area
+            SearchArea("Beloit College Area", 42.5083, -89.0217, 1500, "Rock", "Janesville-Beloit MSA", 1),
+            # Major corridors
+            SearchArea("State Street Corridor", 42.5083, -89.0117, 2500, "Rock", "Janesville-Beloit MSA", 2),
+            SearchArea("Milwaukee Road", 42.5283, -89.0317, 2500, "Rock", "Janesville-Beloit MSA", 2),
+            # South Beloit (border area)
+            SearchArea("South Beloit Border", 42.4883, -89.0317, 2000, "Rock", "Janesville-Beloit MSA", 2),
+            # Janesville (county seat)
+            SearchArea("Janesville", 42.6827, -89.0187, 3000, "Rock", "Janesville-Beloit MSA", 3),
+        ]
+        
+        search_areas.extend(sauk_areas)
+        search_areas.extend(door_areas)
+        search_areas.extend(la_crosse_areas)
+        search_areas.extend(portage_areas)
+        search_areas.extend(douglas_areas)
+        search_areas.extend(rock_areas)
+        
+        self.logger.info(f"Defined {len(search_areas)} search areas for Phase 3")
         return search_areas
     
     def _load_business_categories(self) -> Dict[str, str]:
@@ -938,6 +1055,142 @@ class GooglePlacesCollector(BaseDataCollector):
                 
         except Exception as e:
             error_msg = f"Error in Phase 2 collection: {e}"
+            self.logger.error(error_msg)
+            summary['errors'].append(error_msg)
+            summary['success'] = False
+        
+        summary['processing_time_seconds'] = time.time() - start_time
+        
+        return summary
+    
+    def collect_phase3_data(self) -> pd.DataFrame:
+        """
+        Collect comprehensive business data for Phase 3 counties
+        
+        Returns:
+            DataFrame with collected business data
+        """
+        all_places = []
+        start_time = time.time()
+        
+        self.logger.info("Starting Phase 3 data collection")
+        self.logger.info(f"Target areas: {len(self.phase3_search_areas)}")
+        
+        try:
+            # Collect from each search area
+            for i, search_area in enumerate(self.phase3_search_areas, 1):
+                self.logger.info(f"Processing area {i}/{len(self.phase3_search_areas)}: {search_area.name}")
+                
+                # General search for all businesses
+                area_places = self.search_places_in_area(search_area)
+                all_places.extend(area_places)
+                
+                # Progress reporting
+                if i % 5 == 0:
+                    self.logger.info(f"Progress: {i}/{len(self.phase3_search_areas)} areas completed")
+                    self.logger.info(f"API calls made: {self.api_calls_made}")
+                    self.logger.info(f"Businesses collected: {len(all_places)}")
+            
+            # Remove duplicates based on place_id
+            unique_places = {}
+            for place in all_places:
+                place_id = place.get('place_id')
+                if place_id and place_id not in unique_places:
+                    unique_places[place_id] = place
+            
+            self.businesses_collected = len(unique_places)
+            
+            # Convert to DataFrame
+            df = pd.DataFrame(list(unique_places.values()))
+            
+            # Add competitive analysis
+            if not df.empty:
+                df = self._add_competitive_analysis(df)
+            
+            processing_time = time.time() - start_time
+            
+            self.logger.info("Phase 3 collection complete")
+            self.logger.info(f"Total API calls: {self.api_calls_made}")
+            self.logger.info(f"Unique businesses: {self.businesses_collected}")
+            self.logger.info(f"Processing time: {processing_time:.1f} seconds")
+            self.logger.info(f"Errors encountered: {len(self.errors_encountered)}")
+            
+            return df
+            
+        except Exception as e:
+            self.logger.error(f"Error in Phase 3 collection: {e}")
+            return pd.DataFrame()
+    
+    def run_phase3_collection(self) -> Dict[str, Any]:
+        """
+        Run complete Phase 3 collection process
+        
+        Returns:
+            Collection summary
+        """
+        start_time = time.time()
+        
+        summary = {
+            'collection_date': datetime.now(),
+            'phase': 'Phase 3',
+            'counties': ['Sauk', 'Door', 'La Crosse', 'Portage', 'Douglas', 'Rock'],
+            'search_areas': len(self.phase3_search_areas),
+            'api_calls_made': 0,
+            'businesses_collected': 0,
+            'success': False,
+            'processing_time_seconds': 0,
+            'errors': [],
+            'data_quality': {}
+        }
+        
+        try:
+            self.logger.info("Starting Phase 3 Google Places collection")
+            
+            # Reset counters for Phase 3
+            self.api_calls_made = 0
+            self.businesses_collected = 0
+            self.errors_encountered = []
+            
+            # Collect data
+            df = self.collect_phase3_data()
+            
+            if not df.empty:
+                # Save to BigQuery
+                save_success = self.save_to_bigquery(df)
+                
+                # Save local copy
+                output_file = f"google_places_phase3_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+                df.to_csv(output_file, index=False)
+                
+                # Calculate data quality metrics
+                quality_metrics = {
+                    'total_records': len(df),
+                    'records_with_ratings': len(df[df['rating'].notna()]) if 'rating' in df.columns else 0,
+                    'records_with_phone': len(df[df['formatted_phone_number'].notna()]) if 'formatted_phone_number' in df.columns else 0,
+                    'records_with_website': len(df[df['website'].notna()]) if 'website' in df.columns else 0,
+                    'avg_confidence_score': df['data_confidence_score'].mean() if 'data_confidence_score' in df.columns else 0,
+                    'business_categories': df['business_category'].value_counts().to_dict() if 'business_category' in df.columns else {},
+                    'county_distribution': df['county_name'].value_counts().to_dict() if 'county_name' in df.columns else {}
+                }
+                
+                summary.update({
+                    'api_calls_made': self.api_calls_made,
+                    'businesses_collected': self.businesses_collected,
+                    'success': save_success,
+                    'data_quality': quality_metrics,
+                    'errors': self.errors_encountered,
+                    'output_file': output_file
+                })
+                
+                self.logger.info(f"Phase 3 collection completed successfully")
+                self.logger.info(f"Saved to: {output_file}")
+                
+            else:
+                summary['success'] = False
+                summary['errors'].append("No data collected")
+                
+        except Exception as e:
+            error_msg = f"Error in Phase 3 collection: {e}"
             self.logger.error(error_msg)
             summary['errors'].append(error_msg)
             summary['success'] = False
