@@ -1,0 +1,60 @@
+2025-06-30 18:36:35,970 - __main__ - INFO - ================================================================================
+2025-06-30 18:36:35,970 - __main__ - INFO - Starting Efficient Census Economic Data Collection
+2025-06-30 18:36:35,970 - __main__ - INFO - ================================================================================
+2025-06-30 18:36:36,019 - CensusEconomicCollector_WI - INFO - Census Economic Collector initialized
+2025-06-30 18:36:36,020 - __main__ - INFO - 
+--- Collecting 2017 Economic Census Data ---
+2025-06-30 18:36:36,020 - CensusEconomicCollector_WI - INFO - Starting Economic Census data collection for year 2017
+2025-06-30 18:36:36,020 - CensusEconomicCollector_WI - INFO - Collecting state level data
+2025-06-30 18:36:42,482 - CensusEconomicCollector_WI - INFO - Collecting county level data
+2025-06-30 18:37:18,310 - CensusEconomicCollector_WI - INFO - Collected 58 Economic Census records
+2025-06-30 18:37:18,310 - __main__ - INFO - ✓ Collected 58 records from 2017 Economic Census
+2025-06-30 18:37:18,310 - __main__ - INFO - 
+--- Collecting Recent County Business Patterns Data ---
+2025-06-30 18:37:18,310 - __main__ - INFO - Collecting 2022 CBP data...
+2025-06-30 18:37:25,022 - __main__ - INFO - ✓ Collected 10 records for 2022
+2025-06-30 18:37:26,022 - __main__ - INFO - Collecting 2021 CBP data...
+2025-06-30 18:37:32,838 - __main__ - INFO - ✓ Collected 10 records for 2021
+2025-06-30 18:37:33,839 - __main__ - INFO - Collecting 2020 CBP data...
+2025-06-30 18:37:40,352 - __main__ - INFO - ✓ Collected 10 records for 2020
+2025-06-30 18:37:41,352 - __main__ - INFO - Collecting 2019 CBP data...
+2025-06-30 18:37:52,970 - __main__ - INFO - ✓ Collected 10 records for 2019
+2025-06-30 18:37:53,970 - __main__ - INFO - Collecting 2018 CBP data...
+2025-06-30 18:38:02,521 - __main__ - INFO - ✓ Collected 10 records for 2018
+2025-06-30 18:38:03,521 - __main__ - INFO - 
+--- Attempting 2012 Economic Census Data ---
+2025-06-30 18:38:03,522 - __main__ - INFO - Note: 2012 Economic Census API has different structure, may be limited
+2025-06-30 18:38:03,522 - __main__ - INFO - 
+--- Uploading to BigQuery ---
+2025-06-30 18:38:03,522 - __main__ - INFO - Uploading 108 total records...
+2025-06-30 18:38:07,072 - CensusEconomicCollector_WI - INFO - Loaded 108 Economic Census records to BigQuery
+2025-06-30 18:38:07,073 - __main__ - INFO - ✓ Successfully uploaded to BigQuery
+2025-06-30 18:38:07,073 - __main__ - INFO - 
+================================================================================
+2025-06-30 18:38:07,073 - __main__ - INFO - COLLECTION SUMMARY
+2025-06-30 18:38:07,073 - __main__ - INFO - ================================================================================
+2025-06-30 18:38:07,073 - __main__ - INFO - 
+Total Records Collected: 108
+2025-06-30 18:38:07,073 - __main__ - INFO - Industries Covered: 12
+2025-06-30 18:38:07,073 - __main__ - INFO - Processing Time: 91.1 seconds
+2025-06-30 18:38:07,073 - __main__ - INFO - 
+Breakdown by Source:
+2025-06-30 18:38:07,073 - __main__ - INFO -   - EC_2017: 58 records
+2025-06-30 18:38:07,073 - __main__ - INFO -   - CBP_2022: 10 records
+2025-06-30 18:38:07,073 - __main__ - INFO -   - CBP_2021: 10 records
+2025-06-30 18:38:07,073 - __main__ - INFO -   - CBP_2020: 10 records
+2025-06-30 18:38:07,073 - __main__ - INFO -   - CBP_2019: 10 records
+2025-06-30 18:38:07,073 - __main__ - INFO -   - CBP_2018: 10 records
+2025-06-30 18:38:07,074 - __main__ - INFO - 
+Summary saved to: census_economic_summary_20250630_183807.json
+2025-06-30 18:38:07,074 - __main__ - INFO - 
+--- Checking BigQuery Table ---
+2025-06-30 18:38:08,507 - __main__ - INFO - 
+Current BigQuery Table Contents:
+2025-06-30 18:38:08,667 - __main__ - INFO -   Year 2022 (state): 20 records, 10 industries, 0 counties
+2025-06-30 18:38:08,667 - __main__ - INFO -   Year 2021 (state): 10 records, 10 industries, 0 counties
+2025-06-30 18:38:08,667 - __main__ - INFO -   Year 2020 (state): 10 records, 10 industries, 0 counties
+2025-06-30 18:38:08,668 - __main__ - INFO -   Year 2019 (state): 10 records, 10 industries, 0 counties
+2025-06-30 18:38:08,668 - __main__ - INFO -   Year 2018 (state): 10 records, 10 industries, 0 counties
+2025-06-30 18:38:08,668 - __main__ - INFO -   Year 2017 (county): 150 records, 7 industries, 10 counties
+2025-06-30 18:38:08,668 - __main__ - INFO -   Year 2017 (state): 46 records, 19 industries, 0 counties
