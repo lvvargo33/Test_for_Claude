@@ -320,6 +320,7 @@ Complete mock analysis to document all file and BigQuery table usage before clea
 **Tasks:**
 - [x] Executive Summary - Comprehensive overview with key findings and recommendations  
 - [x] 1.1 Demographic Profile - Fitchburg area population, income, household composition
+- [x] 1.2 Target Market Segmentation - Universal framework with price-level demographics template
 
 ## 📊 **CLIENT REPORT CONTENT**
 
@@ -346,6 +347,97 @@ Complete mock analysis to document all file and BigQuery table usage before clea
 **Missing Data:** ❌ Specific Fitchburg demographics (only county-level available)
 **Should Include:** Population density, income levels, household composition
 **Should NOT Include:** Statewide data without local context
+
+---
+
+### **1.2 TARGET MARKET SEGMENTATION - TEMPLATE WORKFLOW**
+
+**Section 1.2 Universal Template Integration:**
+- ✅ Universal price-level demographics framework implemented
+- ✅ Automated segment generation workflow documented
+- ✅ Google Places price level integration for competitive analysis
+- ✅ Section 1.1 demographic data alignment process established
+
+**Universal Price Level Demographics Framework:**
+
+**$ (Level 1) - Budget Tier:**
+- Students (18-24, <$30K), Entry-level workers (22-30, $30-45K), Fixed-income retirees (65+, <$40K)
+- Single parents, Gig workers, Service industry workers
+- Business Examples: Fast food, discount retail, basic services
+
+**$$ (Level 2) - Moderate Tier:**
+- Middle-income families (35-54, $50-100K), Young professionals (25-34, $40-80K)
+- Skilled trades (30-55, $45-75K), Government employees, Teachers, Dual-income couples
+- Business Examples: Casual dining, standard services, mainstream retail
+
+**$$$ (Level 3) - Premium Tier:**
+- Upper-middle professionals (35-55, $80-150K), Small business owners, Corporate managers
+- Empty nesters (55-70, $70-130K), Tech workers
+- Business Examples: Upscale casual, premium services, luxury retail
+
+**$$$$ (Level 4) - Luxury Tier:**
+- C-suite executives (45-65, $200K+), Established entrepreneurs, Investment professionals
+- Medical specialists, High net worth individuals
+- Business Examples: Fine dining, luxury services, exclusive experiences
+
+**Segment Generation Workflow:**
+
+**Step 1: Business Input Template**
+```
+Business Type: [e.g., Indian Restaurant, Dental Practice]
+Location: [Full address - must match Section 1.1 area]
+Price Point: [Budget($)/Mid-range($$)/Premium($$$)/Luxury($$$$)]
+Core Service: [One sentence description]
+Key Differentiator: [Competitive advantage]
+Service Radius: [Must match Section 1.1 radius]
+```
+
+**Step 2: Automated Process**
+1. Extract demographic data from Section 1.1 for service radius
+2. Apply universal price-level demographics to match business price point
+3. Calculate population sizes for each demographic intersection
+4. Rank by population size (largest first)
+5. Present top 5 segments for approval
+
+**Step 3: Segment Approval Format**
+```
+SEGMENT FOR APPROVAL: [Name] - [Population Size]
+Demographics from Section 1.1: [Age, Income, Household type]
+Universal Framework Match: [Price level demographics]
+Supporting Research: [Academic/industry sources]
+APPROVE? [Yes/No/Modify]
+```
+
+**Step 4: Complete Section Generation**
+- Opening narrative with segmentation methodology
+- Universal price level framework explanation
+- 5 detailed segment profiles with:
+  * Visual components (persona cards, behavior charts, heat maps)
+  * Demographic profiles using Section 1.1 data
+  * Consumer behavior patterns from research
+  * Price sensitivity analysis with Google Places data
+  * Key findings and strategic implications
+- Segment prioritization matrix
+- Competitive segment analysis using Google Places
+- Digital behavior and channel preferences
+- Market penetration potential calculations
+- Strategic insights and recommendations
+- Data sources and limitations
+
+**Data Integration Points:**
+- Section 1.1: Population, age, income, household composition data
+- Google Places: Competitor price levels, density, ratings
+- Academic Research: Demographic behavior patterns
+- Industry Reports: Segment-specific spending and preferences
+
+**Key Benefits:**
+- Consistent methodology across all business types
+- Data-driven segment sizing using actual demographics
+- Research-backed behavioral characteristics
+- Competitive analysis using real market data
+- Scalable template for any industry or location
+
+**Template Status:** ✅ IMPLEMENTED in CLIENT_REPORT_Indian_Restaurant_Feasibility_Study.md
 
 ---
 
