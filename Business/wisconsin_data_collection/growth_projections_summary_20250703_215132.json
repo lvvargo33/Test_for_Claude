@@ -1,0 +1,325 @@
+{
+  "collection_date": "2025-07-03T21:51:32.514055",
+  "state_fips": "55",
+  "state_code": "WI",
+  "population_records": 4,
+  "employment_records": 594,
+  "economic_records": 5,
+  "growth_projections": {
+    "total_nonfarm": {
+      "historical_cagr": 4.06,
+      "trend": "growing",
+      "data_points": 66,
+      "base_year": 2025,
+      "base_value": 159155.0,
+      "projections": [
+        {
+          "year": "2026",
+          "projected_value": 165620.02
+        },
+        {
+          "year": "2027",
+          "projected_value": 172347.66
+        },
+        {
+          "year": "2028",
+          "projected_value": 179348.58
+        },
+        {
+          "year": "2029",
+          "projected_value": 186633.89
+        },
+        {
+          "year": "2030",
+          "projected_value": 194215.13
+        }
+      ],
+      "confidence": "high"
+    },
+    "leisure_hospitality": {
+      "historical_cagr": 14.19,
+      "trend": "growing",
+      "data_points": 66,
+      "base_year": 2025,
+      "base_value": 16931.0,
+      "projections": [
+        {
+          "year": "2026",
+          "projected_value": 19334.18
+        },
+        {
+          "year": "2027",
+          "projected_value": 22078.47
+        },
+        {
+          "year": "2028",
+          "projected_value": 25212.28
+        },
+        {
+          "year": "2029",
+          "projected_value": 28790.91
+        },
+        {
+          "year": "2030",
+          "projected_value": 32877.48
+        }
+      ],
+      "confidence": "high"
+    },
+    "food_services": {
+      "historical_cagr": 14.25,
+      "trend": "growing",
+      "data_points": 66,
+      "base_year": 2025,
+      "base_value": 12299.1,
+      "projections": [
+        {
+          "year": "2026",
+          "projected_value": 14052.12
+        },
+        {
+          "year": "2027",
+          "projected_value": 16054.99
+        },
+        {
+          "year": "2028",
+          "projected_value": 18343.34
+        },
+        {
+          "year": "2029",
+          "projected_value": 20957.85
+        },
+        {
+          "year": "2030",
+          "projected_value": 23945.02
+        }
+      ],
+      "confidence": "high"
+    },
+    "retail_trade": {
+      "historical_cagr": 3.28,
+      "trend": "growing",
+      "data_points": 66,
+      "base_year": 2025,
+      "base_value": 15569.4,
+      "projections": [
+        {
+          "year": "2026",
+          "projected_value": 16080.64
+        },
+        {
+          "year": "2027",
+          "projected_value": 16608.67
+        },
+        {
+          "year": "2028",
+          "projected_value": 17154.04
+        },
+        {
+          "year": "2029",
+          "projected_value": 17717.32
+        },
+        {
+          "year": "2030",
+          "projected_value": 18299.09
+        }
+      ],
+      "confidence": "high"
+    },
+    "professional_business": {
+      "historical_cagr": 3.28,
+      "trend": "growing",
+      "data_points": 66,
+      "base_year": 2025,
+      "base_value": 22594.0,
+      "projections": [
+        {
+          "year": "2026",
+          "projected_value": 23336.06
+        },
+        {
+          "year": "2027",
+          "projected_value": 24102.49
+        },
+        {
+          "year": "2028",
+          "projected_value": 24894.09
+        },
+        {
+          "year": "2029",
+          "projected_value": 25711.69
+        },
+        {
+          "year": "2030",
+          "projected_value": 26556.15
+        }
+      ],
+      "confidence": "high"
+    },
+    "healthcare": {
+      "historical_cagr": 4.52,
+      "trend": "growing",
+      "data_points": 66,
+      "base_year": 2025,
+      "base_value": 23058.6,
+      "projections": [
+        {
+          "year": "2026",
+          "projected_value": 24101.03
+        },
+        {
+          "year": "2027",
+          "projected_value": 25190.59
+        },
+        {
+          "year": "2028",
+          "projected_value": 26329.4
+        },
+        {
+          "year": "2029",
+          "projected_value": 27519.7
+        },
+        {
+          "year": "2030",
+          "projected_value": 28763.81
+        }
+      ],
+      "confidence": "high"
+    },
+    "construction": {
+      "historical_cagr": 4.93,
+      "trend": "growing",
+      "data_points": 66,
+      "base_year": 2025,
+      "base_value": 8298.0,
+      "projections": [
+        {
+          "year": "2026",
+          "projected_value": 8707.47
+        },
+        {
+          "year": "2027",
+          "projected_value": 9137.14
+        },
+        {
+          "year": "2028",
+          "projected_value": 9588.02
+        },
+        {
+          "year": "2029",
+          "projected_value": 10061.15
+        },
+        {
+          "year": "2030",
+          "projected_value": 10557.62
+        }
+      ],
+      "confidence": "high"
+    },
+    "government": {
+      "historical_cagr": 1.49,
+      "trend": "growing",
+      "data_points": 66,
+      "base_year": 2025,
+      "base_value": 23587.0,
+      "projections": [
+        {
+          "year": "2026",
+          "projected_value": 23937.72
+        },
+        {
+          "year": "2027",
+          "projected_value": 24293.65
+        },
+        {
+          "year": "2028",
+          "projected_value": 24654.87
+        },
+        {
+          "year": "2029",
+          "projected_value": 25021.47
+        },
+        {
+          "year": "2030",
+          "projected_value": 25393.52
+        }
+      ],
+      "confidence": "high"
+    },
+    "manufacturing": {
+      "historical_cagr": 2.32,
+      "trend": "growing",
+      "data_points": 66,
+      "base_year": 2025,
+      "base_value": 12763.0,
+      "projections": [
+        {
+          "year": "2026",
+          "projected_value": 13058.69
+        },
+        {
+          "year": "2027",
+          "projected_value": 13361.23
+        },
+        {
+          "year": "2028",
+          "projected_value": 13670.78
+        },
+        {
+          "year": "2029",
+          "projected_value": 13987.5
+        },
+        {
+          "year": "2030",
+          "projected_value": 14311.56
+        }
+      ],
+      "confidence": "high"
+    }
+  },
+  "market_implications": {
+    "market_outlook": {
+      "growing_sectors": [
+        {
+          "sector": "leisure_hospitality",
+          "growth_rate": 14.19,
+          "confidence": "high"
+        },
+        {
+          "sector": "food_services",
+          "growth_rate": 14.25,
+          "confidence": "high"
+        },
+        {
+          "sector": "retail_trade",
+          "growth_rate": 3.28,
+          "confidence": "high"
+        },
+        {
+          "sector": "professional_business",
+          "growth_rate": 3.28,
+          "confidence": "high"
+        },
+        {
+          "sector": "healthcare",
+          "growth_rate": 4.52,
+          "confidence": "high"
+        }
+      ],
+      "declining_sectors": []
+    },
+    "opportunities": [
+      "Food services sector growing at 14.25% annually - favorable for restaurant business"
+    ],
+    "risks": [],
+    "recommendations": [
+      "Strong employment growth supports consumer spending - favorable timing for business expansion",
+      "Overall employment growth of 4.06% supports market demand"
+    ]
+  },
+  "output_files": {
+    "population": "population_projections_20250703_215132.csv",
+    "employment": "employment_projections_20250703_215132.csv",
+    "economic": "economic_projections_20250703_215132.csv"
+  }
+}
