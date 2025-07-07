@@ -3,7 +3,9 @@
 
 **INSTRUCTIONS:** Fill out the sections below with site-specific information. Use "N/A" if information is not available. All monetary values should be in USD.
 
-**NOTE:** Competitive analysis data is now collected separately and comprehensively analyzed in Section 2.1 of the report. This template focuses on site-specific physical characteristics and neighborhood context.
+**NOTE:** Competitive analysis data is now collected separately and comprehensively analyzed in Section 2.1 of the report using the Universal Competitive Analysis Framework. This template focuses on site-specific physical characteristics and neighborhood context.
+
+**COMPETITIVE ANALYSIS INTEGRATION:** Section 2.1 uses automated Google Places data analysis with universal_competitive_analyzer.py to identify direct, similar, and general competition within 1, 3, and 5-mile radii. The system automatically detects "service desert" scenarios and calculates market opportunity scores (0-100).
 
 ---
 
