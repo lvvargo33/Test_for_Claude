@@ -3,6 +3,8 @@
 
 **INSTRUCTIONS:** Fill out the sections below with site-specific information. Use "N/A" if information is not available. All monetary values should be in USD.
 
+**NOTE:** Competitive analysis data is now collected separately and comprehensively analyzed in Section 2.1 of the report. This template focuses on site-specific physical characteristics and neighborhood context.
+
 ---
 
 ## **PROPERTY SPECIFICATIONS**
@@ -140,21 +142,6 @@
 - **Utility Deposits Required:** $[NUMBER]
 - **Connection Fees:** $[NUMBER]
 - **Special Infrastructure Needs:** [List any unique requirements]
-
----
-
-## **COMPETITIVE ENVIRONMENT**
-
-### **Direct Competition (within 1 mile)**
-- **Providers of Exact Same Services & Same Price Point:** [COUNT: ___] [LIST: Name - Distance - Price Level]
-- **Providers of Exact Same Services & Different Price Point:** [COUNT: ___] [LIST: Name - Distance - Price Level]
-- **Providers of Similar Services & Same Price Point:** [COUNT: ___] [LIST: Name - Distance - Price Level]
-- **Providers of Similar Services & Different Price Point:** [COUNT: ___] [LIST: Name - Distance - Price Level]
-
-### **Market Gaps**
-- **Unique Services Only Client Provides:** [List services no competitors offer]
-- **Price Point Gaps:** [Budget/Mid-range/Upscale openings]
-- **Service Style Gaps:** [Different delivery methods, customer service approaches, etc.]
 
 ---
 
