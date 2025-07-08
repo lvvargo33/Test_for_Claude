@@ -29,6 +29,7 @@ import logging
 try:
     from simplified_market_saturation_analyzer import SimplifiedMarketSaturationAnalyzer
     from traffic_transportation_analyzer import TrafficTransportationAnalyzer
+    from site_characteristics_analyzer import SiteCharacteristicsAnalyzer
     from universal_competitive_analyzer import UniversalCompetitiveAnalyzer
     from integrated_business_analyzer import IntegratedBusinessAnalyzer
     from geocoding import OpenStreetMapGeocoder
@@ -101,10 +102,12 @@ class UniversalBusinessAnalysisEngine:
             },
             "3.2": {
                 "name": "Site Characteristics", 
-                "template": "UNIVERSAL_SITE_CHARACTERISTICS_TEMPLATE.md",  # Future
-                "automated": False,  # Likely requires manual data
-                "manual_data_required": True,  # Anticipated
-                "implemented": False
+                "template": "UNIVERSAL_SITE_CHARACTERISTICS_TEMPLATE.md",
+                "automated": True,  # Hybrid - automated with optional manual data enhancement
+                "manual_data_required": False,  # Manual data is optional enhancement
+                "manual_template": "SITE_CHARACTERISTICS_SIMPLE_MANUAL_TEMPLATE.md",
+                "data_sources": ["site_characteristics_analyzer.py", "manual_site_assessment"],
+                "implemented": True
             },
             "4.1": {
                 "name": "Revenue Projections",
@@ -282,6 +285,12 @@ class UniversalBusinessAnalysisEngine:
                         content = self._generate_traffic_transportation_section(
                             business_type, address, fallback_lat, fallback_lon, project_path
                         )
+                    elif section_id == "3.2" and ANALYZERS_AVAILABLE:
+                        # Generate Site Characteristics Analysis
+                        fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
+                        content = self._generate_site_characteristics_section(
+                            business_type, address, fallback_lat, fallback_lon, project_path
+                        )
                     else:
                         # Default template-based generation
                         content = self._generate_template_section(
@@ -381,6 +390,57 @@ class UniversalBusinessAnalysisEngine:
             return self._generate_template_section(
                 self.sections_config["3.1"], business_type, address.split(',')[1].strip(), address
             )
+    
+    def _generate_site_characteristics_section(self, business_type: str, address: str, 
+                                             lat: float, lon: float, project_path: str) -> Optional[str]:
+        """Generate Site Characteristics Analysis section"""
+        try:
+            analyzer = SiteCharacteristicsAnalyzer()
+            
+            # Check for manual data enhancement
+            manual_data_file = f"{project_path}/manual_data_entry/MANUAL_DATA_ENTRY_3_2.md"
+            manual_data = None
+            if os.path.exists(manual_data_file):
+                print("    📋 Loading manual site assessment data...")
+                manual_data = self._parse_manual_site_data(manual_data_file)
+            
+            # Run analysis
+            print("    🏗️ Running site characteristics analysis...")
+            analysis_results = analyzer.analyze_site_characteristics(
+                business_type, address, lat, lon, manual_data
+            )
+            
+            # Save raw analysis data
+            os.makedirs(f"{project_path}/data_results", exist_ok=True)
+            analysis_file = f"{project_path}/data_results/site_characteristics_analysis.json"
+            with open(analysis_file, 'w') as f:
+                json.dump(analysis_results, f, indent=2)
+            
+            # Generate formatted section content
+            section_content = analyzer.generate_section_content(analysis_results)
+            
+            return section_content
+            
+        except Exception as e:
+            print(f"    ⚠️ Site characteristics analysis failed: {str(e)}")
+            print("    📝 Generating basic template...")
+            return self._generate_template_section(
+                self.sections_config["3.2"], business_type, address.split(',')[1].strip(), address
+            )
+    
+    def _parse_manual_site_data(self, manual_data_file: str) -> Dict[str, Any]:
+        """Parse manual site assessment data from markdown file"""
+        try:
+            with open(manual_data_file, 'r') as f:
+                content = f.read()
+            
+            # This would contain logic to parse the manual data
+            # For now, return empty dict to indicate no manual data
+            return {}
+            
+        except Exception as e:
+            print(f"    ⚠️ Failed to parse manual site data: {str(e)}")
+            return {}
     
     def identify_manual_data_requirements(self) -> List[Dict[str, Any]]:
         """Identify all sections requiring manual data entry"""
