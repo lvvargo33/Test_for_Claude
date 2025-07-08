@@ -34,6 +34,7 @@ try:
     from revenue_projections_analyzer import RevenueProjectionsAnalyzer
     from cost_analysis_analyzer import CostAnalysisAnalyzer
     from risk_assessment_analyzer import RiskAssessmentAnalyzer
+    from zoning_permits_analyzer import ZoningPermitsAnalyzer
     from universal_competitive_analyzer import UniversalCompetitiveAnalyzer
     from integrated_business_analyzer import IntegratedBusinessAnalyzer
     from geocoding import OpenStreetMapGeocoder
@@ -143,10 +144,12 @@ class UniversalBusinessAnalysisEngine:
             },
             "5.1": {
                 "name": "Zoning & Permits",
-                "template": "UNIVERSAL_ZONING_PERMITS_TEMPLATE.md",  # Future
-                "automated": False,  # Requires local research
-                "manual_data_required": True,
-                "implemented": False
+                "template": "UNIVERSAL_ZONING_PERMITS_TEMPLATE.md",
+                "automated": True,  # Hybrid with manual data collection
+                "manual_data_required": True,  # Structured manual research required
+                "manual_template": "ZONING_PERMITS_MANUAL_DATA_TEMPLATE.md",
+                "data_sources": ["zoning_permits_analyzer.py", "wisconsin_permit_database", "municipal_ordinances"],
+                "implemented": True
             },
             "5.2": {
                 "name": "Infrastructure",
@@ -326,6 +329,12 @@ class UniversalBusinessAnalysisEngine:
                         # Generate Risk Assessment
                         fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
                         content = self._generate_risk_assessment_section(
+                            business_type, address, fallback_lat, fallback_lon, project_path
+                        )
+                    elif section_id == "5.1" and ANALYZERS_AVAILABLE:
+                        # Generate Zoning & Permits Analysis
+                        fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
+                        content = self._generate_zoning_permits_section(
                             business_type, address, fallback_lat, fallback_lon, project_path
                         )
                     else:
@@ -847,6 +856,210 @@ class UniversalBusinessAnalysisEngine:
             content = content.replace(placeholder, str(default_value))
         
         return content
+    
+    def _generate_zoning_permits_section(self, business_type: str, address: str, 
+                                       lat: float, lon: float, project_path: str) -> Optional[str]:
+        """Generate Zoning & Permits section"""
+        try:
+            analyzer = ZoningPermitsAnalyzer()
+            
+            print("    🏛️ Running zoning and permits analysis...")
+            
+            # Run zoning and permits analysis
+            permits_analysis = analyzer.analyze_zoning_permits(
+                business_type=business_type,
+                address=address,
+                lat=lat,
+                lon=lon
+            )
+            
+            # Save raw analysis data
+            os.makedirs(f"{project_path}/data_results", exist_ok=True)
+            analysis_file = f"{project_path}/data_results/zoning_permits_analysis.json"
+            with open(analysis_file, 'w') as f:
+                json.dump({
+                    "business_type": permits_analysis.business_type,
+                    "location": permits_analysis.location,
+                    "address": permits_analysis.address,
+                    "county_name": permits_analysis.county_name,
+                    "municipality_name": permits_analysis.municipality_name,
+                    "current_zoning": permits_analysis.current_zoning,
+                    "zoning_compliance_status": permits_analysis.zoning_compliance_status,
+                    "total_permit_costs": permits_analysis.total_permit_costs,
+                    "total_timeline_weeks": permits_analysis.total_timeline_weeks,
+                    "state_permits_required": permits_analysis.state_permits_required,
+                    "county_permits_required": permits_analysis.county_permits_required,
+                    "municipal_permits_required": permits_analysis.municipal_permits_required,
+                    "compliance_risk_rating": permits_analysis.compliance_risk_rating,
+                    "manual_research_items": permits_analysis.manual_research_items,
+                    "critical_path_items": permits_analysis.critical_path_items,
+                    "cost_breakdown": permits_analysis.cost_breakdown,
+                    "timeline_breakdown": permits_analysis.timeline_breakdown
+                }, f, indent=2)
+            
+            # Load template and populate with permits data
+            template_path = "UNIVERSAL_ZONING_PERMITS_TEMPLATE.md"
+            if not os.path.exists(template_path):
+                raise FileNotFoundError(f"Template not found: {template_path}")
+            
+            with open(template_path, 'r') as f:
+                template_content = f.read()
+            
+            # Generate zoning and permits charts
+            charts_dir = f"{project_path}/charts"
+            print("    📊 Generating zoning and permits charts...")
+            chart_paths = analyzer.generate_permit_charts(permits_analysis, charts_dir)
+            
+            if chart_paths:
+                print(f"    ✅ Generated {len(chart_paths)} permit charts")
+            else:
+                print("    ⚠️ Chart generation failed, using default paths")
+            
+            # Create manual data template for this section
+            manual_data_path = self._create_zoning_permits_manual_template(
+                permits_analysis, f"{project_path}/manual_data_entry"
+            )
+            
+            if manual_data_path:
+                print(f"    📋 Created manual data template: {os.path.basename(manual_data_path)}")
+            
+            # Populate template with permits analysis results and chart paths
+            section_content = analyzer.populate_template(template_content, permits_analysis, chart_paths)
+            
+            return section_content
+            
+        except Exception as e:
+            print(f"    ⚠️ Zoning and permits analysis failed: {str(e)}")
+            print("    📝 Generating basic template...")
+            return self._generate_template_section(
+                self.sections_config["5.1"], business_type, address.split(',')[1].strip(), address
+            )
+    
+    def _create_zoning_permits_manual_template(self, permits_analysis, manual_data_dir: str) -> Optional[str]:
+        """Create manual data collection template for zoning and permits"""
+        try:
+            os.makedirs(manual_data_dir, exist_ok=True)
+            
+            manual_template_content = f"""# Manual Data Collection: Section 5.1 - Zoning & Permits
+## {permits_analysis.business_type} at {permits_analysis.address}
+
+### INSTRUCTIONS
+Please complete the following manual research and verification tasks. Replace [PLACEHOLDER] text with actual findings.
+
+---
+
+## 5.1.A: Zoning Verification
+
+### Current Zoning Information
+- **Confirmed Zoning Designation**: {permits_analysis.current_zoning}
+- **Zoning Map Verification**: [VERIFIED/NEEDS_VERIFICATION]
+- **Lot Size Verification**: [ACTUAL_LOT_SIZE] sq ft
+- **Building Coverage**: [CURRENT_COVERAGE]% of lot
+- **Setback Measurements**:
+  - Front: [ACTUAL_FRONT_SETBACK] ft
+  - Side: [ACTUAL_SIDE_SETBACK] ft  
+  - Rear: [ACTUAL_REAR_SETBACK] ft
+
+### Zoning Compliance Status
+- **Permitted Use Status**: [PERMITTED/CONDITIONAL/SPECIAL_USE]
+- **Variance Requirements**: [LIST_ANY_VARIANCES_NEEDED]
+- **Special Conditions**: [LIST_SPECIAL_CONDITIONS]
+
+---
+
+## 5.1.B: Municipal Permit Verification
+
+### {permits_analysis.municipality_name} Requirements
+- **Business License Fee**: $[ACTUAL_FEE]
+- **Processing Time**: [ACTUAL_TIMELINE] days
+- **Required Documentation**: [LIST_REQUIRED_DOCS]
+- **Special Permits Required**: [LIST_SPECIAL_PERMITS]
+
+### Zoning Administrator Consultation
+- **Contact Person**: [NAME_AND_CONTACT]
+- **Meeting Date**: [DATE_OF_MEETING]
+- **Key Requirements Discussed**: [SUMMARY_OF_REQUIREMENTS]
+- **Potential Issues Identified**: [LIST_ISSUES]
+
+---
+
+## 5.1.C: County Permit Verification
+
+### {permits_analysis.county_name} County Requirements
+- **Building Permit Required**: [YES/NO]
+- **Estimated Building Permit Cost**: $[ACTUAL_COST]
+- **Plan Review Requirements**: [LIST_PLAN_REQUIREMENTS]
+- **Inspection Schedule**: [LIST_REQUIRED_INSPECTIONS]
+
+### Health Department Requirements (if applicable)
+- **Health Permit Required**: [YES/NO]
+- **Permit Type**: [SPECIFIC_PERMIT_TYPE]
+- **Cost**: $[ACTUAL_COST]
+- **Special Requirements**: [LIST_REQUIREMENTS]
+
+---
+
+## 5.1.D: Professional Services Coordination
+
+### Architect/Engineer Requirements
+- **Professional Plans Required**: [YES/NO]
+- **Recommended Professionals**: [LIST_CONTACTS]
+- **Estimated Professional Fees**: $[COST_ESTIMATE]
+
+### Legal/Consulting Needs
+- **Legal Review Recommended**: [YES/NO]
+- **Zoning Attorney Contact**: [CONTACT_INFO]
+- **Permit Expediting Services**: [AVAILABLE_SERVICES]
+
+---
+
+## 5.1.E: Timeline and Cost Updates
+
+### Revised Cost Estimates
+- **State Permits**: $[ACTUAL_TOTAL]
+- **County Permits**: $[ACTUAL_TOTAL]
+- **Municipal Permits**: $[ACTUAL_TOTAL]
+- **Professional Services**: $[ACTUAL_TOTAL]
+- **Total Updated Estimate**: $[FINAL_TOTAL]
+
+### Revised Timeline
+- **State Applications**: [WEEKS]
+- **County Applications**: [WEEKS]
+- **Municipal Applications**: [WEEKS]
+- **Total Estimated Timeline**: [TOTAL_WEEKS] weeks
+
+---
+
+## 5.1.F: Risk Assessment Updates
+
+### Identified Compliance Risks
+- **High Risk Items**: [LIST_HIGH_RISK_ITEMS]
+- **Medium Risk Items**: [LIST_MEDIUM_RISK_ITEMS]
+- **Mitigation Strategies**: [LIST_MITIGATION_APPROACHES]
+
+### Recommendations
+- **Priority Actions**: [LIST_PRIORITY_ACTIONS]
+- **Professional Support Needed**: [LIST_PROFESSIONAL_NEEDS]
+- **Contingency Planning**: [BACKUP_STRATEGIES]
+
+---
+
+**Manual Research Items:**
+{chr(10).join([f'- [ ] {item}' for item in permits_analysis.manual_research_items])}
+
+**Completion Date**: [DATE_COMPLETED]
+**Completed By**: [NAME_AND_TITLE]
+"""
+            
+            manual_file_path = f"{manual_data_dir}/MANUAL_DATA_ENTRY_5_1.md"
+            with open(manual_file_path, 'w') as f:
+                f.write(manual_template_content)
+            
+            return manual_file_path
+            
+        except Exception as e:
+            logger.warning(f"Failed to create manual data template: {e}")
+            return None
     
     def _extract_county_from_address(self, address: str) -> str:
         """Extract county name from address for Wisconsin-specific data"""
