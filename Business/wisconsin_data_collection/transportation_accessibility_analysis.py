@@ -57,7 +57,7 @@ class TransportationAccessibilityResult:
 class TransportationAccessibilityAnalyzer:
     """Analyzes transportation accessibility for site selection"""
     
-    def __init__(self, credentials_path: str = "location-optimizer-1-449414f93a5a.json"):
+    def __init__(self, credentials_path: str = "location-optimizer-1-96b6102d3548.json"):
         self.client = bigquery.Client.from_service_account_json(credentials_path)
         self.logger = self._setup_logging()
         

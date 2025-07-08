@@ -28,6 +28,7 @@ import logging
 # Import analyzers for automated sections
 try:
     from simplified_market_saturation_analyzer import SimplifiedMarketSaturationAnalyzer
+    from traffic_transportation_analyzer import TrafficTransportationAnalyzer
     from universal_competitive_analyzer import UniversalCompetitiveAnalyzer
     from integrated_business_analyzer import IntegratedBusinessAnalyzer
     from geocoding import OpenStreetMapGeocoder
@@ -93,9 +94,10 @@ class UniversalBusinessAnalysisEngine:
             },
             "3.1": {
                 "name": "Traffic & Transportation",
-                "template": "UNIVERSAL_TRAFFIC_TRANSPORTATION_TEMPLATE.md",  # Future
+                "template": "UNIVERSAL_TRAFFIC_TRANSPORTATION_TEMPLATE.md",
                 "automated": True,
-                "implemented": False
+                "data_sources": ["traffic_transportation_analyzer.py", "transportation_accessibility_analysis.py"],
+                "implemented": True
             },
             "3.2": {
                 "name": "Site Characteristics", 
@@ -274,6 +276,12 @@ class UniversalBusinessAnalysisEngine:
                         content = self._generate_market_saturation_section(
                             business_type, address, fallback_lat, fallback_lon, project_path
                         )
+                    elif section_id == "3.1" and ANALYZERS_AVAILABLE:
+                        # Generate Traffic & Transportation Analysis
+                        fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
+                        content = self._generate_traffic_transportation_section(
+                            business_type, address, fallback_lat, fallback_lon, project_path
+                        )
                     else:
                         # Default template-based generation
                         content = self._generate_template_section(
@@ -342,6 +350,36 @@ class UniversalBusinessAnalysisEngine:
             print("    📝 Generating basic template...")
             return self._generate_template_section(
                 self.sections_config["2.2"], business_type, address.split(',')[1].strip(), address
+            )
+    
+    def _generate_traffic_transportation_section(self, business_type: str, address: str, 
+                                               lat: float, lon: float, project_path: str) -> Optional[str]:
+        """Generate Traffic & Transportation Analysis section"""
+        try:
+            analyzer = TrafficTransportationAnalyzer()
+            
+            # Run analysis
+            print("    🚦 Running traffic and transportation analysis...")
+            analysis_results = analyzer.analyze_traffic_transportation(
+                business_type, address, lat, lon
+            )
+            
+            # Save raw analysis data
+            os.makedirs(f"{project_path}/data_results", exist_ok=True)
+            analysis_file = f"{project_path}/data_results/traffic_transportation_analysis.json"
+            with open(analysis_file, 'w') as f:
+                json.dump(analysis_results, f, indent=2)
+            
+            # Generate formatted section content
+            section_content = analyzer.generate_section_content(analysis_results)
+            
+            return section_content
+            
+        except Exception as e:
+            print(f"    ⚠️ Traffic transportation analysis failed: {str(e)}")
+            print("    📝 Generating basic template...")
+            return self._generate_template_section(
+                self.sections_config["3.1"], business_type, address.split(',')[1].strip(), address
             )
     
     def identify_manual_data_requirements(self) -> List[Dict[str, Any]]:
