@@ -2033,3 +2033,27 @@ Job ID: c970c25b-9b9a-4447-8839-fc08bae9ba20
 2025-06-30 20:31:20,190 - bls_collector - INFO - Collecting LAUS data for Wood County (55141)
 2025-06-30 20:31:20,860 - bls_collector - INFO - BLS collection complete: 0 QCEW + 6912 LAUS records
 2025-06-30 20:31:20,864 - bls_collector - ERROR - Failed to store BLS data to BigQuery: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.
+2025-07-08 16:29:21,020 - transportation_analyzer - INFO - Analyzing transportation accessibility for 43.0731, -89.4014
+2025-07-08 16:29:21,021 - transportation_analyzer - INFO - Finding highway access near 43.0731, -89.4014
+2025-07-08 16:29:28,759 - transportation_analyzer - INFO - Finding public transit near 43.0731, -89.4014
+2025-07-08 16:29:31,315 - transportation_analyzer - WARNING - Failed to get Census commute data: 400 Unrecognized name: latitude at [8:17]; reason: invalidQuery, location: query, message: Unrecognized name: latitude at [8:17]
+
+Location: US
+Job ID: cdf94eba-ed48-4cf9-a912-22c1bed96c95
+
+2025-07-08 16:29:31,315 - transportation_analyzer - INFO - Analyzing transportation accessibility for 43.0731, -89.4014
+2025-07-08 16:29:31,315 - transportation_analyzer - INFO - Finding highway access near 43.0731, -89.4014
+2025-07-08 16:29:45,642 - transportation_analyzer - INFO - Finding public transit near 43.0731, -89.4014
+2025-07-08 16:29:47,505 - transportation_analyzer - WARNING - Failed to get Census commute data: 400 Unrecognized name: latitude at [8:17]; reason: invalidQuery, location: query, message: Unrecognized name: latitude at [8:17]
+
+Location: US
+Job ID: b9bf331e-2fce-4bc3-baf7-7adcf5346576
+
+2025-07-08 17:11:17,726 - transportation_analyzer - INFO - Analyzing transportation accessibility for 43.0731, -89.4014
+2025-07-08 17:11:17,726 - transportation_analyzer - INFO - Finding highway access near 43.0731, -89.4014
+2025-07-08 17:11:25,861 - transportation_analyzer - INFO - Finding public transit near 43.0731, -89.4014
+2025-07-08 17:11:28,016 - transportation_analyzer - WARNING - Failed to get Census commute data: 400 Unrecognized name: latitude at [8:17]; reason: invalidQuery, location: query, message: Unrecognized name: latitude at [8:17]
+
+Location: US
+Job ID: 0689f154-80ab-4ee1-a98e-40e762d14c87
+

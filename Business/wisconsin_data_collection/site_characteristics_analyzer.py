@@ -19,6 +19,7 @@ from typing import Dict, List, Any, Optional, Tuple
 from trade_area_analyzer import TradeAreaAnalyzer
 from universal_competitive_analyzer import UniversalCompetitiveAnalyzer
 from transportation_accessibility_analysis import TransportationAccessibilityAnalyzer
+# Removed business_habitat_analyzer import - moved to Section 3.3
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,7 @@ class SiteCharacteristicsAnalyzer:
     def __init__(self):
         self.trade_area_analyzer = TradeAreaAnalyzer()
         self.accessibility_analyzer = TransportationAccessibilityAnalyzer()
+        # Removed habitat_analyzer - moved to Section 3.3
         
     def analyze_site_characteristics(self, business_type: str, address: str, 
                                    lat: float, lon: float, 
@@ -438,6 +440,8 @@ class SiteCharacteristicsAnalyzer:
             "data_source": "Automated risk assessment with manual verification",
             "requires_manual_verification": True
         }
+    
+# Habitat analysis methods removed - moved to Section 3.3 Business Habitat Mapping
     
     def _generate_summary(self, sections: Dict[str, Any]) -> Dict[str, Any]:
         """Generate comprehensive summary"""

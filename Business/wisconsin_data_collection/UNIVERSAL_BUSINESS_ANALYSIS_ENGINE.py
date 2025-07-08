@@ -30,6 +30,7 @@ try:
     from simplified_market_saturation_analyzer import SimplifiedMarketSaturationAnalyzer
     from traffic_transportation_analyzer import TrafficTransportationAnalyzer
     from site_characteristics_analyzer import SiteCharacteristicsAnalyzer
+    from business_habitat_analyzer import BusinessHabitatAnalyzer
     from universal_competitive_analyzer import UniversalCompetitiveAnalyzer
     from integrated_business_analyzer import IntegratedBusinessAnalyzer
     from geocoding import OpenStreetMapGeocoder
@@ -107,6 +108,13 @@ class UniversalBusinessAnalysisEngine:
                 "manual_data_required": False,  # Manual data is optional enhancement
                 "manual_template": "SITE_CHARACTERISTICS_SIMPLE_MANUAL_TEMPLATE.md",
                 "data_sources": ["site_characteristics_analyzer.py", "manual_site_assessment"],
+                "implemented": True
+            },
+            "3.3": {
+                "name": "Business Habitat Mapping",
+                "template": "UNIVERSAL_BUSINESS_HABITAT_TEMPLATE.md",
+                "automated": True,
+                "data_sources": ["business_habitat_analyzer.py", "google_reviews_data", "wisconsin_business_registry"],
                 "implemented": True
             },
             "4.1": {
@@ -291,6 +299,12 @@ class UniversalBusinessAnalysisEngine:
                         content = self._generate_site_characteristics_section(
                             business_type, address, fallback_lat, fallback_lon, project_path
                         )
+                    elif section_id == "3.3" and ANALYZERS_AVAILABLE:
+                        # Generate Business Habitat Mapping Analysis
+                        fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
+                        content = self._generate_business_habitat_section(
+                            business_type, address, fallback_lat, fallback_lon, project_path
+                        )
                     else:
                         # Default template-based generation
                         content = self._generate_template_section(
@@ -426,6 +440,66 @@ class UniversalBusinessAnalysisEngine:
             print("    📝 Generating basic template...")
             return self._generate_template_section(
                 self.sections_config["3.2"], business_type, address.split(',')[1].strip(), address
+            )
+    
+    def _generate_business_habitat_section(self, business_type: str, address: str, 
+                                        lat: float, lon: float, project_path: str) -> Optional[str]:
+        """Generate Business Habitat Mapping section"""
+        try:
+            analyzer = BusinessHabitatAnalyzer()
+            
+            print("    🧬 Running business habitat mapping analysis...")
+            
+            # Default preferences for pilot implementation
+            habitat_preferences = {
+                "business_types": ["restaurant", "hair_salon", "auto_repair", "retail_clothing", "gym"],
+                "location_type": "urban",  # Default - could be enhanced with user input
+                "franchise_model": False   # Default - could be enhanced with user input
+            }
+            
+            # Run habitat analysis for each business type
+            habitat_results = []
+            for selected_business_type in habitat_preferences['business_types']:
+                try:
+                    result = analyzer.analyze_habitat_suitability(
+                        business_type=selected_business_type,
+                        lat=lat,
+                        lon=lon,
+                        location_type=habitat_preferences['location_type'],
+                        franchise_model=habitat_preferences['franchise_model']
+                    )
+                    habitat_results.append(result)
+                except Exception as e:
+                    print(f"    ⚠️ Habitat analysis failed for {selected_business_type}: {e}")
+                    continue
+            
+            # Generate habitat report
+            habitat_report = analyzer.generate_habitat_report(habitat_results)
+            
+            # Save raw analysis data
+            os.makedirs(f"{project_path}/data_results", exist_ok=True)
+            analysis_file = f"{project_path}/data_results/business_habitat_analysis.json"
+            with open(analysis_file, 'w') as f:
+                json.dump([result.__dict__ for result in habitat_results], f, indent=2)
+            
+            # Load template and populate with habitat data
+            template_path = "UNIVERSAL_BUSINESS_HABITAT_TEMPLATE.md"
+            if not os.path.exists(template_path):
+                raise FileNotFoundError(f"Template not found: {template_path}")
+            
+            with open(template_path, 'r') as f:
+                template_content = f.read()
+            
+            # Populate template with habitat analysis results
+            section_content = analyzer.populate_template(template_content, habitat_results, habitat_preferences)
+            
+            return section_content
+            
+        except Exception as e:
+            print(f"    ⚠️ Business habitat analysis failed: {str(e)}")
+            print("    📝 Generating basic template...")
+            return self._generate_template_section(
+                self.sections_config["3.3"], business_type, address.split(',')[1].strip(), address
             )
     
     def _parse_manual_site_data(self, manual_data_file: str) -> Dict[str, Any]:
