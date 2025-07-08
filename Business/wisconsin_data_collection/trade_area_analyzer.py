@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 # Configuration
 PROJECT_ID = "location-optimizer-1"
 DATASET_ID = "location_optimizer"
-CREDENTIALS_PATH = "location-optimizer-1-449414f93a5a.json"
+CREDENTIALS_PATH = "location-optimizer-1-96b6102d3548.json"
 
 # OpenRouteService configuration (using free tier)
 ORS_BASE_URL = "https://api.openrouteservice.org/v2/isochrones/driving-car"

@@ -23,6 +23,20 @@ from pathlib import Path
 import subprocess
 import sys
 from typing import Dict, List, Any, Optional
+import logging
+
+# Import analyzers for automated sections
+try:
+    from simplified_market_saturation_analyzer import SimplifiedMarketSaturationAnalyzer
+    from universal_competitive_analyzer import UniversalCompetitiveAnalyzer
+    from integrated_business_analyzer import IntegratedBusinessAnalyzer
+    from geocoding import OpenStreetMapGeocoder
+    ANALYZERS_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Some analyzers not available: {e}")
+    ANALYZERS_AVAILABLE = False
+
+logging.basicConfig(level=logging.INFO)
 
 class UniversalBusinessAnalysisEngine:
     """Main engine for orchestrating complete business analysis"""
@@ -72,9 +86,10 @@ class UniversalBusinessAnalysisEngine:
             # Future sections (extensible framework)
             "2.2": {
                 "name": "Market Saturation",
-                "template": "UNIVERSAL_MARKET_SATURATION_TEMPLATE.md",  # Future
-                "automated": True,  # May change
-                "implemented": False
+                "template": "UNIVERSAL_MARKET_SATURATION_TEMPLATE.md",
+                "automated": True,
+                "data_sources": ["market_saturation_analyzer.py", "osm_competitive_analysis.py"],
+                "implemented": True
             },
             "3.1": {
                 "name": "Traffic & Transportation",
@@ -233,33 +248,101 @@ class UniversalBusinessAnalysisEngine:
         completed_sections = []
         implemented_sections = self.get_implemented_sections()
         
+        # Get coordinates for location-based analysis
+        lat, lon = None, None
+        if ANALYZERS_AVAILABLE:
+            try:
+                geocoder = OpenStreetMapGeocoder()
+                result = geocoder.geocode_address(address, "", "WI")
+                if result and result.latitude is not None and result.longitude is not None:
+                    lat, lon = result.latitude, result.longitude
+                    print(f"  📍 Geocoded location: {lat}, {lon}")
+            except Exception as e:
+                print(f"  ⚠️ Geocoding failed: {e}")
+        
         for section_id in implemented_sections:
             section_config = self.sections_config[section_id]
             
             if section_config.get("automated", True):
                 print(f"  ✍️  Generating Section {section_id}: {section_config['name']}")
                 
-                # Load template
-                template_file = section_config["template"]
-                if os.path.exists(template_file):
-                    with open(template_file, 'r') as f:
-                        template_content = f.read()
+                try:
+                    # Generate section based on type
+                    if section_id == "2.2" and ANALYZERS_AVAILABLE:
+                        # Generate Market Saturation Analysis (with fallback coordinates)
+                        fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
+                        content = self._generate_market_saturation_section(
+                            business_type, address, fallback_lat, fallback_lon, project_path
+                        )
+                    else:
+                        # Default template-based generation
+                        content = self._generate_template_section(
+                            section_config, business_type, location, address
+                        )
                     
-                    # Basic template population (simplified - would need full data integration)
-                    populated_content = template_content.replace("[BUSINESS_TYPE]", business_type)
-                    populated_content = populated_content.replace("[LOCATION]", location)
-                    populated_content = populated_content.replace("[SITE_ADDRESS]", address)
-                    
-                    # Save populated template
-                    section_filename = f"section_{section_id.replace('.', '_')}_{section_config['name'].lower().replace(' ', '_').replace('&', 'and')}.md"
-                    with open(f"{project_path}/templates_populated/{section_filename}", 'w') as f:
-                        f.write(populated_content)
-                    
-                    completed_sections.append(section_id)
-                else:
-                    print(f"    ⚠️ Template {template_file} not found")
+                    if content:
+                        # Save populated content
+                        section_filename = f"section_{section_id.replace('.', '_')}_{section_config['name'].lower().replace(' ', '_').replace('&', 'and')}.md"
+                        with open(f"{project_path}/templates_populated/{section_filename}", 'w') as f:
+                            f.write(content)
+                        
+                        completed_sections.append(section_id)
+                    else:
+                        print(f"    ⚠️ Failed to generate content for Section {section_id}")
+                        
+                except Exception as e:
+                    print(f"    ❌ Error generating Section {section_id}: {str(e)}")
         
         return completed_sections
+    
+    def _generate_template_section(self, section_config: Dict[str, Any], 
+                                 business_type: str, location: str, address: str) -> Optional[str]:
+        """Generate section using template replacement"""
+        template_file = section_config["template"]
+        if os.path.exists(template_file):
+            with open(template_file, 'r') as f:
+                template_content = f.read()
+            
+            # Basic template population
+            populated_content = template_content.replace("[BUSINESS_TYPE]", business_type)
+            populated_content = populated_content.replace("[LOCATION]", location)
+            populated_content = populated_content.replace("[SITE_ADDRESS]", address)
+            populated_content = populated_content.replace("{business_type}", business_type)
+            populated_content = populated_content.replace("{location}", location)
+            populated_content = populated_content.replace("{address}", address)
+            
+            return populated_content
+        return None
+    
+    def _generate_market_saturation_section(self, business_type: str, address: str, 
+                                          lat: float, lon: float, project_path: str) -> Optional[str]:
+        """Generate Market Saturation Analysis section"""
+        try:
+            analyzer = SimplifiedMarketSaturationAnalyzer()
+            
+            # Run analysis
+            print("    🔍 Running market saturation analysis...")
+            analysis_results = analyzer.analyze_market_saturation(
+                business_type, address, lat, lon
+            )
+            
+            # Save raw analysis data
+            os.makedirs(f"{project_path}/data_results", exist_ok=True)
+            analysis_file = f"{project_path}/data_results/market_saturation_analysis.json"
+            with open(analysis_file, 'w') as f:
+                json.dump(analysis_results, f, indent=2)
+            
+            # Generate formatted section content
+            section_content = analyzer.generate_section_content(analysis_results)
+            
+            return section_content
+            
+        except Exception as e:
+            print(f"    ⚠️ Market saturation analysis failed: {str(e)}")
+            print("    📝 Generating basic template...")
+            return self._generate_template_section(
+                self.sections_config["2.2"], business_type, address.split(',')[1].strip(), address
+            )
     
     def identify_manual_data_requirements(self) -> List[Dict[str, Any]]:
         """Identify all sections requiring manual data entry"""
