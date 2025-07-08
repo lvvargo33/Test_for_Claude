@@ -31,6 +31,7 @@ try:
     from traffic_transportation_analyzer import TrafficTransportationAnalyzer
     from site_characteristics_analyzer import SiteCharacteristicsAnalyzer
     from business_habitat_analyzer import BusinessHabitatAnalyzer
+    from revenue_projections_analyzer import RevenueProjectionsAnalyzer
     from universal_competitive_analyzer import UniversalCompetitiveAnalyzer
     from integrated_business_analyzer import IntegratedBusinessAnalyzer
     from geocoding import OpenStreetMapGeocoder
@@ -119,9 +120,10 @@ class UniversalBusinessAnalysisEngine:
             },
             "4.1": {
                 "name": "Revenue Projections",
-                "template": "UNIVERSAL_REVENUE_PROJECTIONS_TEMPLATE.md",  # Future
+                "template": "UNIVERSAL_REVENUE_PROJECTIONS_TEMPLATE.md",
                 "automated": True,
-                "implemented": False
+                "data_sources": ["revenue_projections_analyzer.py", "industry_benchmarks", "demographic_data", "competitive_analysis"],
+                "implemented": True
             },
             "4.2": {
                 "name": "Cost Analysis", 
@@ -303,6 +305,12 @@ class UniversalBusinessAnalysisEngine:
                         # Generate Business Habitat Mapping Analysis
                         fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
                         content = self._generate_business_habitat_section(
+                            business_type, address, fallback_lat, fallback_lon, project_path
+                        )
+                    elif section_id == "4.1" and ANALYZERS_AVAILABLE:
+                        # Generate Revenue Projections Analysis
+                        fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
+                        content = self._generate_revenue_projections_section(
                             business_type, address, fallback_lat, fallback_lon, project_path
                         )
                     else:
@@ -500,6 +508,61 @@ class UniversalBusinessAnalysisEngine:
             print("    📝 Generating basic template...")
             return self._generate_template_section(
                 self.sections_config["3.3"], business_type, address.split(',')[1].strip(), address
+            )
+    
+    def _generate_revenue_projections_section(self, business_type: str, address: str, 
+                                           lat: float, lon: float, project_path: str) -> Optional[str]:
+        """Generate Revenue Projections section"""
+        try:
+            analyzer = RevenueProjectionsAnalyzer()
+            
+            print("    💰 Running revenue projections analysis...")
+            
+            # Run revenue projections analysis
+            projection = analyzer.analyze_revenue_projections(
+                business_type=business_type,
+                address=address,
+                lat=lat,
+                lon=lon
+            )
+            
+            # Save raw analysis data
+            os.makedirs(f"{project_path}/data_results", exist_ok=True)
+            analysis_file = f"{project_path}/data_results/revenue_projections_analysis.json"
+            with open(analysis_file, 'w') as f:
+                json.dump({
+                    "business_type": projection.business_type,
+                    "location": projection.location,
+                    "conservative_annual": projection.conservative_annual,
+                    "realistic_annual": projection.realistic_annual,
+                    "optimistic_annual": projection.optimistic_annual,
+                    "recommended_planning": projection.recommended_planning,
+                    "confidence_level": projection.confidence_level,
+                    "key_assumptions": projection.key_assumptions,
+                    "revenue_drivers": projection.revenue_drivers,
+                    "risk_factors": projection.risk_factors,
+                    "model_validation": projection.model_validation,
+                    "seasonal_adjustments": projection.seasonal_adjustments
+                }, f, indent=2)
+            
+            # Load template and populate with revenue data
+            template_path = "UNIVERSAL_REVENUE_PROJECTIONS_TEMPLATE.md"
+            if not os.path.exists(template_path):
+                raise FileNotFoundError(f"Template not found: {template_path}")
+            
+            with open(template_path, 'r') as f:
+                template_content = f.read()
+            
+            # Populate template with revenue projections results
+            section_content = analyzer.populate_template(template_content, projection)
+            
+            return section_content
+            
+        except Exception as e:
+            print(f"    ⚠️ Revenue projections analysis failed: {str(e)}")
+            print("    📝 Generating basic template...")
+            return self._generate_template_section(
+                self.sections_config["4.1"], business_type, address.split(',')[1].strip(), address
             )
     
     def _parse_manual_site_data(self, manual_data_file: str) -> Dict[str, Any]:
