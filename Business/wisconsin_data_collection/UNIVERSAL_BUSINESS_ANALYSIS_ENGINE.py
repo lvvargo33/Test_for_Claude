@@ -35,6 +35,7 @@ try:
     from cost_analysis_analyzer import CostAnalysisAnalyzer
     from risk_assessment_analyzer import RiskAssessmentAnalyzer
     from zoning_permits_analyzer import ZoningPermitsAnalyzer
+    from infrastructure_analyzer import InfrastructureAnalyzer
     from universal_competitive_analyzer import UniversalCompetitiveAnalyzer
     from integrated_business_analyzer import IntegratedBusinessAnalyzer
     from geocoding import OpenStreetMapGeocoder
@@ -153,9 +154,10 @@ class UniversalBusinessAnalysisEngine:
             },
             "5.2": {
                 "name": "Infrastructure",
-                "template": "UNIVERSAL_INFRASTRUCTURE_TEMPLATE.md",  # Future 
-                "automated": True,  # May be automated
-                "implemented": False
+                "template": "UNIVERSAL_INFRASTRUCTURE_TEMPLATE.md",
+                "automated": True,
+                "data_sources": ["infrastructure_analyzer.py", "wisconsin_utilities_database", "transportation_networks"],
+                "implemented": True
             },
             "6.1": {
                 "name": "Final Recommendations",
@@ -335,6 +337,12 @@ class UniversalBusinessAnalysisEngine:
                         # Generate Zoning & Permits Analysis
                         fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
                         content = self._generate_zoning_permits_section(
+                            business_type, address, fallback_lat, fallback_lon, project_path
+                        )
+                    elif section_id == "5.2" and ANALYZERS_AVAILABLE:
+                        # Generate Infrastructure Analysis
+                        fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
+                        content = self._generate_infrastructure_section(
                             business_type, address, fallback_lat, fallback_lon, project_path
                         )
                     else:
@@ -1060,6 +1068,77 @@ Please complete the following manual research and verification tasks. Replace [P
         except Exception as e:
             logger.warning(f"Failed to create manual data template: {e}")
             return None
+    
+    def _generate_infrastructure_section(self, business_type: str, address: str, 
+                                       lat: float, lon: float, project_path: str) -> Optional[str]:
+        """Generate Infrastructure Analysis section"""
+        try:
+            analyzer = InfrastructureAnalyzer()
+            
+            print("    🏗️ Running infrastructure analysis...")
+            
+            # Run infrastructure analysis
+            infrastructure_analysis = analyzer.analyze_infrastructure(
+                business_type=business_type,
+                address=address,
+                lat=lat,
+                lon=lon
+            )
+            
+            # Save raw analysis data
+            os.makedirs(f"{project_path}/data_results", exist_ok=True)
+            analysis_file = f"{project_path}/data_results/infrastructure_analysis.json"
+            with open(analysis_file, 'w') as f:
+                json.dump({
+                    "business_type": infrastructure_analysis.business_type,
+                    "location": infrastructure_analysis.location,
+                    "address": infrastructure_analysis.address,
+                    "county_name": infrastructure_analysis.county_name,
+                    "municipality_name": infrastructure_analysis.municipality_name,
+                    "overall_infrastructure_score": infrastructure_analysis.overall_infrastructure_score,
+                    "utilities_infrastructure_score": infrastructure_analysis.utilities_infrastructure_score,
+                    "transportation_infrastructure_score": infrastructure_analysis.transportation_infrastructure_score,
+                    "safety_infrastructure_score": infrastructure_analysis.safety_infrastructure_score,
+                    "commercial_infrastructure_score": infrastructure_analysis.commercial_infrastructure_score,
+                    "technology_infrastructure_score": infrastructure_analysis.technology_infrastructure_score,
+                    "infrastructure_risk_score": infrastructure_analysis.infrastructure_risk_score,
+                    "infrastructure_investment_required": infrastructure_analysis.infrastructure_investment_required,
+                    "monthly_infrastructure_costs": infrastructure_analysis.monthly_infrastructure_costs,
+                    "infrastructure_strengths": infrastructure_analysis.infrastructure_strengths,
+                    "infrastructure_challenges": infrastructure_analysis.infrastructure_challenges,
+                    "critical_infrastructure_gaps": infrastructure_analysis.critical_infrastructure_gaps,
+                    "improvement_recommendations": infrastructure_analysis.improvement_recommendations
+                }, f, indent=2)
+            
+            # Load template and populate with infrastructure data
+            template_path = "UNIVERSAL_INFRASTRUCTURE_TEMPLATE.md"
+            if not os.path.exists(template_path):
+                raise FileNotFoundError(f"Template not found: {template_path}")
+            
+            with open(template_path, 'r') as f:
+                template_content = f.read()
+            
+            # Generate infrastructure charts
+            charts_dir = f"{project_path}/charts"
+            print("    📊 Generating infrastructure charts...")
+            chart_paths = analyzer.generate_infrastructure_charts(infrastructure_analysis, charts_dir)
+            
+            if chart_paths:
+                print(f"    ✅ Generated {len(chart_paths)} infrastructure charts")
+            else:
+                print("    ⚠️ Chart generation failed, using default paths")
+            
+            # Populate template with infrastructure analysis results and chart paths
+            section_content = analyzer.populate_template(template_content, infrastructure_analysis, chart_paths)
+            
+            return section_content
+            
+        except Exception as e:
+            print(f"    ⚠️ Infrastructure analysis failed: {str(e)}")
+            print("    📝 Generating basic template...")
+            return self._generate_template_section(
+                self.sections_config["5.2"], business_type, address.split(',')[1].strip(), address
+            )
     
     def _extract_county_from_address(self, address: str) -> str:
         """Extract county name from address for Wisconsin-specific data"""
