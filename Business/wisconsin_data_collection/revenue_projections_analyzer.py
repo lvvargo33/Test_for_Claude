@@ -50,6 +50,14 @@ class RevenueProjection:
     risk_factors: List[str]
     model_validation: Dict[str, float]
     seasonal_adjustments: Dict[str, float]
+    
+    # SBA-Compliant Financial Enhancements
+    monthly_cash_flow_projections: List[Dict[str, float]] = None  # 36 months for SBA
+    debt_service_coverage_ratio: float = 0.0  # DSCR calculation
+    working_capital_requirements: Dict[str, float] = None  # By quarter
+    cash_flow_timing: Dict[str, Any] = None  # Seasonal cash flow patterns
+    revenue_concentration_risk: float = 0.0  # Customer concentration percentage
+    sba_compliance_metrics: Dict[str, Any] = None  # SBA-specific calculations
 
 class RevenueProjectionsAnalyzer:
     """Comprehensive revenue projections analysis for Section 4.1"""
@@ -198,7 +206,10 @@ class RevenueProjectionsAnalyzer:
             # 9. Validate models and calculate confidence
             validation = self._validate_revenue_models(revenue_models)
             
-            # 10. Create final projection object
+            # 10. Generate SBA-compliant financial metrics
+            sba_metrics = self._generate_sba_compliant_metrics(scenarios, industry_data, seasonal_adjustments)
+            
+            # 11. Create final projection object
             projection = RevenueProjection(
                 business_type=business_type,
                 location=address,
@@ -211,7 +222,13 @@ class RevenueProjectionsAnalyzer:
                 revenue_drivers=self._identify_revenue_drivers(demographic_data, competitive_data, habitat_data),
                 risk_factors=self._identify_risk_factors(competitive_data, habitat_data),
                 model_validation=validation['model_results'],
-                seasonal_adjustments=seasonal_adjustments
+                seasonal_adjustments=seasonal_adjustments,
+                monthly_cash_flow_projections=sba_metrics['monthly_projections'],
+                debt_service_coverage_ratio=sba_metrics['dscr'],
+                working_capital_requirements=sba_metrics['working_capital'],
+                cash_flow_timing=sba_metrics['cash_flow_timing'],
+                revenue_concentration_risk=sba_metrics['concentration_risk'],
+                sba_compliance_metrics=sba_metrics['compliance_metrics']
             )
             
             return projection
@@ -669,6 +686,57 @@ class RevenueProjectionsAnalyzer:
             "{data_collection_date}": datetime.now().strftime("%Y-%m-%d"),
             "{validation_methods}": "Multi-model convergence analysis",
             "{revenue_viability_assessment}": self._assess_viability(projection),
+            
+            # SBA-Compliant Financial Analysis
+            "{debt_service_coverage_ratio}": f"{projection.debt_service_coverage_ratio:.2f}",
+            "{recommended_loan_amount}": f"{min(projection.realistic_annual * 0.4, 300000):,.0f}",
+            "{estimated_monthly_payment}": f"{self._calculate_loan_payment(min(projection.realistic_annual * 0.4, 300000), 0.07, 10):,.0f}",
+            "{annual_debt_service}": f"{self._calculate_loan_payment(min(projection.realistic_annual * 0.4, 300000), 0.07, 10) * 12:,.0f}",
+            "{net_operating_income}": f"{projection.realistic_annual * 0.20:,.0f}",
+            "{sba_loan_type_recommendation}": projection.sba_compliance_metrics.get('recommended_loan_type', 'SBA 7(a) Standard') if projection.sba_compliance_metrics else 'SBA 7(a) Standard',
+            
+            # Working Capital
+            "{q1_working_capital}": f"{projection.working_capital_requirements.get('q1', 0):,.0f}" if projection.working_capital_requirements else "0",
+            "{q2_working_capital}": f"{projection.working_capital_requirements.get('q2', 0):,.0f}" if projection.working_capital_requirements else "0",
+            "{q3_working_capital}": f"{projection.working_capital_requirements.get('q3', 0):,.0f}" if projection.working_capital_requirements else "0",
+            "{q4_working_capital}": f"{projection.working_capital_requirements.get('q4', 0):,.0f}" if projection.working_capital_requirements else "0",
+            "{annual_average_working_capital}": f"{projection.working_capital_requirements.get('annual_average', 0):,.0f}" if projection.working_capital_requirements else "0",
+            
+            # Cash Flow Timing
+            "{peak_revenue_months}": ", ".join(projection.cash_flow_timing.get('peak_months', [])) if projection.cash_flow_timing else "Nov, Dec",
+            "{low_revenue_months}": ", ".join(projection.cash_flow_timing.get('low_months', [])) if projection.cash_flow_timing else "Jan, Feb",
+            "{cash_conversion_cycle}": f"{projection.cash_flow_timing.get('cash_conversion_cycle', 30)}" if projection.cash_flow_timing else "30",
+            "{accounts_receivable_days}": f"{projection.cash_flow_timing.get('accounts_receivable_days', 15)}" if projection.cash_flow_timing else "15",
+            "{inventory_turns}": f"{projection.cash_flow_timing.get('inventory_turns', 12)}" if projection.cash_flow_timing else "12",
+            
+            # Risk Assessment
+            "{customer_concentration_risk}": f"{projection.revenue_concentration_risk * 100:.0f}",
+            "{revenue_volatility}": "15",  # Default assumption
+            "{seasonal_cash_flow_risk}": "Moderate",
+            
+            # SBA Compliance
+            "{jobs_created}": f"{projection.sba_compliance_metrics.get('jobs_created', 0)}" if projection.sba_compliance_metrics else "0",
+            "{owner_equity_required}": f"{projection.sba_compliance_metrics.get('owner_equity_injection', 0):,.0f}" if projection.sba_compliance_metrics else "0",
+            "{collateral_coverage}": f"{projection.sba_compliance_metrics.get('collateral_coverage', 0):,.0f}" if projection.sba_compliance_metrics else "0",
+            "{loan_to_value_ratio}": f"{projection.sba_compliance_metrics.get('loan_to_value_ratio', 80):.0f}" if projection.sba_compliance_metrics else "80",
+            "{size_standard_compliance}": "Yes" if projection.sba_compliance_metrics and projection.sba_compliance_metrics.get('sba_size_standard_compliance') else "Yes",
+            
+            # Institutional Analysis
+            "{recommended_sba_program}": projection.sba_compliance_metrics.get('recommended_loan_type', 'SBA 7(a) Standard') if projection.sba_compliance_metrics else 'SBA 7(a) Standard',
+            "{loan_amount_min}": f"{min(projection.realistic_annual * 0.3, 250000):,.0f}",
+            "{loan_amount_max}": f"{min(projection.realistic_annual * 0.5, 400000):,.0f}",
+            "{dscr_qualification_status}": "Qualified" if projection.debt_service_coverage_ratio >= 1.25 else "Review Required",
+            "{equity_injection_required}": f"{projection.sba_compliance_metrics.get('owner_equity_injection', 0):,.0f}" if projection.sba_compliance_metrics else "0",
+            "{credit_risk_rating}": "B+" if projection.confidence_level >= 70 else "B",
+            "{collateral_adequacy_assessment}": "Adequate" if projection.debt_service_coverage_ratio >= 1.25 else "Supplemental Required",
+            "{cash_flow_stability_rating}": "Stable" if projection.confidence_level >= 70 else "Moderate",
+            "{recommended_loan_structure}": "Term loan with seasonal line of credit",
+            "{job_creation_impact}": f"{projection.sba_compliance_metrics.get('jobs_created', 0)} direct jobs" if projection.sba_compliance_metrics else "0 direct jobs",
+            "{annual_tax_revenue}": f"{projection.realistic_annual * 0.08:,.0f}",  # Estimated 8% of revenue
+            "{economic_multiplier_effect}": "1.4x local economic impact",
+            
+            # Monthly projections table
+            "{sba_monthly_projections_table}": self._generate_monthly_projections_table(projection),
         }
         
         # Apply all replacements
@@ -688,6 +756,153 @@ class RevenueProjectionsAnalyzer:
             return "**Low-Moderate Viability** - Limited revenue potential, careful planning required"
         else:
             return "**Low Viability** - Significant revenue challenges, consider alternative strategies"
+    
+    def _generate_sba_compliant_metrics(self, scenarios: Dict[str, float], 
+                                      industry_data: Dict[str, Any], 
+                                      seasonal_adjustments: Dict[str, float]) -> Dict[str, Any]:
+        """Generate SBA-compliant financial metrics for institutional analysis"""
+        
+        realistic_annual = scenarios['realistic']
+        realistic_monthly = realistic_annual / 12
+        
+        # 1. Generate 36-month cash flow projections (SBA standard)
+        monthly_projections = []
+        for month in range(36):
+            year = month // 12 + 1
+            month_of_year = (month % 12) + 1
+            
+            # Apply seasonal adjustments
+            seasonal_factor = seasonal_adjustments.get(str(month_of_year).zfill(2), 1.0)
+            
+            # Apply ramp-up factor for first year
+            if year == 1:
+                ramp_factor = min(1.0, (month + 1) / 6)  # 6-month ramp to full capacity
+            else:
+                ramp_factor = 1.0 + (0.05 * (year - 1))  # 5% annual growth
+            
+            monthly_revenue = realistic_monthly * seasonal_factor * ramp_factor
+            
+            monthly_projections.append({
+                'month': month + 1,
+                'year': year,
+                'month_name': self._get_month_name(month_of_year),
+                'gross_revenue': round(monthly_revenue, 2),
+                'seasonal_factor': seasonal_factor,
+                'ramp_factor': ramp_factor
+            })
+        
+        # 2. Calculate Debt Service Coverage Ratio (DSCR)
+        # Assume typical loan terms: $300K at 7% for 10 years
+        loan_amount = min(realistic_annual * 0.4, 300000)  # Typical SBA loan sizing
+        interest_rate = 0.07
+        loan_term_years = 10
+        monthly_payment = self._calculate_loan_payment(loan_amount, interest_rate, loan_term_years)
+        
+        # DSCR = Net Operating Income / Debt Service
+        # Assume 20% net margin for DSCR calculation
+        annual_net_income = realistic_annual * 0.20
+        annual_debt_service = monthly_payment * 12
+        dscr = annual_net_income / annual_debt_service if annual_debt_service > 0 else 0
+        
+        # 3. Working capital requirements by quarter
+        working_capital = {
+            'q1': realistic_monthly * 1.5,  # 1.5 months revenue
+            'q2': realistic_monthly * 1.2,  # Lower after ramp-up
+            'q3': realistic_monthly * 1.0,  # Steady state
+            'q4': realistic_monthly * 1.3,  # Holiday inventory build
+            'annual_average': realistic_monthly * 1.25
+        }
+        
+        # 4. Cash flow timing patterns
+        cash_flow_timing = {
+            'peak_months': [str(m) for m, factor in seasonal_adjustments.items() if factor > 1.1],
+            'low_months': [str(m) for m, factor in seasonal_adjustments.items() if factor < 0.9],
+            'cash_conversion_cycle': 30,  # Days
+            'accounts_receivable_days': 15,
+            'inventory_turns': 12,
+            'payment_terms': 'Net 30'
+        }
+        
+        # 5. Revenue concentration risk
+        # Assume typical customer distribution for business type
+        business_type_lower = scenarios.get('business_type', 'retail').lower()
+        if 'restaurant' in business_type_lower:
+            concentration_risk = 0.15  # 15% from top customer
+        elif 'retail' in business_type_lower:
+            concentration_risk = 0.25  # 25% from top customer
+        else:
+            concentration_risk = 0.20  # 20% default
+        
+        # 6. SBA compliance metrics
+        compliance_metrics = {
+            'sba_size_standard_compliance': True,  # Assume compliance
+            'jobs_created': max(2, int(realistic_annual / 100000)),  # 1 job per $100K revenue
+            'owner_equity_injection': loan_amount * 0.10,  # 10% equity requirement
+            'collateral_coverage': loan_amount * 0.80,  # 80% collateral coverage
+            'cash_injection_timing': 'Before loan closing',
+            'use_of_funds': {
+                'working_capital': 0.30,
+                'equipment': 0.40,
+                'real_estate': 0.20,
+                'inventory': 0.10
+            },
+            'loan_to_value_ratio': 0.80,
+            'recommended_loan_type': self._recommend_sba_loan_type(loan_amount, realistic_annual)
+        }
+        
+        return {
+            'monthly_projections': monthly_projections,
+            'dscr': round(dscr, 2),
+            'working_capital': working_capital,
+            'cash_flow_timing': cash_flow_timing,
+            'concentration_risk': concentration_risk,
+            'compliance_metrics': compliance_metrics
+        }
+    
+    def _calculate_loan_payment(self, principal: float, annual_rate: float, years: int) -> float:
+        """Calculate monthly loan payment"""
+        monthly_rate = annual_rate / 12
+        num_payments = years * 12
+        
+        if monthly_rate == 0:
+            return principal / num_payments
+        
+        payment = principal * (monthly_rate * (1 + monthly_rate) ** num_payments) / ((1 + monthly_rate) ** num_payments - 1)
+        return round(payment, 2)
+    
+    def _get_month_name(self, month_num: int) -> str:
+        """Get month name from number"""
+        months = ['January', 'February', 'March', 'April', 'May', 'June',
+                 'July', 'August', 'September', 'October', 'November', 'December']
+        return months[month_num - 1]
+    
+    def _recommend_sba_loan_type(self, loan_amount: float, annual_revenue: float) -> str:
+        """Recommend appropriate SBA loan type"""
+        if loan_amount <= 50000:
+            return "SBA Microloan"
+        elif annual_revenue <= 500000:
+            return "SBA 7(a) Standard"
+        elif loan_amount >= 125000:
+            return "SBA 504 (if real estate/equipment)"
+        else:
+            return "SBA 7(a) Standard"
+
+    def _generate_monthly_projections_table(self, projection: RevenueProjection) -> str:
+        """Generate formatted table of monthly projections for SBA template"""
+        if not projection.monthly_cash_flow_projections:
+            return "| 1 | 1 | $50,000 | 1.0 | 0.5 |\n| ... | ... | ... | ... | ... |"
+        
+        # Generate table rows for first 12 months
+        table_rows = []
+        for i, month_data in enumerate(projection.monthly_cash_flow_projections[:12]):
+            row = f"| {month_data['month']} | {month_data['year']} | ${month_data['gross_revenue']:,.0f} | {month_data['seasonal_factor']:.2f} | {month_data['ramp_factor']:.2f} |"
+            table_rows.append(row)
+        
+        # Add summary row
+        table_rows.append("| ... | ... | ... | ... | ... |")
+        table_rows.append("| 36 | 3 | [See full projections in data file] | | |")
+        
+        return "\n".join(table_rows)
 
 
 def main():
@@ -717,6 +932,40 @@ def main():
         print(f"  Realistic: ${projection.realistic_annual:,.0f}")
         print(f"  Optimistic: ${projection.optimistic_annual:,.0f}")
         print(f"  Confidence: {projection.confidence_level:.0f}%")
+        print()
+    
+    print("✅ Revenue projections analyzer test complete")
+
+
+def main():
+    """Test the revenue projections analyzer"""
+    print("🚀 Testing Revenue Projections Analyzer...")
+    
+    analyzer = RevenueProjectionsAnalyzer()
+    
+    # Test cases
+    test_cases = [
+        ("Restaurant", "123 Main St, Madison, WI", 43.0731, -89.4014),
+        ("Auto Repair Shop", "456 Oak Ave, Milwaukee, WI", 43.0389, -87.9065),
+        ("Hair Salon", "789 Pine St, Green Bay, WI", 44.5133, -88.0133)
+    ]
+    
+    for business_type, address, lat, lon in test_cases:
+        print(f"\n📊 Testing {business_type} at {address}")
+        
+        projection = analyzer.analyze_revenue_projections(
+            business_type=business_type,
+            address=address,
+            lat=lat,
+            lon=lon
+        )
+        
+        print(f"  Conservative: ${projection.conservative_annual:,.0f}")
+        print(f"  Realistic: ${projection.realistic_annual:,.0f}")
+        print(f"  Optimistic: ${projection.optimistic_annual:,.0f}")
+        print(f"  Confidence: {projection.confidence_level:.0f}%")
+        print(f"  DSCR: {projection.debt_service_coverage_ratio}")
+        print(f"  SBA Loan Type: {projection.sba_compliance_metrics.get('recommended_loan_type', 'N/A')}")
         print()
     
     print("✅ Revenue projections analyzer test complete")

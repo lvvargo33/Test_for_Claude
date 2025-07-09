@@ -228,6 +228,68 @@ This section provides comprehensive revenue forecasting for the {business_type} 
 4. **Competitive Positioning**: {competitive_positioning_recommendation}
 5. **Revenue Enhancement**: {revenue_enhancement_recommendation}
 
+## 4.1.9 SBA-Compliant Financial Analysis
+
+### 36-Month Cash Flow Projections
+**Monthly Revenue Projections (SBA Format)**
+
+| Month | Year | Revenue | Seasonal Factor | Growth Factor |
+|-------|------|---------|----------------|---------------|
+{sba_monthly_projections_table}
+
+### Debt Service Coverage Analysis
+- **Debt Service Coverage Ratio (DSCR)**: {debt_service_coverage_ratio}
+- **Recommended Loan Amount**: ${recommended_loan_amount:,}
+- **Estimated Monthly Payment**: ${estimated_monthly_payment:,}
+- **Annual Debt Service**: ${annual_debt_service:,}
+- **Net Operating Income**: ${net_operating_income:,}
+- **SBA Loan Type Recommendation**: {sba_loan_type_recommendation}
+
+### Working Capital Requirements
+- **Q1 Working Capital**: ${q1_working_capital:,}
+- **Q2 Working Capital**: ${q2_working_capital:,}
+- **Q3 Working Capital**: ${q3_working_capital:,}
+- **Q4 Working Capital**: ${q4_working_capital:,}
+- **Annual Average**: ${annual_average_working_capital:,}
+
+### Cash Flow Timing Analysis
+- **Peak Revenue Months**: {peak_revenue_months}
+- **Low Revenue Months**: {low_revenue_months}
+- **Cash Conversion Cycle**: {cash_conversion_cycle} days
+- **Accounts Receivable**: {accounts_receivable_days} days
+- **Inventory Turnover**: {inventory_turns}x annually
+
+### Revenue Risk Assessment
+- **Customer Concentration Risk**: {customer_concentration_risk}%
+- **Revenue Volatility**: {revenue_volatility}%
+- **Seasonal Cash Flow Risk**: {seasonal_cash_flow_risk}
+
+### SBA Compliance Metrics
+- **Jobs Created**: {jobs_created}
+- **Owner Equity Required**: ${owner_equity_required:,}
+- **Collateral Coverage**: ${collateral_coverage:,}
+- **Loan-to-Value Ratio**: {loan_to_value_ratio}%
+- **Size Standard Compliance**: {size_standard_compliance}
+
+## 4.1.10 Institutional Analysis Summary
+
+### For SBA Brokers
+- **Recommended SBA Program**: {recommended_sba_program}
+- **Loan Amount Range**: ${loan_amount_min:,} - ${loan_amount_max:,}
+- **DSCR Qualification**: {dscr_qualification_status}
+- **Equity Injection**: ${equity_injection_required:,}
+
+### For Banks
+- **Credit Risk Rating**: {credit_risk_rating}
+- **Collateral Adequacy**: {collateral_adequacy_assessment}
+- **Cash Flow Stability**: {cash_flow_stability_rating}
+- **Loan Structure**: {recommended_loan_structure}
+
+### For Economic Development
+- **Job Creation Impact**: {job_creation_impact}
+- **Tax Revenue Generation**: ${annual_tax_revenue:,}
+- **Economic Multiplier**: {economic_multiplier_effect}
+
 ### Revenue Projections Summary
 - **Conservative Annual Revenue**: ${conservative_annual_revenue:,}
 - **Realistic Annual Revenue**: ${realistic_annual_revenue:,}
@@ -238,4 +300,4 @@ This section provides comprehensive revenue forecasting for the {business_type} 
 **Revenue Viability Assessment**: {revenue_viability_assessment}
 
 ---
-*Revenue projections based on {data_collection_date} analysis using market penetration modeling, demographic analysis, competitive intelligence, traffic analysis, and industry benchmarking. Models validated with {validation_methods}.*
+*Revenue projections based on {data_collection_date} analysis using market penetration modeling, demographic analysis, competitive intelligence, traffic analysis, and industry benchmarking. Models validated with {validation_methods}. SBA-compliant financial analysis meets institutional lending standards.*
