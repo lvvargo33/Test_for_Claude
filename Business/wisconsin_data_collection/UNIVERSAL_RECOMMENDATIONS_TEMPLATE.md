@@ -50,50 +50,79 @@ The following risks require immediate attention and mitigation strategies:
 
 ---
 
-## 3. Financial Recommendations
+## 3. Institutional Risk Rating
 
-### 3.1 Capital Requirements
+### 3.1 Credit Rating Assessment
+
+**Institutional Investment Rating: {institutional_credit_rating}**
+
+{credit_rating_justification}
+
+### 3.2 Institutional Investment Summary
+
+{institutional_risk_summary}
+
+### 3.3 Rating Components Analysis
+
+**Detailed Component Breakdown:**
+- **Composite Risk Score**: {composite_risk_score}/100 (Lower is better)
+- **Overall Viability Score**: {confidence_level}/100
+- **Financial Strength Score**: {financial_strength_score}/100
+- **Market Position Score**: {market_position_score}/100
+- **Risk Component Score**: {risk_component_score}/100
+
+**Rating Criteria:**
+- **A Rating**: Risk ≤35, Viability ≥75, Financial ≥80, Market ≥70
+- **B Rating**: Risk ≤55, Viability ≥60, Financial ≥65, Market ≥55
+- **C Rating**: Risk ≤75, Viability ≥45, Financial ≥50, Market ≥40
+- **D Rating**: Below C criteria thresholds
+
+---
+
+## 4. Financial Recommendations
+
+### 4.1 Capital Requirements
 - **Total Initial Investment**: ${total_initial_investment:,}
 - **Working Capital Reserve**: ${working_capital_reserve:,}
 - **Contingency Fund (15%)**: ${contingency_fund:,}
 - **Total Capital Needed**: ${total_capital_needed:,}
 
-### 3.2 Financial Benchmarks
+### 4.2 Financial Benchmarks
 - **Target Monthly Revenue**: ${target_monthly_revenue:,}
 - **Breakeven Timeline**: {breakeven_timeline} months
 - **Target Net Margin**: {target_net_margin}%
 - **ROI Projection (3-year)**: {roi_projection}%
 
-### 3.3 Funding Strategy
+### 4.3 Funding Strategy
 {funding_strategy_recommendations}
 
 ---
 
-## 4. Operational Recommendations
+## 5. Operational Recommendations
 
-### 4.1 Immediate Action Items (0-30 days)
+### 5.1 Immediate Action Items (0-30 days)
 {immediate_action_items}
 
-### 4.2 Pre-Launch Requirements (1-3 months)
+### 5.2 Pre-Launch Requirements (1-3 months)
 {prelaunch_requirements}
 
-### 4.3 Launch Strategy (3-6 months)
+### 5.3 Launch Strategy (3-6 months)
 {launch_strategy_recommendations}
 
-### 4.4 Growth Phase Planning (6-24 months)
+### 5.4 Growth Phase Planning (6-24 months)
 {growth_phase_recommendations}
 
 ---
 
-## 5. Market Positioning Strategy
+## 6. Market Positioning Strategy
 
-### 5.1 Target Market Focus
+### 6.1 Target Market Focus
 {target_market_recommendations}
 
-### 5.2 Competitive Differentiation
+### 6.2 Competitive Differentiation
 {competitive_differentiation_strategy}
 
-### 5.3 Marketing Priorities
+### 6.3 Marketing Priorities
 1. **Primary Channel**: {primary_marketing_channel}
 2. **Secondary Channels**: {secondary_marketing_channels}
 3. **Budget Allocation**: ${marketing_budget:,}/month
@@ -101,35 +130,35 @@ The following risks require immediate attention and mitigation strategies:
 
 ---
 
-## 6. Location-Specific Recommendations
+## 7. Location-Specific Recommendations
 
-### 6.1 Site Optimization
+### 7.1 Site Optimization
 {site_optimization_recommendations}
 
-### 6.2 Infrastructure Priorities
+### 7.2 Infrastructure Priorities
 {infrastructure_priority_recommendations}
 
-### 6.3 Community Integration
+### 7.3 Community Integration
 {community_integration_strategy}
 
 ---
 
-## 7. Regulatory Compliance Roadmap
+## 8. Regulatory Compliance Roadmap
 
-### 7.1 Critical Permits & Licenses
+### 8.1 Critical Permits & Licenses
 {critical_permits_timeline}
 
-### 7.2 Compliance Priorities
+### 8.2 Compliance Priorities
 {compliance_priority_list}
 
-### 7.3 Professional Services Required
+### 8.3 Professional Services Required
 {professional_services_recommendations}
 
 ---
 
-## 8. Performance Monitoring Framework
+## 9. Performance Monitoring Framework
 
-### 8.1 Key Performance Indicators (KPIs)
+### 9.1 Key Performance Indicators (KPIs)
 Monitor these metrics monthly to ensure business health:
 
 1. **Revenue Growth Rate**: Target {revenue_growth_target}% monthly
@@ -138,16 +167,16 @@ Monitor these metrics monthly to ensure business health:
 4. **Operating Margin**: Target {target_operating_margin}%
 5. **Cash Flow Coverage**: Minimum {min_cash_flow_coverage}x
 
-### 8.2 Review Schedule
+### 9.2 Review Schedule
 - **Weekly**: Cash flow, customer feedback, operational metrics
 - **Monthly**: Financial performance, competitive analysis, market trends
 - **Quarterly**: Strategic plan review, major adjustments, growth opportunities
 
 ---
 
-## 9. Decision Framework
+## 10. Decision Framework
 
-### 9.1 Go/No-Go Criteria
+### 10.1 Go/No-Go Criteria
 
 **✅ PROCEED if you can confirm:**
 {proceed_criteria}
@@ -158,13 +187,13 @@ Monitor these metrics monthly to ensure business health:
 **❌ AVOID if:**
 {avoid_criteria}
 
-### 9.2 Alternative Recommendations
+### 10.2 Alternative Recommendations
 If the primary location or concept presents challenges:
 {alternative_recommendations}
 
 ---
 
-## 10. Executive Recommendation
+## 11. Executive Recommendation
 
 ### Overall Assessment
 {executive_summary_narrative}

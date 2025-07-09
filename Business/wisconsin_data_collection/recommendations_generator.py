@@ -81,6 +81,12 @@ class RecommendationResult:
         self.avoid_criteria = []
         self.alternative_recommendations = ""
         
+        # Institutional Risk Rating System
+        self.institutional_credit_rating = ""  # A, B, C, D
+        self.credit_rating_justification = ""
+        self.credit_rating_components = {}
+        self.institutional_risk_summary = ""
+        
         # Executive Summary
         self.executive_summary_narrative = ""
         self.final_recommendation_statement = ""
@@ -97,6 +103,42 @@ class RecommendationsGenerator:
             "high": 80,
             "moderate": 60,
             "low": 40
+        }
+        
+        # Institutional Risk Rating Matrix (A-D scale)
+        self.credit_rating_matrix = {
+            "A": {
+                "composite_risk_max": 35,
+                "viability_min": 75,
+                "financial_strength_min": 80,
+                "market_position_min": 70,
+                "label": "Prime Investment Grade",
+                "institutional_appeal": "Banks, PE firms, EDCs - All institutions highly interested"
+            },
+            "B": {
+                "composite_risk_max": 55,
+                "viability_min": 60,
+                "financial_strength_min": 65,
+                "market_position_min": 55,
+                "label": "Investment Grade",
+                "institutional_appeal": "Banks comfortable, PE firms interested, EDCs supportive"
+            },
+            "C": {
+                "composite_risk_max": 75,
+                "viability_min": 45,
+                "financial_strength_min": 50,
+                "market_position_min": 40,
+                "label": "Sub-Investment Grade",
+                "institutional_appeal": "Banks cautious, PE firms selective, EDCs case-by-case"
+            },
+            "D": {
+                "composite_risk_max": 100,
+                "viability_min": 0,
+                "financial_strength_min": 0,
+                "market_position_min": 0,
+                "label": "High Risk",
+                "institutional_appeal": "Most institutions avoid, EDCs may consider with incentives"
+            }
         }
         
     def generate_recommendations(self, business_type: str, location: str, 
@@ -143,6 +185,9 @@ class RecommendationsGenerator:
         
         # Decision framework
         self._generate_decision_framework(recommendation, viability_score, integrated_data)
+        
+        # Institutional risk rating
+        self._generate_institutional_risk_rating(recommendation, viability_score, integrated_data)
         
         # Executive summary
         self._generate_executive_summary(recommendation, viability_score, integrated_data)
@@ -581,6 +626,199 @@ class RecommendationsGenerator:
             recommendation.business_type, viability_score, integrated_data
         )
     
+    def _generate_institutional_risk_rating(self, recommendation: RecommendationResult, 
+                                          viability_score: float, 
+                                          integrated_data: Dict[str, Any]):
+        """Generate institutional risk rating (A-D scale) based on composite analysis"""
+        
+        # Calculate component scores
+        components = self._calculate_rating_components(viability_score, integrated_data)
+        
+        # Determine credit rating based on matrix
+        credit_rating = self._determine_credit_rating(components)
+        
+        # Generate rating justification
+        rating_info = self.credit_rating_matrix[credit_rating]
+        justification = self._generate_rating_justification(credit_rating, components, rating_info)
+        
+        # Generate institutional risk summary
+        risk_summary = self._generate_institutional_risk_summary(credit_rating, components, rating_info)
+        
+        # Update recommendation
+        recommendation.institutional_credit_rating = credit_rating
+        recommendation.credit_rating_justification = justification
+        recommendation.credit_rating_components = components
+        recommendation.institutional_risk_summary = risk_summary
+    
+    def _calculate_rating_components(self, viability_score: float, 
+                                   integrated_data: Dict[str, Any]) -> Dict[str, float]:
+        """Calculate individual components for credit rating"""
+        
+        # Component 1: Composite Risk Score (inverted - lower risk = higher score)
+        composite_risk = integrated_data.get("risk", {}).get("composite_risk_score", 50)
+        risk_component = 100 - composite_risk
+        
+        # Component 2: Viability Score (already calculated)
+        viability_component = viability_score
+        
+        # Component 3: Financial Strength
+        financial_strength = self._calculate_financial_strength(integrated_data)
+        
+        # Component 4: Market Position
+        market_position = self._calculate_market_position(integrated_data)
+        
+        return {
+            "composite_risk_score": composite_risk,
+            "risk_component": risk_component,
+            "viability_score": viability_component,
+            "financial_strength": financial_strength,
+            "market_position": market_position
+        }
+    
+    def _calculate_financial_strength(self, integrated_data: Dict[str, Any]) -> float:
+        """Calculate financial strength score for credit rating"""
+        
+        financial_scores = []
+        
+        # Revenue predictability and confidence
+        if "revenue" in integrated_data:
+            revenue_data = integrated_data["revenue"]
+            confidence = float(revenue_data.get("confidence_level", "70").replace("%", ""))
+            financial_scores.append(confidence)
+        
+        # Cost structure efficiency
+        if "cost" in integrated_data:
+            cost_data = integrated_data["cost"]
+            # Lower operating cost ratio is better
+            op_ratio = cost_data.get("operating_cost_ratio", 0.85)
+            cost_efficiency = max(0, (1 - op_ratio) * 100)
+            financial_scores.append(cost_efficiency)
+        
+        # Profitability metrics
+        if "revenue" in integrated_data and "cost" in integrated_data:
+            revenue_data = integrated_data["revenue"]
+            cost_data = integrated_data["cost"]
+            
+            annual_revenue = revenue_data.get("realistic_annual", 800000)
+            annual_costs = cost_data.get("realistic_annual_operating", 680000)
+            
+            if annual_revenue > 0:
+                profit_margin = ((annual_revenue - annual_costs) / annual_revenue) * 100
+                profitability_score = min(100, max(0, profit_margin * 5))  # Scale to 0-100
+                financial_scores.append(profitability_score)
+        
+        # Return average if scores available, otherwise default
+        return sum(financial_scores) / len(financial_scores) if financial_scores else 65
+    
+    def _calculate_market_position(self, integrated_data: Dict[str, Any]) -> float:
+        """Calculate market position score for credit rating"""
+        
+        market_scores = []
+        
+        # Market demand and growth
+        if "market" in integrated_data:
+            market_data = integrated_data["market"]
+            growth_rate = market_data.get("growth_rate", 3)
+            growth_score = min(100, max(0, growth_rate * 20))  # Scale to 0-100
+            market_scores.append(growth_score)
+            
+            # Market saturation (inverted)
+            saturation = market_data.get("saturation_score", 50)
+            opportunity_score = 100 - saturation
+            market_scores.append(opportunity_score)
+        
+        # Competitive position
+        if "competitive" in integrated_data:
+            # Add competitive advantage score if available
+            market_scores.append(65)  # Default competitive position
+        
+        # Location advantages
+        if "traffic" in integrated_data:
+            traffic_data = integrated_data["traffic"]
+            location_score = traffic_data.get("overall_score", 70)
+            market_scores.append(location_score)
+        
+        # Return average if scores available, otherwise default
+        return sum(market_scores) / len(market_scores) if market_scores else 65
+    
+    def _determine_credit_rating(self, components: Dict[str, float]) -> str:
+        """Determine credit rating based on component scores"""
+        
+        # Extract key metrics
+        composite_risk = components["composite_risk_score"]
+        viability = components["viability_score"]
+        financial_strength = components["financial_strength"]
+        market_position = components["market_position"]
+        
+        # Check each rating level (A is highest)
+        for rating in ["A", "B", "C", "D"]:
+            thresholds = self.credit_rating_matrix[rating]
+            
+            if (composite_risk <= thresholds["composite_risk_max"] and
+                viability >= thresholds["viability_min"] and
+                financial_strength >= thresholds["financial_strength_min"] and
+                market_position >= thresholds["market_position_min"]):
+                return rating
+        
+        # Default to D if no criteria met
+        return "D"
+    
+    def _generate_rating_justification(self, rating: str, components: Dict[str, float], 
+                                     rating_info: Dict[str, Any]) -> str:
+        """Generate detailed justification for credit rating"""
+        
+        justification = f"**{rating} Rating - {rating_info['label']}**\n\n"
+        
+        # Key metrics summary
+        justification += f"**Key Metrics:**\n"
+        justification += f"- Composite Risk Score: {components['composite_risk_score']:.1f}/100\n"
+        justification += f"- Overall Viability: {components['viability_score']:.1f}/100\n"
+        justification += f"- Financial Strength: {components['financial_strength']:.1f}/100\n"
+        justification += f"- Market Position: {components['market_position']:.1f}/100\n\n"
+        
+        # Rating-specific justification
+        if rating == "A":
+            justification += "This business demonstrates **exceptional fundamentals** with low risk profile, strong financial projections, and excellent market positioning. Ideal for all institutional investors."
+        elif rating == "B":
+            justification += "This business shows **solid fundamentals** with manageable risk, good financial outlook, and competitive market position. Suitable for most institutional investors."
+        elif rating == "C":
+            justification += "This business presents **moderate challenges** with elevated risk factors that require careful evaluation. Institutional investors should conduct enhanced due diligence."
+        else:  # D
+            justification += "This business faces **significant challenges** with high risk factors that may deter most institutional investors. Requires substantial risk mitigation or alternative structuring."
+        
+        return justification
+    
+    def _generate_institutional_risk_summary(self, rating: str, components: Dict[str, float], 
+                                           rating_info: Dict[str, Any]) -> str:
+        """Generate institutional risk summary for different investor types"""
+        
+        summary = f"**Institutional Investment Rating: {rating}**\n\n"
+        summary += f"**{rating_info['institutional_appeal']}**\n\n"
+        
+        # Bank perspective
+        if rating in ["A", "B"]:
+            summary += "**Banks:** Favorable lending candidate with appropriate debt service coverage and collateral requirements.\n"
+        elif rating == "C":
+            summary += "**Banks:** Requires enhanced underwriting, higher equity contribution, and stronger personal guarantees.\n"
+        else:
+            summary += "**Banks:** High risk profile may require specialized lending programs or alternative financing structures.\n"
+        
+        # PE firm perspective
+        if rating in ["A", "B"]:
+            summary += "**PE Firms:** Attractive investment opportunity with clear growth potential and manageable risk profile.\n"
+        elif rating == "C":
+            summary += "**PE Firms:** Requires detailed due diligence and may need operational improvements before investment.\n"
+        else:
+            summary += "**PE Firms:** High risk profile requires significant value creation opportunities to justify investment.\n"
+        
+        # EDC perspective
+        if rating in ["A", "B", "C"]:
+            summary += "**Economic Development:** Positive economic impact candidate suitable for incentive programs and support.\n"
+        else:
+            summary += "**Economic Development:** May qualify for specialized programs focused on high-risk, high-reward initiatives.\n"
+        
+        return summary
+    
     def _generate_executive_summary(self, recommendation: RecommendationResult, 
                                   viability_score: float, 
                                   integrated_data: Dict[str, Any]):
@@ -720,6 +958,19 @@ class RecommendationsGenerator:
         content = content.replace("{avoid_criteria}", avoid_list)
         
         content = content.replace("{alternative_recommendations}", recommendation.alternative_recommendations)
+        
+        # Institutional risk rating
+        content = content.replace("{institutional_credit_rating}", recommendation.institutional_credit_rating)
+        content = content.replace("{credit_rating_justification}", recommendation.credit_rating_justification)
+        content = content.replace("{institutional_risk_summary}", recommendation.institutional_risk_summary)
+        
+        # Credit rating components
+        if recommendation.credit_rating_components:
+            comp = recommendation.credit_rating_components
+            content = content.replace("{composite_risk_score}", f"{comp.get('composite_risk_score', 50):.1f}")
+            content = content.replace("{financial_strength_score}", f"{comp.get('financial_strength', 65):.1f}")
+            content = content.replace("{market_position_score}", f"{comp.get('market_position', 65):.1f}")
+            content = content.replace("{risk_component_score}", f"{comp.get('risk_component', 50):.1f}")
         
         # Executive summary
         content = content.replace("{executive_summary_narrative}", recommendation.executive_summary_narrative)

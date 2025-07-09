@@ -40,6 +40,7 @@ try:
     from integrated_business_analyzer import IntegratedBusinessAnalyzer
     from geocoding import OpenStreetMapGeocoder
     from recommendations_generator import RecommendationsGenerator
+    from implementation_plan_generator import ImplementationPlanGenerator
     ANALYZERS_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: Some analyzers not available: {e}")
@@ -164,13 +165,14 @@ class UniversalBusinessAnalysisEngine:
                 "name": "Final Recommendations",
                 "template": "UNIVERSAL_RECOMMENDATIONS_TEMPLATE.md",
                 "automated": True,  # Generated from all other sections
-                "implemented": True
+                "implemented": True,
+                "features": ["institutional_risk_rating", "a_to_d_credit_scale", "institutional_appeal_assessment"]
             },
             "6.2": {
                 "name": "Implementation Plan",
-                "template": "UNIVERSAL_IMPLEMENTATION_TEMPLATE.md",  # Future
+                "template": "UNIVERSAL_IMPLEMENTATION_TEMPLATE.md",
                 "automated": True,  # Generated from analysis
-                "implemented": False
+                "implemented": True
             }
         }
         
@@ -349,6 +351,11 @@ class UniversalBusinessAnalysisEngine:
                     elif section_id == "6.1" and ANALYZERS_AVAILABLE:
                         # Generate Final Recommendations
                         content = self._generate_recommendations_section(
+                            business_type, address, project_path
+                        )
+                    elif section_id == "6.2" and ANALYZERS_AVAILABLE:
+                        # Generate Implementation Plan
+                        content = self._generate_implementation_plan_section(
                             business_type, address, project_path
                         )
                     else:
@@ -1244,6 +1251,76 @@ Please complete the following manual research and verification tasks. Replace [P
                         print(f"    ⚠️ Failed to load {data_type} data from alternate: {e}")
         
         return integrated_data
+    
+    def _generate_implementation_plan_section(self, business_type: str, address: str, 
+                                            project_path: str) -> Optional[str]:
+        """Generate Implementation Plan section"""
+        try:
+            generator = ImplementationPlanGenerator()
+            
+            print("    📋 Generating implementation plan...")
+            
+            # Collect comprehensive data from all previous sections
+            integrated_data = self._collect_comprehensive_data(project_path)
+            
+            # Load recommendations data
+            recommendations_data = {}
+            recommendations_file = f"{project_path}/data_results/final_recommendations.json"
+            if os.path.exists(recommendations_file):
+                try:
+                    with open(recommendations_file, 'r') as f:
+                        recommendations_data = json.load(f)
+                        print("    📊 Loaded recommendations data for implementation plan")
+                except Exception as e:
+                    print(f"    ⚠️ Failed to load recommendations data: {e}")
+            
+            # Generate implementation plan
+            implementation_plan = generator.generate_implementation_plan(
+                business_type=business_type,
+                location=address,
+                integrated_data=integrated_data,
+                recommendations_data=recommendations_data
+            )
+            
+            # Save raw implementation plan data
+            os.makedirs(f"{project_path}/data_results", exist_ok=True)
+            analysis_file = f"{project_path}/data_results/implementation_plan.json"
+            with open(analysis_file, 'w') as f:
+                json.dump({
+                    "business_type": implementation_plan.business_type,
+                    "location": implementation_plan.location,
+                    "total_weeks": implementation_plan.total_weeks,
+                    "total_implementation_capital": implementation_plan.total_implementation_capital,
+                    "success_probability": implementation_plan.success_probability,
+                    "roi_timeline": implementation_plan.roi_timeline,
+                    "critical_actions": implementation_plan.critical_actions,
+                    "decision_points": implementation_plan.decision_points,
+                    "phase1_capital": implementation_plan.phase1_capital,
+                    "phase2_capital": implementation_plan.phase2_capital,
+                    "phase3_capital": implementation_plan.phase3_capital,
+                    "phase4_capital": implementation_plan.phase4_capital,
+                    "working_capital": implementation_plan.working_capital
+                }, f, indent=2)
+            
+            # Load template and populate with implementation plan
+            template_path = "UNIVERSAL_IMPLEMENTATION_TEMPLATE.md"
+            if not os.path.exists(template_path):
+                raise FileNotFoundError(f"Template not found: {template_path}")
+            
+            with open(template_path, 'r') as f:
+                template_content = f.read()
+            
+            # Populate template with implementation plan
+            section_content = generator.populate_template(template_content, implementation_plan)
+            
+            return section_content
+            
+        except Exception as e:
+            print(f"    ⚠️ Implementation plan generation failed: {str(e)}")
+            print("    📝 Generating basic template...")
+            return self._generate_template_section(
+                self.sections_config["6.2"], business_type, address.split(',')[1].strip() if ',' in address else "Wisconsin", address
+            )
     
     def _extract_county_from_address(self, address: str) -> str:
         """Extract county name from address for Wisconsin-specific data"""
