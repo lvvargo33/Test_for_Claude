@@ -39,6 +39,7 @@ try:
     from universal_competitive_analyzer import UniversalCompetitiveAnalyzer
     from integrated_business_analyzer import IntegratedBusinessAnalyzer
     from geocoding import OpenStreetMapGeocoder
+    from recommendations_generator import RecommendationsGenerator
     ANALYZERS_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: Some analyzers not available: {e}")
@@ -161,9 +162,9 @@ class UniversalBusinessAnalysisEngine:
             },
             "6.1": {
                 "name": "Final Recommendations",
-                "template": "UNIVERSAL_RECOMMENDATIONS_TEMPLATE.md",  # Future
+                "template": "UNIVERSAL_RECOMMENDATIONS_TEMPLATE.md",
                 "automated": True,  # Generated from all other sections
-                "implemented": False
+                "implemented": True
             },
             "6.2": {
                 "name": "Implementation Plan",
@@ -344,6 +345,11 @@ class UniversalBusinessAnalysisEngine:
                         fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
                         content = self._generate_infrastructure_section(
                             business_type, address, fallback_lat, fallback_lon, project_path
+                        )
+                    elif section_id == "6.1" and ANALYZERS_AVAILABLE:
+                        # Generate Final Recommendations
+                        content = self._generate_recommendations_section(
+                            business_type, address, project_path
                         )
                     else:
                         # Default template-based generation
@@ -1139,6 +1145,105 @@ Please complete the following manual research and verification tasks. Replace [P
             return self._generate_template_section(
                 self.sections_config["5.2"], business_type, address.split(',')[1].strip(), address
             )
+    
+    def _generate_recommendations_section(self, business_type: str, address: str, 
+                                        project_path: str) -> Optional[str]:
+        """Generate Final Recommendations section"""
+        try:
+            generator = RecommendationsGenerator()
+            
+            print("    🎯 Generating final recommendations...")
+            
+            # Collect all integrated data from previous sections
+            integrated_data = self._collect_comprehensive_data(project_path)
+            
+            # Generate recommendations
+            recommendations = generator.generate_recommendations(
+                business_type=business_type,
+                location=address,
+                integrated_data=integrated_data
+            )
+            
+            # Save raw analysis data
+            os.makedirs(f"{project_path}/data_results", exist_ok=True)
+            analysis_file = f"{project_path}/data_results/final_recommendations.json"
+            with open(analysis_file, 'w') as f:
+                json.dump({
+                    "business_type": recommendations.business_type,
+                    "location": recommendations.location,
+                    "overall_viability_rating": recommendations.overall_viability_rating,
+                    "confidence_level": recommendations.confidence_level,
+                    "primary_recommendation": recommendations.primary_recommendation,
+                    "strategic_advantages": recommendations.strategic_advantages,
+                    "top_risks": recommendations.top_risks,
+                    "total_capital_needed": recommendations.total_capital_needed,
+                    "breakeven_timeline": recommendations.breakeven_timeline,
+                    "immediate_action_items": recommendations.immediate_action_items,
+                    "key_performance_indicators": recommendations.key_performance_indicators,
+                    "final_recommendation_statement": recommendations.final_recommendation_statement
+                }, f, indent=2)
+            
+            # Load template and populate with recommendations
+            template_path = "UNIVERSAL_RECOMMENDATIONS_TEMPLATE.md"
+            if not os.path.exists(template_path):
+                raise FileNotFoundError(f"Template not found: {template_path}")
+            
+            with open(template_path, 'r') as f:
+                template_content = f.read()
+            
+            # Populate template with recommendations
+            section_content = generator.populate_template(template_content, recommendations, integrated_data)
+            
+            return section_content
+            
+        except Exception as e:
+            print(f"    ⚠️ Recommendations generation failed: {str(e)}")
+            print("    📝 Generating basic template...")
+            return self._generate_template_section(
+                self.sections_config["6.1"], business_type, address.split(',')[1].strip() if ',' in address else "Wisconsin", address
+            )
+    
+    def _collect_comprehensive_data(self, project_path: str) -> Dict[str, Any]:
+        """Collect all data from previous sections for recommendations synthesis"""
+        integrated_data = {}
+        
+        # Load data from all previous sections
+        data_files = [
+            ("market_saturation_analysis.json", "market"),
+            ("traffic_transportation_analysis.json", "traffic"),
+            ("site_characteristics_analysis.json", "site"),
+            ("business_habitat_analysis.json", "habitat"),
+            ("revenue_projections_analysis.json", "revenue"),
+            ("cost_analysis.json", "cost"),
+            ("risk_assessment_analysis.json", "risk"),
+            ("zoning_permits_analysis.json", "permits"),
+            ("infrastructure_analysis.json", "infrastructure"),
+            ("competitive_analysis_results.json", "competitive")
+        ]
+        
+        for file_name, data_type in data_files:
+            file_path = f"{project_path}/data_results/{file_name}"
+            if os.path.exists(file_path):
+                try:
+                    with open(file_path, 'r') as f:
+                        data = json.load(f)
+                        integrated_data[data_type] = data
+                        print(f"    📊 Loaded {data_type} data for recommendations")
+                except Exception as e:
+                    print(f"    ⚠️ Failed to load {data_type} data: {e}")
+            else:
+                # Try alternate location
+                alt_path = f"{project_path}/data/{file_name}"
+                if os.path.exists(alt_path):
+                    try:
+                        with open(alt_path, 'r') as f:
+                            data = json.load(f)
+                            integrated_data[data_type] = data
+                            print(f"    📊 Loaded {data_type} data from alternate location")
+                    except Exception as e:
+                        print(f"    ⚠️ Failed to load {data_type} data from alternate: {e}")
+        
+        return integrated_data
     
     def _extract_county_from_address(self, address: str) -> str:
         """Extract county name from address for Wisconsin-specific data"""
