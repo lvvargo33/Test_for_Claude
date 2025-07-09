@@ -60,82 +60,276 @@ Click **"Add to Report"** to proceed.
 
 **Add Credit Risk Score Card:**
 1. Click **"Add a chart"** → **"Scorecard"**
-2. Place it in the top-left corner
-3. **Configure:**
+2. Place it in the top-left corner (resize to ~300px wide x 150px tall)
+3. **Data Setup:**
    - **Metric:** `credit_risk_score`
    - **Dimension:** `business_name`
-4. **Style:**
-   - Font size: 36px
-   - Color: Blue (#1f4788)
-   - Add suffix: "/100"
+4. **Style Configuration:**
+   - Click **"Style"** tab in the properties panel
+   - **Chart header:**
+     - Title: "Credit Risk Score"
+     - Subtitle: "Overall creditworthiness assessment"
+     - Title font size: 16px
+     - Title color: #1f4788 (Professional Blue)
+   - **Metric:**
+     - Font size: 48px
+     - Font weight: Bold
+     - Color: #1f4788
+   - **Number format:**
+     - Type: Number
+     - Decimal places: 0
+     - Suffix: "/100"
+   - **Conditional formatting:**
+     - Click "Add rule"
+     - Condition: Greater than or equal to 80
+     - Color: #2e7d32 (Green)
+     - Add another rule: Less than 65
+     - Color: #d32f2f (Red)
 
 **Add DSCR Card:**
-1. Add another **Scorecard** next to the first one
-2. **Configure:**
+1. Add another **Scorecard** next to the first one (same size)
+2. **Data Setup:**
    - **Metric:** `debt_service_coverage_ratio`
    - **Dimension:** `business_name`
-3. **Style:**
-   - Font size: 36px
-   - Color: Green if ≥1.15, Orange if <1.15
-   - Add prefix: "DSCR: "
+3. **Style Configuration:**
+   - **Chart header:**
+     - Title: "Debt Service Coverage Ratio"
+     - Subtitle: "Target: ≥1.15"
+     - Title font size: 16px
+     - Title color: #1f4788
+   - **Metric:**
+     - Font size: 48px
+     - Font weight: Bold
+   - **Number format:**
+     - Type: Number
+     - Decimal places: 2
+     - Prefix: ""
+     - Suffix: "x"
+   - **Conditional formatting:**
+     - Condition: Greater than or equal to 1.15
+     - Color: #2e7d32 (Green)
+     - Add rule: Less than 1.15
+     - Color: #f57c00 (Orange)
 
 **Add SBA Eligibility Card:**
-1. Add third **Scorecard**
-2. **Configure:**
+1. Add third **Scorecard** (same size)
+2. **Data Setup:**
    - **Metric:** `sba_eligibility_score`
    - **Dimension:** `business_name`
-3. **Style:**
-   - Font size: 36px
-   - Color: Green (#2e7d32)
-   - Add suffix: "/100"
+3. **Style Configuration:**
+   - **Chart header:**
+     - Title: "SBA Eligibility Score"
+     - Subtitle: "Program qualification assessment"
+     - Title font size: 16px
+     - Title color: #1f4788
+   - **Metric:**
+     - Font size: 48px
+     - Font weight: Bold
+     - Color: #2e7d32
+   - **Number format:**
+     - Type: Number
+     - Decimal places: 0
+     - Suffix: "/100"
+   - **Conditional formatting:**
+     - Condition: Greater than or equal to 85
+     - Color: #2e7d32 (Green)
+     - Add rule: Less than 70
+     - Color: #f57c00 (Orange)
+
+**Add Loan Amount Card:**
+1. Add fourth **Scorecard** to complete the top row
+2. **Data Setup:**
+   - **Metric:** `optimal_loan_amount`
+   - **Dimension:** `business_name`
+3. **Style Configuration:**
+   - **Chart header:**
+     - Title: "Optimal Loan Amount"
+     - Subtitle: "Recommended financing"
+     - Title font size: 16px
+     - Title color: #1f4788
+   - **Metric:**
+     - Font size: 42px
+     - Font weight: Bold
+     - Color: #1f4788
+   - **Number format:**
+     - Type: Currency
+     - Currency: USD ($)
+     - Decimal places: 0
+     - Compact numbers: Yes (shows $292.5K instead of $292,500)
 
 ### **2.2 Credit Risk Gauge Chart**
 
 1. Click **"Add a chart"** → **"Gauge chart"**
-2. Place it prominently on the dashboard
-3. **Configure:**
+2. Place it prominently on the dashboard (resize to ~400px wide x 300px tall)
+3. **Data Setup:**
    - **Metric:** `credit_risk_score`
    - **Dimension:** `business_name`
-4. **Style:**
-   - **Min value:** 0
-   - **Max value:** 100
+4. **Style Configuration:**
+   - **Chart header:**
+     - Title: "Credit Risk Assessment"
+     - Subtitle: "Real-time creditworthiness gauge"
+     - Title font size: 18px
+     - Title color: #1f4788
+     - Show title: Yes
+   - **Gauge settings:**
+     - **Min value:** 0
+     - **Max value:** 100
+     - **Gauge type:** Arc (half circle)
+     - **Show value:** Yes
+   - **Number format:**
+     - Type: Number
+     - Decimal places: 0
+     - Suffix: "/100"
    - **Color ranges:**
-     - 0-50: Red (#d32f2f)
-     - 51-75: Orange (#f57c00)
-     - 76-100: Green (#2e7d32)
+     - Range 1: 0-50 → Color: #d32f2f (Red) → Label: "High Risk"
+     - Range 2: 51-75 → Color: #f57c00 (Orange) → Label: "Moderate Risk"
+     - Range 3: 76-100 → Color: #2e7d32 (Green) → Label: "Low Risk"
+   - **Value label:**
+     - Font size: 24px
+     - Font weight: Bold
+     - Position: Center
 
 ### **2.3 SBA Program Recommendation Chart**
 
 1. Add **"Pie chart"**
-2. **Configure:**
+2. Position it next to the gauge chart (resize to ~350px wide x 300px tall)
+3. **Data Setup:**
    - **Dimension:** `recommended_sba_program`
-   - **Metric:** Count (default)
-3. **Style:**
-   - Colors: Blue for SBA 7(a), Green for SBA 504
-   - Show data labels
-   - Add title: "SBA Program Recommendations"
+   - **Metric:** Count (this will count how many businesses use each program)
+4. **Style Configuration:**
+   - **Chart header:**
+     - Title: "SBA Program Recommendations"
+     - Subtitle: "Optimal financing program by business type"
+     - Title font size: 18px
+     - Title color: #1f4788
+     - Show title: Yes
+   - **Pie chart settings:**
+     - **Show data labels:** Yes
+     - **Label position:** Outside
+     - **Show percentage:** Yes
+     - **Show value:** Yes
+   - **Color by:**
+     - SBA 7(a): #1f4788 (Professional Blue)
+     - SBA 504: #2e7d32 (Success Green)
+   - **Legend:**
+     - Position: Bottom
+     - Font size: 12px
+     - Show legend: Yes
+   - **Data labels:**
+     - Font size: 14px
+     - Font weight: Bold
+     - Show percentage: Yes
 
 ### **2.4 Loan Amount Comparison**
 
 1. Add **"Bar chart"**
-2. **Configure:**
+2. Position it in the bottom section (resize to ~800px wide x 250px tall)
+3. **Data Setup:**
    - **Dimension:** `business_name`
    - **Metric:** `optimal_loan_amount`
-3. **Style:**
-   - Horizontal orientation
-   - Color: Professional blue (#1f4788)
-   - Format as currency ($)
-   - Add title: "Optimal Loan Amounts"
+4. **Style Configuration:**
+   - **Chart header:**
+     - Title: "Optimal Loan Amounts by Business"
+     - Subtitle: "Recommended SBA financing amounts"
+     - Title font size: 18px
+     - Title color: #1f4788
+     - Show title: Yes
+   - **Bar chart settings:**
+     - **Orientation:** Horizontal
+     - **Bar color:** #1f4788 (Professional Blue)
+     - **Bar spacing:** Medium
+     - **Show data labels:** Yes
+   - **Axes:**
+     - **X-axis (values):**
+       - Show axis: Yes
+       - Title: "Loan Amount ($)"
+       - Format: Currency
+       - Decimal places: 0
+       - Compact numbers: Yes
+     - **Y-axis (dimensions):**
+       - Show axis: Yes
+       - Title: "Business"
+       - Font size: 12px
+   - **Data labels:**
+     - Position: End of bar
+     - Font size: 12px
+     - Font weight: Bold
+     - Format: Currency ($)
+     - Decimal places: 0
+     - Compact numbers: Yes
+   - **Gridlines:**
+     - Show major gridlines: Yes
+     - Color: Light gray (#f0f0f0)
 
-### **2.5 Risk Rating Overview**
+### **2.5 Risk Rating Overview Table**
 
 1. Add **"Table"**
-2. **Configure:**
-   - **Dimensions:** `business_name`, `institutional_risk_rating`
+2. Position it in the bottom section (resize to ~800px wide x 200px tall)
+3. **Data Setup:**
+   - **Dimensions:** `business_name`, `institutional_risk_rating`, `recommended_sba_program`
    - **Metrics:** `credit_risk_score`, `sba_eligibility_score`, `optimal_loan_amount`
-3. **Style:**
-   - Conditional formatting: Green for A ratings, Yellow for B ratings
-   - Format loan amounts as currency
+4. **Style Configuration:**
+   - **Table header:**
+     - Title: "Comprehensive Risk Assessment Summary"
+     - Subtitle: "Complete loan analysis by business"
+     - Title font size: 18px
+     - Title color: #1f4788
+     - Show title: Yes
+   - **Table settings:**
+     - **Show header:** Yes
+     - **Header background:** #f8f9fa (Light gray)
+     - **Header text color:** #1f4788
+     - **Header font weight:** Bold
+     - **Row height:** 40px
+     - **Alternate row colors:** Yes
+   - **Column formatting:**
+     - **Business Name:**
+       - Header: "Business"
+       - Width: 200px
+       - Font weight: Bold
+     - **Risk Rating:**
+       - Header: "Risk Rating"
+       - Width: 100px
+       - Text align: Center
+     - **SBA Program:**
+       - Header: "SBA Program"
+       - Width: 120px
+       - Text align: Center
+     - **Credit Score:**
+       - Header: "Credit Score"
+       - Width: 100px
+       - Format: Number
+       - Suffix: "/100"
+       - Text align: Center
+     - **SBA Eligibility:**
+       - Header: "SBA Score"
+       - Width: 100px
+       - Format: Number
+       - Suffix: "/100"
+       - Text align: Center
+     - **Loan Amount:**
+       - Header: "Loan Amount"
+       - Width: 120px
+       - Format: Currency ($)
+       - Decimal places: 0
+       - Text align: Right
+   - **Conditional formatting:**
+     - **Risk Rating column:**
+       - Condition: Contains "A"
+       - Background color: #e8f5e8 (Light green)
+       - Text color: #2e7d32 (Green)
+     - **Risk Rating column:**
+       - Condition: Contains "B"
+       - Background color: #fff3e0 (Light orange)
+       - Text color: #f57c00 (Orange)
+     - **Credit Score column:**
+       - Condition: Greater than or equal to 80
+       - Background color: #e8f5e8 (Light green)
+       - Text color: #2e7d32 (Green)
+     - **Credit Score column:**
+       - Condition: Less than 65
+       - Background color: #ffebee (Light red)
+       - Text color: #d32f2f (Red)
 
 ---
 
