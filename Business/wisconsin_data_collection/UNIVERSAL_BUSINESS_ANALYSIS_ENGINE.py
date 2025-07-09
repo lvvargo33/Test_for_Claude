@@ -90,7 +90,8 @@ class UniversalBusinessAnalysisEngine:
                 "name": "Direct Competition",
                 "template": "UNIVERSAL_COMPETITIVE_ANALYSIS_TEMPLATE.md",
                 "automated": True,
-                "data_sources": ["universal_competitive_analyzer.py", "google_places_data"]
+                "data_sources": ["universal_competitive_analyzer.py", "google_places_data"],
+                "features": ["market_share_analysis", "penetration_timeline", "pe_bank_metrics", "competitive_positioning"]
             },
             
             # Future sections (extensible framework)
@@ -257,13 +258,17 @@ class UniversalBusinessAnalysisEngine:
                 # Check if Google Places data exists
                 places_files = ["google_places_phase1_20250627_212804.csv"]
                 if any(os.path.exists(f) for f in places_files):
-                    report, results = analyzer.run_complete_analysis()
+                    # Load projected revenue for market share analysis
+                    projected_revenue = 500000  # Default, could be enhanced to read from revenue projections
+                    
+                    # Run complete analysis including market share analysis
+                    report, results = analyzer.run_complete_analysis(projected_revenue=projected_revenue)
                     
                     # Save competitive analysis results
                     with open(f"{project_path}/data/competitive_analysis_results.json", 'w') as f:
                         json.dump(results, f, indent=2)
                     
-                    data_results["competitive_analysis"] = "✅ Success"
+                    data_results["competitive_analysis"] = "✅ Success (including market share analysis)"
                 else:
                     data_results["competitive_analysis"] = "⚠️ Google Places data not found - using mock data"
                     

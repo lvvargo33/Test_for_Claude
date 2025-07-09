@@ -286,6 +286,90 @@ Based on comprehensive Google Places data analysis of [NUMBER] businesses, no [s
 - **Operational Excellence:** Superior execution difficult to match
 - **Continuous Innovation:** Stay ahead of competitive responses
 
+#### **Market Share Analysis (PE/Bank Evaluation)**
+
+**Visual Components:**
+1. **Market Share Projection Chart** - 5-year growth timeline
+2. **Market Size Analysis** - Total addressable market breakdown
+3. **Competitive Positioning Matrix** - Growth vs. advantage scoring
+4. **Penetration Timeline** - Phase-by-phase market entry strategy
+
+**Market Size Analysis:**
+- **Total Addressable Market (5-mile radius):** $[MARKET_SIZE_TOTAL]
+- **Achievable Revenue Potential:** $[ACHIEVABLE_REVENUE]
+- **Market Saturation Level:** [MARKET_SATURATION]% ([SATURATION_DESCRIPTION])
+- **Average Competitor Revenue:** $[AVG_COMPETITOR_REVENUE]
+- **Direct Competitors in Market:** [DIRECT_COMPETITORS_COUNT]
+
+**Market Share Projections:**
+
+**Conservative Scenario:**
+- **Year 1:** [CONSERVATIVE_YEAR_1]% market share
+- **Year 2:** [CONSERVATIVE_YEAR_2]% market share
+- **Year 3:** [CONSERVATIVE_YEAR_3]% market share
+- **Year 5:** [CONSERVATIVE_YEAR_5]% market share
+
+**Realistic Scenario (Planning Base):**
+- **Year 1:** [REALISTIC_YEAR_1]% market share
+- **Year 2:** [REALISTIC_YEAR_2]% market share
+- **Year 3:** [REALISTIC_YEAR_3]% market share
+- **Year 5:** [REALISTIC_YEAR_5]% market share
+
+**Optimistic Scenario:**
+- **Year 1:** [OPTIMISTIC_YEAR_1]% market share
+- **Year 2:** [OPTIMISTIC_YEAR_2]% market share
+- **Year 3:** [OPTIMISTIC_YEAR_3]% market share
+- **Year 5:** [OPTIMISTIC_YEAR_5]% market share
+
+**Market Penetration Timeline:**
+
+**Phase 1: Market Entry ([PHASE_1_DURATION] months)**
+- **Target Market Share:** [PHASE_1_TARGET]%
+- **Key Activities:** [PHASE_1_ACTIVITIES]
+- **Primary Challenges:** [PHASE_1_CHALLENGES]
+
+**Phase 2: Market Development ([PHASE_2_DURATION] months)**
+- **Target Market Share:** [PHASE_2_TARGET]%
+- **Key Activities:** [PHASE_2_ACTIVITIES]
+- **Primary Challenges:** [PHASE_2_CHALLENGES]
+
+**Phase 3: Market Leadership ([PHASE_3_DURATION] months)**
+- **Target Market Share:** [PHASE_3_TARGET]%
+- **Key Activities:** [PHASE_3_ACTIVITIES]
+- **Primary Challenges:** [PHASE_3_CHALLENGES]
+
+**Phase 4: Market Maturity ([PHASE_4_DURATION] months)**
+- **Target Market Share:** [PHASE_4_TARGET]%
+- **Key Activities:** [PHASE_4_ACTIVITIES]
+- **Primary Challenges:** [PHASE_4_CHALLENGES]
+
+**PE/Bank Investment Metrics:**
+- **Revenue Validation:** [REVENUE_VALIDATION_STATUS] (projected revenue vs. achievable market)
+- **Growth Potential Score:** [GROWTH_POTENTIAL_SCORE]/100
+- **Competitive Advantage Score:** [COMPETITIVE_ADVANTAGE_SCORE]/100
+- **Investment Attractiveness:** [INVESTMENT_ATTRACTIVENESS] 
+- **Market Entry Barriers:** [MARKET_ENTRY_BARRIERS]
+- **Customer Switching Costs:** [CUSTOMER_SWITCHING_COSTS]
+
+**Growth Potential Factors:**
+- **Market Size Opportunity:** [MARKET_SIZE_FACTOR]/25 points
+- **Competition Intensity:** [COMPETITION_INTENSITY_FACTOR]/25 points
+- **Market Growth Potential:** [MARKET_GROWTH_FACTOR]/20 points
+- **Differentiation Opportunity:** [DIFFERENTIATION_FACTOR]/20 points
+- **Scalability Potential:** [SCALABILITY_FACTOR]/15 points
+
+**Competitive Advantage Factors:**
+- **First-Mover Advantage:** [FIRST_MOVER_FACTOR]/30 points
+- **Location Advantage:** [LOCATION_FACTOR]/20 points
+- **Service Differentiation:** [SERVICE_DIFFERENTIATION_FACTOR]/20 points
+- **Operational Efficiency:** [OPERATIONAL_EFFICIENCY_FACTOR]/15 points
+- **Customer Experience:** [CUSTOMER_EXPERIENCE_FACTOR]/15 points
+
+**Investment Risk Assessment:**
+- **Primary Investment Risks:** [INVESTMENT_RISKS_LIST]
+- **Risk Mitigation Strategies:** [RISK_MITIGATION_STRATEGIES]
+- **Market Defense Capabilities:** [MARKET_DEFENSE_ASSESSMENT]
+
 #### **Key Competitive Insights & Strategic Implications**
 
 **Critical Success Factors:**

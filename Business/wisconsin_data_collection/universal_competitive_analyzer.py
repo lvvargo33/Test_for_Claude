@@ -314,6 +314,269 @@ class UniversalCompetitiveAnalyzer:
         self.analysis_results['market_opportunity'] = insights
         return insights
     
+    def calculate_market_share_potential(self, projected_annual_revenue: float = 500000) -> Dict:
+        """Calculate realistic market share percentage and growth timeline for PE/bank analysis"""
+        print(f"📊 Calculating market share potential for {self.business_type}...")
+        
+        # Get density data for calculations
+        density_data = self.analysis_results.get('density', {})
+        profiles = self.analysis_results.get('competitor_profiles', [])
+        
+        # Estimate total market size based on competitor analysis
+        market_size_analysis = self._estimate_market_size(profiles, density_data)
+        
+        # Calculate market share scenarios
+        market_share_scenarios = self._calculate_market_share_scenarios(
+            projected_annual_revenue, market_size_analysis
+        )
+        
+        # Generate market penetration timeline
+        penetration_timeline = self._generate_penetration_timeline(
+            market_share_scenarios, density_data
+        )
+        
+        # Calculate competitive positioning metrics
+        competitive_positioning = self._analyze_competitive_positioning(
+            market_share_scenarios, profiles
+        )
+        
+        market_share_analysis = {
+            'market_size_analysis': market_size_analysis,
+            'market_share_scenarios': market_share_scenarios,
+            'penetration_timeline': penetration_timeline,
+            'competitive_positioning': competitive_positioning,
+            'pe_bank_metrics': {
+                'realistic_market_share_year_1': market_share_scenarios['realistic']['year_1'],
+                'realistic_market_share_year_3': market_share_scenarios['realistic']['year_3'],
+                'realistic_market_share_year_5': market_share_scenarios['realistic']['year_5'],
+                'market_size_total': market_size_analysis['total_market_size'],
+                'revenue_validation': projected_annual_revenue <= market_size_analysis['achievable_revenue'],
+                'growth_potential_score': competitive_positioning['growth_potential_score'],
+                'competitive_advantage_score': competitive_positioning['competitive_advantage_score']
+            }
+        }
+        
+        self.analysis_results['market_share_analysis'] = market_share_analysis
+        return market_share_analysis
+    
+    def _estimate_market_size(self, profiles: List[Dict], density_data: Dict) -> Dict:
+        """Estimate total addressable market size based on competitor analysis"""
+        
+        # Business-specific revenue multipliers (industry averages)
+        revenue_multipliers = {
+            'restaurant': 450000,      # Average restaurant revenue
+            'auto_repair': 350000,     # Average auto repair revenue
+            'retail': 300000,          # Average retail revenue
+            'professional_services': 250000,  # Average professional services
+            'healthcare': 600000,      # Average healthcare practice
+            'default': 400000          # Default business revenue
+        }
+        
+        # Determine business category for revenue estimation
+        business_category = 'default'
+        business_lower = self.business_type.lower()
+        for category in revenue_multipliers:
+            if category in business_lower:
+                business_category = category
+                break
+        
+        avg_competitor_revenue = revenue_multipliers[business_category]
+        
+        # Calculate market size based on competitor density
+        direct_competitors_5mi = density_data.get(5, {}).get('direct_competitors', 0)
+        similar_competitors_5mi = density_data.get(5, {}).get('similar_competitors', 0)
+        
+        # Market size calculation
+        if direct_competitors_5mi == 0:
+            # No direct competition - estimate based on similar businesses
+            total_market_size = similar_competitors_5mi * avg_competitor_revenue * 0.3  # 30% crossover
+            market_saturation = 0.0
+        else:
+            # Direct competition exists
+            total_market_size = direct_competitors_5mi * avg_competitor_revenue
+            market_saturation = min(direct_competitors_5mi / 10.0, 0.85)  # Max 85% saturation
+        
+        # Adjust for market growth potential
+        market_growth_factor = 1.15  # 15% growth potential
+        total_market_size *= market_growth_factor
+        
+        # Calculate achievable revenue based on market conditions
+        if direct_competitors_5mi == 0:
+            achievable_revenue = total_market_size * 0.4  # 40% of crossover market
+        elif direct_competitors_5mi <= 2:
+            achievable_revenue = total_market_size * 0.25  # 25% of established market
+        else:
+            achievable_revenue = total_market_size * 0.15  # 15% of saturated market
+        
+        return {
+            'total_market_size': round(total_market_size, 0),
+            'achievable_revenue': round(achievable_revenue, 0),
+            'avg_competitor_revenue': avg_competitor_revenue,
+            'market_saturation': market_saturation,
+            'direct_competitors_5mi': direct_competitors_5mi,
+            'similar_competitors_5mi': similar_competitors_5mi,
+            'market_growth_factor': market_growth_factor
+        }
+    
+    def _calculate_market_share_scenarios(self, projected_revenue: float, market_size: Dict) -> Dict:
+        """Calculate conservative, realistic, and optimistic market share scenarios"""
+        
+        total_market = market_size['total_market_size']
+        achievable_revenue = market_size['achievable_revenue']
+        saturation = market_size['market_saturation']
+        
+        # Scenario calculations
+        scenarios = {}
+        
+        # Conservative scenario (cautious market entry)
+        scenarios['conservative'] = {
+            'year_1': min(projected_revenue * 0.6 / total_market * 100, 5.0),
+            'year_2': min(projected_revenue * 0.8 / total_market * 100, 8.0),
+            'year_3': min(projected_revenue / total_market * 100, 12.0),
+            'year_5': min(projected_revenue * 1.2 / total_market * 100, 15.0)
+        }
+        
+        # Realistic scenario (expected performance)
+        scenarios['realistic'] = {
+            'year_1': min(projected_revenue * 0.8 / total_market * 100, 8.0),
+            'year_2': min(projected_revenue / total_market * 100, 12.0),
+            'year_3': min(projected_revenue * 1.3 / total_market * 100, 18.0),
+            'year_5': min(projected_revenue * 1.6 / total_market * 100, 25.0)
+        }
+        
+        # Optimistic scenario (strong performance)
+        scenarios['optimistic'] = {
+            'year_1': min(projected_revenue / total_market * 100, 12.0),
+            'year_2': min(projected_revenue * 1.3 / total_market * 100, 18.0),
+            'year_3': min(projected_revenue * 1.6 / total_market * 100, 25.0),
+            'year_5': min(projected_revenue * 2.0 / total_market * 100, 35.0)
+        }
+        
+        # Adjust for market saturation
+        for scenario in scenarios:
+            for year in scenarios[scenario]:
+                scenarios[scenario][year] = round(scenarios[scenario][year] * (1 - saturation * 0.5), 2)
+        
+        return scenarios
+    
+    def _generate_penetration_timeline(self, scenarios: Dict, density_data: Dict) -> Dict:
+        """Generate detailed market penetration timeline for PE/bank analysis"""
+        
+        direct_competitors = density_data.get(5, {}).get('direct_competitors', 0)
+        
+        # Timeline phases based on market conditions
+        if direct_competitors == 0:
+            # Market creation scenario
+            timeline_phases = {
+                'phase_1_market_entry': {
+                    'duration_months': 6,
+                    'key_activities': ['Establish market presence', 'Build brand awareness', 'Acquire initial customers'],
+                    'market_share_target': scenarios['realistic']['year_1'],
+                    'challenges': ['Market education', 'Customer acquisition', 'Service delivery setup']
+                },
+                'phase_2_market_development': {
+                    'duration_months': 12,
+                    'key_activities': ['Scale operations', 'Expand service offerings', 'Build customer loyalty'],
+                    'market_share_target': scenarios['realistic']['year_2'],
+                    'challenges': ['Competition entry', 'Operational scaling', 'Quality maintenance']
+                },
+                'phase_3_market_leadership': {
+                    'duration_months': 24,
+                    'key_activities': ['Defend market position', 'Optimize operations', 'Expand geographic reach'],
+                    'market_share_target': scenarios['realistic']['year_3'],
+                    'challenges': ['New competition', 'Market saturation', 'Margin pressure']
+                },
+                'phase_4_market_maturity': {
+                    'duration_months': 24,
+                    'key_activities': ['Maintain leadership', 'Innovation focus', 'Adjacent market expansion'],
+                    'market_share_target': scenarios['realistic']['year_5'],
+                    'challenges': ['Market maturity', 'Competitive pressure', 'Growth limitations']
+                }
+            }
+        else:
+            # Competitive market entry scenario
+            timeline_phases = {
+                'phase_1_market_entry': {
+                    'duration_months': 9,
+                    'key_activities': ['Competitive differentiation', 'Customer acquisition', 'Market positioning'],
+                    'market_share_target': scenarios['realistic']['year_1'],
+                    'challenges': ['Established competition', 'Customer switching costs', 'Market share capture']
+                },
+                'phase_2_market_growth': {
+                    'duration_months': 15,
+                    'key_activities': ['Scale competitive advantages', 'Customer retention', 'Service innovation'],
+                    'market_share_target': scenarios['realistic']['year_2'],
+                    'challenges': ['Competitive response', 'Customer acquisition costs', 'Operational efficiency']
+                },
+                'phase_3_market_positioning': {
+                    'duration_months': 24,
+                    'key_activities': ['Optimize market position', 'Expand customer base', 'Improve profitability'],
+                    'market_share_target': scenarios['realistic']['year_3'],
+                    'challenges': ['Market saturation', 'Competitive pricing', 'Customer loyalty']
+                },
+                'phase_4_market_optimization': {
+                    'duration_months': 24,
+                    'key_activities': ['Maximize market share', 'Operational excellence', 'Strategic partnerships'],
+                    'market_share_target': scenarios['realistic']['year_5'],
+                    'challenges': ['Market maturity', 'Margin optimization', 'Strategic positioning']
+                }
+            }
+        
+        return timeline_phases
+    
+    def _analyze_competitive_positioning(self, scenarios: Dict, profiles: List[Dict]) -> Dict:
+        """Analyze competitive positioning for PE/bank investment evaluation"""
+        
+        # Calculate competitive advantage factors
+        competitive_factors = {
+            'market_entry_barriers': 'Low' if len(profiles) <= 2 else 'Medium' if len(profiles) <= 5 else 'High',
+            'customer_switching_costs': 'Low' if len(profiles) == 0 else 'Medium',
+            'brand_recognition_requirements': 'Low' if len(profiles) <= 1 else 'Medium',
+            'operational_complexity': 'Medium',  # Business-specific
+            'capital_requirements': 'Medium'    # Business-specific
+        }
+        
+        # Calculate growth potential score (0-100)
+        growth_factors = {
+            'market_size_opportunity': 25 if len(profiles) == 0 else 20 if len(profiles) <= 2 else 15,
+            'competition_intensity': 25 if len(profiles) <= 1 else 20 if len(profiles) <= 3 else 10,
+            'market_growth_potential': 20,  # Standard growth potential
+            'differentiation_opportunity': 20 if len(profiles) <= 2 else 15,
+            'scalability_potential': 15 if len(profiles) <= 3 else 10
+        }
+        
+        growth_potential_score = sum(growth_factors.values())
+        
+        # Calculate competitive advantage score (0-100)
+        advantage_factors = {
+            'first_mover_advantage': 30 if len(profiles) == 0 else 20 if len(profiles) <= 1 else 5,
+            'location_advantage': 20,  # Assumed strategic location
+            'service_differentiation': 20 if len(profiles) <= 2 else 15,
+            'operational_efficiency': 15,  # Assumed operational advantages
+            'customer_experience': 15   # Assumed customer experience focus
+        }
+        
+        competitive_advantage_score = sum(advantage_factors.values())
+        
+        # Investment risk assessment
+        investment_risks = []
+        if len(profiles) >= 5:
+            investment_risks.append('High competitive intensity')
+        if len(profiles) == 0:
+            investment_risks.append('Market creation risk')
+        if len(profiles) >= 3:
+            investment_risks.append('Customer acquisition costs')
+        
+        return {
+            'growth_potential_score': growth_potential_score,
+            'competitive_advantage_score': competitive_advantage_score,
+            'competitive_factors': competitive_factors,
+            'growth_factors': growth_factors,
+            'advantage_factors': advantage_factors,
+            'investment_risks': investment_risks,
+            'investment_attractiveness': 'High' if (growth_potential_score + competitive_advantage_score) >= 150 else 'Medium' if (growth_potential_score + competitive_advantage_score) >= 120 else 'Low'
+        }
+    
     def generate_analysis_report(self) -> str:
         """Generate complete competitive analysis report"""
         print(f"📝 Generating competitive analysis report for {self.business_type}...")
@@ -440,8 +703,9 @@ The competitive analysis extends beyond simple competitor counting to evaluate p
         
         return report
     
-    def run_complete_analysis(self, data_file: str = 'google_places_phase1_20250627_212804.csv') -> Tuple[str, Dict]:
-        """Run complete competitive analysis"""
+    def run_complete_analysis(self, data_file: str = 'google_places_phase1_20250627_212804.csv', 
+                            projected_revenue: float = 500000) -> Tuple[str, Dict]:
+        """Run complete competitive analysis including market share analysis"""
         print(f"🚀 STARTING COMPETITIVE ANALYSIS FOR {self.business_type.upper()}")
         print("=" * 70)
         print(f"Target Site: {self.site_address}")
@@ -453,12 +717,21 @@ The competitive analysis extends beyond simple competitor counting to evaluate p
         self.get_competitor_profiles()
         self.analyze_market_opportunity()
         
+        # NEW: Add market share analysis for PE/bank evaluation
+        self.calculate_market_share_potential(projected_revenue)
+        
         # Generate report
         report = self.generate_analysis_report()
         
         print("✅ COMPETITIVE ANALYSIS COMPLETE!")
         print(f"🎯 Market Opportunity Score: {self.analysis_results['market_opportunity']['opportunity_score']}/100")
         print(f"📊 Direct Competitors (5-mile): {self.analysis_results['density'].get(5, {}).get('direct_competitors', 0)}")
+        
+        # NEW: Display market share metrics
+        market_share = self.analysis_results.get('market_share_analysis', {}).get('pe_bank_metrics', {})
+        print(f"📈 Market Share Year 1: {market_share.get('realistic_market_share_year_1', 'N/A')}%")
+        print(f"📈 Market Share Year 5: {market_share.get('realistic_market_share_year_5', 'N/A')}%")
+        print(f"💰 Market Size: ${market_share.get('market_size_total', 0):,.0f}")
         
         return report, self.analysis_results
 
