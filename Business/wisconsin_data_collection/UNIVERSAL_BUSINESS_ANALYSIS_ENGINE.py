@@ -148,6 +148,22 @@ class UniversalBusinessAnalysisEngine:
                 "implemented": True,
                 "features": ["industry_default_rates", "stress_testing_scenarios", "regulatory_compliance_analysis"]
             },
+            "4.4": {
+                "name": "Financial Institution Analysis",
+                "template": "UNIVERSAL_FINANCIAL_INSTITUTION_TEMPLATE.md",
+                "automated": True,  # Uses existing financial + SBA data
+                "data_sources": ["revenue_projections_analyzer.py", "cost_analysis_analyzer.py", "risk_assessment_analyzer.py", "sba_loan_data"],
+                "implemented": True,
+                "features": ["debt_service_coverage_analysis", "sba_compliance_scoring", "credit_risk_assessment", "collateral_analysis", "loan_structuring_recommendations"]
+            },
+            "4.5": {
+                "name": "Investment Opportunity Analysis", 
+                "template": "UNIVERSAL_INVESTMENT_OPPORTUNITY_TEMPLATE.md",
+                "automated": True,  # Uses existing market + financial data
+                "data_sources": ["universal_competitive_analyzer.py", "revenue_projections_analyzer.py", "market_analysis_data", "demographic_analyzer.py"],
+                "implemented": True,
+                "features": ["scalability_assessment", "exit_strategy_modeling", "ebitda_analysis", "competitive_moat_evaluation", "market_timing_analysis"]
+            },
             "5.1": {
                 "name": "Zoning & Permits",
                 "template": "UNIVERSAL_ZONING_PERMITS_TEMPLATE.md",
@@ -178,29 +194,13 @@ class UniversalBusinessAnalysisEngine:
                 "implemented": True,
                 "features": ["funding_structure_recommendations", "sba_loan_decision_tree", "equity_debt_optimization", "drawdown_schedules", "institutional_lending_analysis"]
             },
-            "7.1": {
+            "6.3": {
                 "name": "Economic Development Centers",
                 "template": "UNIVERSAL_ECONOMIC_DEVELOPMENT_TEMPLATE.md",
                 "automated": True,  # Calculates jobs, tax revenue, multiplier effects
                 "data_sources": ["revenue_projections_analyzer.py", "demographic_analyzer.py", "economic_impact_calculator.py"],
                 "implemented": True,  # Economic Development Centers analysis implemented
                 "features": ["job_creation_formulas", "tax_revenue_estimation", "economic_multiplier_effects", "edc_grant_justification"]
-            },
-            "8.1": {
-                "name": "Financial Institution Analysis",
-                "template": "UNIVERSAL_FINANCIAL_INSTITUTION_TEMPLATE.md",
-                "automated": True,  # Uses existing financial + SBA data
-                "data_sources": ["revenue_projections_analyzer.py", "cost_analysis_analyzer.py", "risk_assessment_analyzer.py", "sba_loan_data"],
-                "implemented": True,
-                "features": ["debt_service_coverage_analysis", "sba_compliance_scoring", "credit_risk_assessment", "collateral_analysis", "loan_structuring_recommendations"]
-            },
-            "8.2": {
-                "name": "Investment Opportunity Analysis", 
-                "template": "UNIVERSAL_INVESTMENT_OPPORTUNITY_TEMPLATE.md",
-                "automated": True,  # Uses existing market + financial data
-                "data_sources": ["universal_competitive_analyzer.py", "revenue_projections_analyzer.py", "market_analysis_data", "demographic_analyzer.py"],
-                "implemented": True,
-                "features": ["scalability_assessment", "exit_strategy_modeling", "ebitda_analysis", "competitive_moat_evaluation", "market_timing_analysis"]
             }
         }
         
@@ -390,21 +390,21 @@ class UniversalBusinessAnalysisEngine:
                         content = self._generate_implementation_plan_section(
                             business_type, address, project_path
                         )
-                    elif section_id == "7.1" and ANALYZERS_AVAILABLE:
-                        # Generate Economic Development Centers Analysis
-                        fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
-                        content = self._generate_economic_development_section(
-                            business_type, address, fallback_lat, fallback_lon, project_path
-                        )
-                    elif section_id == "8.1":
+                    elif section_id == "4.4":
                         # Financial Institution Analysis
                         content = self._generate_financial_institution_section(
                             business_type, address, project_path
                         )
-                    elif section_id == "8.2":
+                    elif section_id == "4.5":
                         # Investment Opportunity Analysis
                         content = self._generate_investment_opportunity_section(
                             business_type, address, project_path
+                        )
+                    elif section_id == "6.3" and ANALYZERS_AVAILABLE:
+                        # Generate Economic Development Centers Analysis
+                        fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
+                        content = self._generate_economic_development_section(
+                            business_type, address, fallback_lat, fallback_lon, project_path
                         )
                     else:
                         # Default template-based generation
@@ -1411,7 +1411,7 @@ Please complete the following manual research and verification tasks. Replace [P
             print(f"    ⚠️ Economic development analysis failed: {str(e)}")
             print("    📝 Generating basic template...")
             return self._generate_template_section(
-                self.sections_config["7.1"], business_type, address.split(',')[1].strip() if ',' in address else "Wisconsin", address
+                self.sections_config["6.3"], business_type, address.split(',')[1].strip() if ',' in address else "Wisconsin", address
             )
     
     def _generate_financial_institution_section(self, business_type: str, address: str, 
@@ -1458,7 +1458,7 @@ Please complete the following manual research and verification tasks. Replace [P
             print(f"    ⚠️ Financial institution analysis failed: {str(e)}")
             print("    📝 Generating basic template...")
             return self._generate_template_section(
-                self.sections_config["8.1"], business_type, address.split(',')[1].strip() if ',' in address else "Wisconsin", address
+                self.sections_config["4.4"], business_type, address.split(',')[1].strip() if ',' in address else "Wisconsin", address
             )
     
     def _generate_investment_opportunity_section(self, business_type: str, address: str, 
@@ -1470,14 +1470,14 @@ Please complete the following manual research and verification tasks. Replace [P
             # For now, use template-based generation
             # TODO: Implement full investment opportunity analyzer
             return self._generate_template_section(
-                self.sections_config["8.2"], business_type, address.split(',')[1].strip() if ',' in address else "Wisconsin", address
+                self.sections_config["4.5"], business_type, address.split(',')[1].strip() if ',' in address else "Wisconsin", address
             )
             
         except Exception as e:
             print(f"    ⚠️ Investment opportunity analysis failed: {str(e)}")
             print("    📝 Generating basic template...")
             return self._generate_template_section(
-                self.sections_config["8.2"], business_type, address.split(',')[1].strip() if ',' in address else "Wisconsin", address
+                self.sections_config["4.5"], business_type, address.split(',')[1].strip() if ',' in address else "Wisconsin", address
             )
     
     def _load_analysis_data(self, project_path: str, filename: str) -> Dict[str, Any]:
