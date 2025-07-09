@@ -291,7 +291,104 @@ This section provides comprehensive risk assessment for the {business_type} at {
 ![Risk Mitigation Timeline]({risk_mitigation_timeline_path})
 *Implementation schedule for risk mitigation strategies*
 
-## 4.3.12 Risk Assessment Summary
+## 4.3.11 Industry Default Rates Analysis
+
+### **Regulatory Compliance Rating: {regulatory_compliance_score}/100**
+
+### Industry Default Rate Benchmarks
+- **1-Year Default Rate**: {default_rate_1yr}%
+- **3-Year Default Rate**: {default_rate_3yr}%
+- **5-Year Default Rate**: {default_rate_5yr}%
+- **SBA Loan Default Rate**: {sba_default_rate}%
+- **Recovery Rate on Defaults**: {recovery_rate}%
+- **Average Time to Default**: {time_to_default_avg} months
+- **Seasonal Default Spike**: {seasonal_default_spike}
+- **Default Severity Classification**: {default_severity}
+
+### Risk-Adjusted Default Probability
+**Adjusted Default Probability (5-year): {default_probability_adjusted}%**
+- Base industry rate: {default_rate_5yr}%
+- Risk adjustment factor: {risk_adjustment_factor}x
+- Stress scenario weighting: {stress_scenario_weight}%
+
+### Banking Risk Assessment
+- **Loan Loss Reserve Requirement**: {loan_loss_reserve}% of loan amount
+- **Risk-Based Capital Allocation**: {risk_based_capital}% 
+- **Credit Rating Impact**: {credit_rating_impact}
+- **Regulatory Capital Requirements**: {regulatory_capital_requirement}%
+
+## 4.3.12 Stress Testing Analysis
+
+### **Stress Test Survival Rate: {stress_test_survival_rate}%**
+
+### Scenario 1: Mild Recession
+**Probability: {mild_recession_probability}%**
+- Revenue Impact: {mild_recession_revenue_impact}%
+- Cost Impact: {mild_recession_cost_impact}%
+- Stressed Annual Revenue: ${mild_recession_stressed_revenue:,}
+- Stressed Profit Margin: {mild_recession_stressed_margin}%
+- Survival Probability: {mild_recession_survival_probability}%
+- Expected Loss: {mild_recession_expected_loss}%
+
+### Scenario 2: Severe Recession
+**Probability: {severe_recession_probability}%**
+- Revenue Impact: {severe_recession_revenue_impact}%
+- Cost Impact: {severe_recession_cost_impact}%
+- Stressed Annual Revenue: ${severe_recession_stressed_revenue:,}
+- Stressed Profit Margin: {severe_recession_stressed_margin}%
+- Survival Probability: {severe_recession_survival_probability}%
+- Expected Loss: {severe_recession_expected_loss}%
+
+### Scenario 3: Industry Disruption
+**Probability: {industry_disruption_probability}%**
+- Revenue Impact: {industry_disruption_revenue_impact}%
+- Cost Impact: {industry_disruption_cost_impact}%
+- Stressed Annual Revenue: ${industry_disruption_stressed_revenue:,}
+- Stressed Profit Margin: {industry_disruption_stressed_margin}%
+- Survival Probability: {industry_disruption_survival_probability}%
+- Expected Loss: {industry_disruption_expected_loss}%
+
+### Scenario 4: Supply Chain Crisis
+**Probability: {supply_chain_crisis_probability}%**
+- Revenue Impact: {supply_chain_crisis_revenue_impact}%
+- Cost Impact: {supply_chain_crisis_cost_impact}%
+- Stressed Annual Revenue: ${supply_chain_crisis_stressed_revenue:,}
+- Stressed Profit Margin: {supply_chain_crisis_stressed_margin}%
+- Survival Probability: {supply_chain_crisis_survival_probability}%
+- Expected Loss: {supply_chain_crisis_expected_loss}%
+
+### Scenario 5: Competitive Shock
+**Probability: {competitive_shock_probability}%**
+- Revenue Impact: {competitive_shock_revenue_impact}%
+- Cost Impact: {competitive_shock_cost_impact}%
+- Stressed Annual Revenue: ${competitive_shock_stressed_revenue:,}
+- Stressed Profit Margin: {competitive_shock_stressed_margin}%
+- Survival Probability: {competitive_shock_survival_probability}%
+- Expected Loss: {competitive_shock_expected_loss}%
+
+### Scenario 6: Regulatory Change
+**Probability: {regulatory_change_probability}%**
+- Revenue Impact: {regulatory_change_revenue_impact}%
+- Cost Impact: {regulatory_change_cost_impact}%
+- Stressed Annual Revenue: ${regulatory_change_stressed_revenue:,}
+- Stressed Profit Margin: {regulatory_change_stressed_margin}%
+- Survival Probability: {regulatory_change_survival_probability}%
+- Expected Loss: {regulatory_change_expected_loss}%
+
+### Stress Test Summary
+- **Weighted Average Survival Rate**: {stress_test_survival_rate}%
+- **Most Likely Adverse Scenario**: {most_likely_adverse_scenario}
+- **Worst-Case Scenario Impact**: {worst_case_scenario_impact}%
+- **Recovery Timeline Range**: {recovery_timeline_min}-{recovery_timeline_max} months
+- **Stress Test Rating**: {stress_test_rating}
+
+### Regulatory Implications
+- **Bank Capital Requirements**: {bank_capital_requirements}% additional reserves recommended
+- **PE Firm Due Diligence**: {pe_due_diligence_recommendation}
+- **Regulatory Reporting**: {regulatory_reporting_requirements}
+- **Insurance Requirements**: {insurance_requirements}
+
+## 4.3.13 Risk Assessment Summary
 
 ### Overall Risk Profile
 **Composite Risk Score: {composite_risk_score}/100**

@@ -143,7 +143,8 @@ class UniversalBusinessAnalysisEngine:
                 "template": "UNIVERSAL_RISK_ASSESSMENT_TEMPLATE.md",
                 "automated": True,
                 "data_sources": ["risk_assessment_analyzer.py", "monte_carlo_simulation", "integrated_data_analysis"],
-                "implemented": True
+                "implemented": True,
+                "features": ["industry_default_rates", "stress_testing_scenarios", "regulatory_compliance_analysis"]
             },
             "5.1": {
                 "name": "Zoning & Permits",
