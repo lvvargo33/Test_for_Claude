@@ -174,6 +174,14 @@ class UniversalBusinessAnalysisEngine:
                 "template": "UNIVERSAL_IMPLEMENTATION_TEMPLATE.md",
                 "automated": True,  # Generated from analysis
                 "implemented": True
+            },
+            "7.1": {
+                "name": "Economic Development Centers",
+                "template": "UNIVERSAL_ECONOMIC_DEVELOPMENT_TEMPLATE.md",
+                "automated": True,  # Calculates jobs, tax revenue, multiplier effects
+                "data_sources": ["revenue_projections_analyzer.py", "demographic_analyzer.py", "economic_impact_calculator.py"],
+                "implemented": True,  # Economic Development Centers analysis implemented
+                "features": ["job_creation_formulas", "tax_revenue_estimation", "economic_multiplier_effects", "edc_grant_justification"]
             }
         }
         
@@ -358,6 +366,12 @@ class UniversalBusinessAnalysisEngine:
                         # Generate Implementation Plan
                         content = self._generate_implementation_plan_section(
                             business_type, address, project_path
+                        )
+                    elif section_id == "7.1" and ANALYZERS_AVAILABLE:
+                        # Generate Economic Development Centers Analysis
+                        fallback_lat, fallback_lon = lat or 43.0731, lon or -89.4014  # Madison, WI
+                        content = self._generate_economic_development_section(
+                            business_type, address, fallback_lat, fallback_lon, project_path
                         )
                     else:
                         # Default template-based generation
@@ -1322,6 +1336,186 @@ Please complete the following manual research and verification tasks. Replace [P
             return self._generate_template_section(
                 self.sections_config["6.2"], business_type, address.split(',')[1].strip() if ',' in address else "Wisconsin", address
             )
+    
+    def _generate_economic_development_section(self, business_type: str, address: str, 
+                                             lat: float, lon: float, project_path: str) -> Optional[str]:
+        """Generate Economic Development Centers section"""
+        try:
+            print("    🏛️ Running economic development centers analysis...")
+            
+            # Collect data from revenue projections and demographic analysis
+            revenue_data = self._load_analysis_data(project_path, "revenue_projections_analysis.json")
+            demographic_data = self._load_analysis_data(project_path, "demographic_analysis.json")
+            cost_data = self._load_analysis_data(project_path, "cost_analysis.json")
+            
+            # Calculate economic impact metrics
+            economic_impact = self._calculate_economic_impact(
+                business_type, revenue_data, demographic_data, cost_data
+            )
+            
+            # Save raw analysis data
+            os.makedirs(f"{project_path}/data_results", exist_ok=True)
+            analysis_file = f"{project_path}/data_results/economic_development_analysis.json"
+            with open(analysis_file, 'w') as f:
+                json.dump(economic_impact, f, indent=2)
+            
+            # Load template and populate with economic development data
+            template_path = "UNIVERSAL_ECONOMIC_DEVELOPMENT_TEMPLATE.md"
+            if not os.path.exists(template_path):
+                raise FileNotFoundError(f"Template not found: {template_path}")
+            
+            with open(template_path, 'r') as f:
+                template_content = f.read()
+            
+            # Populate template with economic development analysis
+            section_content = self._populate_economic_development_template(
+                template_content, economic_impact, business_type, address
+            )
+            
+            return section_content
+            
+        except Exception as e:
+            print(f"    ⚠️ Economic development analysis failed: {str(e)}")
+            print("    📝 Generating basic template...")
+            return self._generate_template_section(
+                self.sections_config["7.1"], business_type, address.split(',')[1].strip() if ',' in address else "Wisconsin", address
+            )
+    
+    def _load_analysis_data(self, project_path: str, filename: str) -> Dict[str, Any]:
+        """Load analysis data from previous sections"""
+        file_path = f"{project_path}/data_results/{filename}"
+        if os.path.exists(file_path):
+            try:
+                with open(file_path, 'r') as f:
+                    return json.load(f)
+            except Exception as e:
+                print(f"    ⚠️ Failed to load {filename}: {e}")
+        return {}
+    
+    def _calculate_economic_impact(self, business_type: str, revenue_data: Dict[str, Any], 
+                                 demographic_data: Dict[str, Any], cost_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Calculate economic impact metrics for EDC purposes"""
+        
+        # Get revenue projections
+        realistic_revenue = revenue_data.get('realistic_annual', 500000)  # Default $500k
+        
+        # Job creation calculations by business type
+        job_multipliers = {
+            'restaurant': 0.025,  # 25 jobs per $1M revenue
+            'retail': 0.020,      # 20 jobs per $1M revenue
+            'auto_repair': 0.018, # 18 jobs per $1M revenue
+            'hair_salon': 0.030,  # 30 jobs per $1M revenue
+            'gym': 0.015,         # 15 jobs per $1M revenue
+            'manufacturing': 0.012, # 12 jobs per $1M revenue
+            'professional_services': 0.022, # 22 jobs per $1M revenue
+            'default': 0.020      # 20 jobs per $1M revenue
+        }
+        
+        # Determine business category
+        business_category = 'default'
+        business_lower = business_type.lower()
+        for category in job_multipliers:
+            if category in business_lower:
+                business_category = category
+                break
+        
+        # Calculate direct jobs
+        direct_jobs = (realistic_revenue / 1000000) * job_multipliers[business_category]
+        
+        # Calculate indirect and induced jobs (multiplier effect)
+        # Economic multiplier for Wisconsin small businesses: 1.4-1.8
+        economic_multiplier = 1.6
+        total_jobs = direct_jobs * economic_multiplier
+        
+        # Tax revenue calculations
+        # Wisconsin sales tax: 5% base + local rates (typically 0.5-2%)
+        sales_tax_rate = 0.065  # 6.5% average
+        sales_tax_revenue = realistic_revenue * sales_tax_rate
+        
+        # Property tax (estimated based on business property value)
+        property_value_multiplier = 0.3  # Business property ~30% of revenue
+        property_value = realistic_revenue * property_value_multiplier
+        property_tax_rate = 0.018  # 1.8% average in Wisconsin
+        property_tax_revenue = property_value * property_tax_rate
+        
+        # Income tax from employees
+        avg_salary = 35000  # Wisconsin average
+        income_tax_rate = 0.065  # Combined state/local
+        income_tax_revenue = total_jobs * avg_salary * income_tax_rate
+        
+        # Total tax revenue
+        total_tax_revenue = sales_tax_revenue + property_tax_revenue + income_tax_revenue
+        
+        # Economic multiplier effects
+        local_spending = realistic_revenue * 0.65  # 65% of revenue stays local
+        supply_chain_impact = realistic_revenue * 0.25  # 25% to local suppliers
+        induced_spending = (total_jobs * avg_salary) * 0.8  # 80% of wages spent locally
+        
+        return {
+            'business_type': business_type,
+            'realistic_annual_revenue': realistic_revenue,
+            'direct_jobs_created': max(1.0, round(direct_jobs, 1)),  # Minimum 1 job
+            'total_jobs_created': max(1.6, round(total_jobs, 1)),     # Minimum 1.6 jobs with multiplier
+            'economic_multiplier': economic_multiplier,
+            'job_multiplier_used': job_multipliers[business_category],
+            'tax_revenue': {
+                'sales_tax_annual': round(sales_tax_revenue, 0),
+                'property_tax_annual': round(property_tax_revenue, 0),
+                'income_tax_annual': round(income_tax_revenue, 0),
+                'total_tax_annual': round(total_tax_revenue, 0)
+            },
+            'economic_impact': {
+                'local_spending': round(local_spending, 0),
+                'supply_chain_impact': round(supply_chain_impact, 0),
+                'induced_spending': round(induced_spending, 0),
+                'total_economic_impact': round(local_spending + supply_chain_impact + induced_spending, 0)
+            },
+            'edc_metrics': {
+                'jobs_per_dollar_invested': round(total_jobs / realistic_revenue * 1000000, 3),
+                'tax_roi': round(total_tax_revenue / realistic_revenue * 100, 2),
+                'economic_impact_ratio': round((local_spending + supply_chain_impact + induced_spending) / realistic_revenue, 2)
+            }
+        }
+    
+    def _populate_economic_development_template(self, template_content: str, economic_impact: Dict[str, Any], 
+                                              business_type: str, address: str) -> str:
+        """Populate economic development template with calculated metrics"""
+        
+        content = template_content
+        
+        # Basic information
+        content = content.replace("{business_type}", business_type)
+        content = content.replace("{address}", address)
+        content = content.replace("{data_collection_date}", datetime.now().strftime("%B %d, %Y"))
+        
+        # Revenue and jobs
+        content = content.replace("{realistic_annual_revenue}", f"${economic_impact['realistic_annual_revenue']:,.0f}")
+        content = content.replace("{direct_jobs_created}", str(economic_impact['direct_jobs_created']))
+        content = content.replace("{total_jobs_created}", str(economic_impact['total_jobs_created']))
+        content = content.replace("{economic_multiplier}", str(economic_impact['economic_multiplier']))
+        content = content.replace("{job_multiplier_used}", str(economic_impact['job_multiplier_used']))
+        
+        # Tax revenue
+        tax_data = economic_impact['tax_revenue']
+        content = content.replace("{sales_tax_annual}", f"${tax_data['sales_tax_annual']:,.0f}")
+        content = content.replace("{property_tax_annual}", f"${tax_data['property_tax_annual']:,.0f}")
+        content = content.replace("{income_tax_annual}", f"${tax_data['income_tax_annual']:,.0f}")
+        content = content.replace("{total_tax_annual}", f"${tax_data['total_tax_annual']:,.0f}")
+        
+        # Economic impact
+        impact_data = economic_impact['economic_impact']
+        content = content.replace("{local_spending}", f"${impact_data['local_spending']:,.0f}")
+        content = content.replace("{supply_chain_impact}", f"${impact_data['supply_chain_impact']:,.0f}")
+        content = content.replace("{induced_spending}", f"${impact_data['induced_spending']:,.0f}")
+        content = content.replace("{total_economic_impact}", f"${impact_data['total_economic_impact']:,.0f}")
+        
+        # EDC metrics
+        edc_data = economic_impact['edc_metrics']
+        content = content.replace("{jobs_per_dollar_invested}", str(edc_data['jobs_per_dollar_invested']))
+        content = content.replace("{tax_roi}", f"{edc_data['tax_roi']}%")
+        content = content.replace("{economic_impact_ratio}", str(edc_data['economic_impact_ratio']))
+        
+        return content
     
     def _extract_county_from_address(self, address: str) -> str:
         """Extract county name from address for Wisconsin-specific data"""
